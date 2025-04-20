@@ -35,10 +35,11 @@ const NavbarComponent = () => {
       <div className="hidden xl:flex space-x-4 justify-center w-full">
         <Link to="/home" className="link-navbar">HOME</Link>
         <Link to="/fale-conosco" className="link-navbar">FALE CONOSCO</Link>
-        <Link to="/admin/acompanhamento" className="link-navbar">ACOMPANHAMENTO</Link>
-        <Link to="/admin/gerenciar" className="link-navbar">GERENCIAR MANIFESTAÇÕES</Link>
         <Link to="/informacoes" className="link-navbar">INFORMAÇÕES E FAQs</Link>
         <Link to="/regulamento" className="link-navbar">POLÍTICAS E REGULAMENTOS</Link>
+        <div className="border-r"></div>
+        <Link to="/admin/gerenciar" className="link-navbar">GERENCIAR</Link>
+        <Link to="/admin/acompanhamento" className="link-navbar">ACOMPANHAMENTO</Link>
       </div>
       <div className="xl:hidden ml-auto flex items-center justify-end">
         <DropdownMenu modal={false}>
@@ -52,17 +53,18 @@ const NavbarComponent = () => {
             <Link to="/fale-conosco">
               <DropdownMenuItem className="link-navbar-menu">FALE CONOSCO</DropdownMenuItem>
             </Link>
-            <Link to="/admin/acompanhamento">
-              <DropdownMenuItem className="link-navbar-menu">ACOMPANHAMENTO</DropdownMenuItem>
-            </Link>
-            <Link to="/admin/gerenciar">
-              <DropdownMenuItem className="link-navbar-menu">GERENCIAR MANIFESTAÇÕES</DropdownMenuItem>
-            </Link>
             <Link to="/informacoes">
               <DropdownMenuItem className="link-navbar-menu">INFORMAÇÕES E FAQs</DropdownMenuItem>
             </Link>
             <Link to="/regulamento">
               <DropdownMenuItem className="link-navbar-menu">POLÍTICAS EREGULAMENTOS</DropdownMenuItem>
+            </Link>
+            <DropdownMenuItem className="border-t mt-3 rounded-[0]"></DropdownMenuItem>
+            <Link to="/admin/gerenciar">
+              <DropdownMenuItem className="link-navbar-menu">GERENCIAR</DropdownMenuItem>
+            </Link>
+            <Link to="/admin/acompanhamento">
+              <DropdownMenuItem className="link-navbar-menu">ACOMPANHAMENTO</DropdownMenuItem>
             </Link>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button"
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
-import "./Acompanhamento.css";
+import "../admin.css";
 import { BlankLayout } from "@/components/BlankLayout/BlankLayout";
 import { useEffect } from "react";
 import Geral from "@/components/acompanhamento/Geral";

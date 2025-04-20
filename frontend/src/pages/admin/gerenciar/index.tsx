@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button"
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
-import "./Gerenciar.css";
+import "../admin.css";
 import { BlankLayout } from "@/components/BlankLayout/BlankLayout";
 import { useEffect } from "react";
 import Geral from "@/components/acompanhamento/Geral";
@@ -37,11 +37,10 @@ const Gerenciar = () => {
   };
 
   const opcoes = [
-    { icon: "material-symbols:dashboard-rounded", label: "Visão Geral" },
-    { icon: "material-symbols:feedback-rounded", label: "Reclamações" },
-    { icon: "material-symbols:thumb-up-rounded", label: "Elogios" },
-    { icon: "material-symbols:warning-rounded", label: "Denúncias" },
-    { icon: "material-symbols:lightbulb-rounded", label: "Sugestões" },
+    { icon: "material-symbols:record-voice-over-rounded", label: "Manifestações" },
+    { icon: "material-symbols:groups-rounded", label: "Usuários" },
+    { icon: "material-symbols:security-rounded", label: "Permissões" },
+    { icon: "material-symbols:work-history-rounded", label: "Histórico" },
   ];
 
   return (
