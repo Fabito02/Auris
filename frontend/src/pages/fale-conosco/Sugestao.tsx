@@ -102,10 +102,9 @@ const Sugestao = () => {
     <BlankLayout showHeader showNavbar showFooter={false}>
       <form onSubmit={handleSubmit} className="flex justify-center p-6 my-4">
         <div className="w-[850px]">
-          
           <Progress
             value={progresso}
-            className="w-[100%] mb-6 h-3 [&>div]:bg-[var(--color-primary)]"
+            className="w-[100%] mb-2 h-3 [&>div]:bg-[var(--color-primary)]"
           />
 
           <Tabs
