@@ -75,12 +75,12 @@
   color: var(--color-primary) !important;
 }
 
-.button-outline.white {
+.button-outline.muted {
   border-color: var(--color-muted) !important;
   color: var(--color-muted) !important;
 }
 
-.button-outline.white:hover {
+.button-outline.muted:hover {
   background-color: var(--color-muted) !important;
   border-color: var(--color-muted)!important;
   color: white !important;
