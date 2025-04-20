@@ -358,7 +358,7 @@ const Elogio = () => {
             <div className="flex justify-between w-full gap-4 mt-4">
               <Button
                 texto="Voltar"
-                color="secondary"
+                color={tab === "contato" ? "muted" : "secondary"}
                 type="button"
                 onClick={() => {
                   const order = ["contato", "tipo", "descricao", "finalizar"];
