@@ -1,0 +1,134 @@
+.corpoDoSite {
+    display: flex;
+    height: calc(100vh - 114px);
+    padding: 0;
+  }
+  
+  .barraLateral {
+    position: fixed;
+    background-color: var(--color-primary);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.3s ease;
+    width: 90px;
+    min-width: 78px;
+    padding-top: 55px;
+    white-space: nowrap;
+    top: 65px;
+    height: calc(100vh - 65px);
+    z-index: 2;
+  }
+  
+  .barraLateral.expandido {
+    width: 200px;
+    min-width: 200px;
+  }
+  
+  .toggle-expandir {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    width: 40px;
+    max-width: 40px;
+    aspect-ratio: 1 / 1;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #1b9841;
+    border: 0;
+    font-size: 25px;
+    border-radius: 12px;
+    cursor: pointer;
+  }
+  
+  .toggle-expandir:hover {
+    background-color: #2bb655;
+  }
+  
+  .toggle-expandir:active {
+    background-color: #2bb655 !important;
+  }
+  
+  .opcao {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1b9841;
+    margin: 5px 0;
+    width: calc(100% - 20px);
+    max-width: 70px;
+    aspect-ratio: 1 / 1;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  
+  .opcao:hover {
+    background-color: #2bb655;
+  }
+  
+  .opcao.expandido {
+    aspect-ratio: unset;
+    height: 50px;
+    justify-content: flex-start;
+    padding-left: 10px;
+    max-width: unset;
+  }
+  
+  .icone {
+    font-size: 30px;
+  }
+  
+  .opcao.expandido .icone {
+    font-size: 20px;
+    margin-right: 10px;
+  }
+  
+  .label {
+    font-size: 16px;
+  }
+  
+  .conteudo {
+    width: 100%;
+    margin-left: 90px;
+    transition: filter 0.3s ease;
+  }
+  
+  .conteudoContainer {
+    background-color: #fff !important;
+    max-width: 100%;
+    min-height: calc(100vh - 115px);
+  }
+  
+  .conteudo.escurecido {
+    filter: brightness(0.65);
+  }
+  
+  @media (max-width: 992px) {
+    .conteudo {
+      margin-left: 0px;
+    }
+  
+    .barraLateral {
+      transform: translateX(-100%);
+      min-width: unset;
+    }
+  
+    .barraLateral.expandido {
+      transform: translateX(0);
+    }
+  
+    .barraLateral.expandido .toggle-expandir {
+      top: 10px;
+      right: 10px;
+    }
+  
+    .toggle-expandir {
+      top: 10px;
+      right: -50px;
+    }
+  }
+  

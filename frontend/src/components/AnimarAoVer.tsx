@@ -18,7 +18,7 @@ const AnimarAoVer = ({ children, className }: { children: React.ReactNode; class
         } else {
             controls.start({
                 opacity: 0,
-                y: 25,
+                y: 20,
             });
         }
     }, [controls, inView]);

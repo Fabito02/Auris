@@ -75,6 +75,17 @@
   color: var(--color-primary) !important;
 }
 
+.button-outline.white {
+  border-color: var(--color-muted) !important;
+  color: var(--color-muted) !important;
+}
+
+.button-outline.white:hover {
+  background-color: var(--color-muted) !important;
+  border-color: var(--color-muted)!important;
+  color: white !important;
+}
+
 .button.primary {
   background-color: var(--color-primary) !important;
   border-color: var(--color-primary) !important;
@@ -159,12 +170,23 @@
   color: rgb(71, 71, 71) !important;
 }
 
+.button.muted {
+  background-color: var(--color-muted) !important;
+  border-color: var(--color-muted) !important;
+  color: white !important;
+}
+
+.button.muted:hover {
+  background-color: var(--color-muted-hover) !important;
+  border-color: var(--color-muted-hover) !important;
+  color: white !important;
+}
+
 .full-rounded {
   border-radius: 9999px !important;
 }
 
 .button-outline {
-  border-radius: 11px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -175,7 +197,6 @@
 }
 
 .button {
-  border-radius: 11px;
   color: white;
   display: flex;
   align-items: center;
@@ -187,7 +208,7 @@
 }
 
 .button:hover, .button-outline:hover {
-  transform: scale(1.015);
+  transform: scale(1.010);
 }
 
 .button:active, .button-outline:active {

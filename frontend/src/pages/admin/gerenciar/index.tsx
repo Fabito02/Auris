@@ -1,22 +1,22 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button"
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
-import "./Acompanhamento.css";
-import { BlankLayout } from "../../components/BlankLayout/BlankLayout";
+import "./Gerenciar.css";
+import { BlankLayout } from "@/components/BlankLayout/BlankLayout";
 import { useEffect } from "react";
-import Geral from "../../components/acompanhamento/Geral";
-import Reclamacoes from "../../components/acompanhamento/Reclamacoes";
-import Elogios from "../../components/acompanhamento/Elogios";
-import Denuncias from "../../components/acompanhamento/Denuncias";
-import Sugestoes from "../../components/acompanhamento/Sugestoes";
+import Geral from "@/components/acompanhamento/Geral";
+import Reclamacoes from "@/components/acompanhamento/Reclamacoes";
+import Elogios from "@/components/acompanhamento/Elogios";
+import Denuncias from "@/components/acompanhamento/Denuncias";
+import Sugestoes from "@/components/acompanhamento/Sugestoes";
 
-const Acompanhamento = () => {
+const Gerenciar = () => {
   const [expandido, setExpandido] = useState(false);
   const [abaSelecionada, setAbaSelecionada] = useState("0");
 
   useEffect(() => {
 
-    document.title = "Acompanhamento"
+    document.title = "Gerenciar"
 
     const handleExibirTab = () => {
       const tabs = document.querySelectorAll(".tabContainer");
@@ -92,4 +92,4 @@ const Acompanhamento = () => {
   );
 };
 
-export default Acompanhamento;
+export default Gerenciar;

@@ -13,7 +13,7 @@ interface ButtonProps {
   outline?: boolean;
   iconPosition?: "left" | "right";
   onClick?: () => void;
-  color?: "primary" | "secondary" | "success" | "danger" | "warning" | "info" | "white";
+  color?: "primary" | "secondary" | "success" | "danger" | "warning" | "info" | "white" | "muted";
   style?: CSSProperties;
   full_rounded?: boolean;
 }
@@ -25,7 +25,7 @@ const iconSeExistir = (icon: string | undefined, iconPosition?: "left" | "right"
   return null;
 };
 
-export default function ButtonNormal({
+export default function Button({
   texto,
   className = "",
   type = "button",

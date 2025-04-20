@@ -1,30 +1,74 @@
-import { useEffect, useRef, useState } from "react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { useState, useEffect, useRef } from "react";
+import { Input } from "@/components/ui/input";
+import Button from "@/components/buttons/Button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Progress } from "@/components/ui/progress";
+import { motion, AnimatePresence } from "framer-motion";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
-import { Input } from "../../components/ui/input";
-import { Checkbox } from "../../components/ui/checkbox";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { BlankLayout } from "@/components/BlankLayout/BlankLayout";
 import {
   Select,
+  SelectTrigger,
   SelectContent,
   SelectItem,
-  SelectTrigger,
   SelectValue,
-} from "../../components/ui/select";
-import Button from "../../components/buttons/Button";
+} from "@/components/ui/select";
+import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
+
+const tabVariants = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -20 },
+};
 
 const Sugestao = () => {
-  const [anonimo, setAnonimo] = useState(false);
-  const editorRef = useRef<Quill | null>(null);
+  const [tab, setTab] = useState<
+    "contato" | "tipo" | "descricao" | "finalizar"
+  >("contato");
+
+  const [salvarContato, setSalvarContato] = useState(false);
+  const [tipoSugestao, setTipoSugestao] = useState("");
+  const [titulo, setTitulo] = useState("");
+  const quillContainerRef = useRef<HTMLDivElement | null>(null);
+  const quillRef = useRef<Quill | null>(null);
+  const [progresso, setProgresso] = useState(1);
 
   useEffect(() => {
-    document.title = "Enviar sugestão";
+    document.title = "Enviar Sugestão";
+  }, []);
 
-    if (!editorRef.current) {
-      editorRef.current = new Quill("#editor", {
+  const handleSetProgresso = (
+    value: "contato" | "tipo" | "descricao" | "finalizar"
+  ) => {
+    if (value === "contato") {
+      setProgresso(25);
+    } else if (value === "tipo") {
+      setProgresso(50);
+    } else if (value === "descricao") {
+      setProgresso(75);
+    } else {
+      setProgresso(100);
+    }
+  };
+
+  useEffect(() => {
+    if (tab === "descricao" && quillContainerRef.current) {
+      quillContainerRef.current.innerHTML = "";
+      quillRef.current = new Quill(quillContainerRef.current, {
         theme: "snow",
         modules: {
           toolbar: [
-            [{ header: "1" }, { header: "2" }, { header: "3" }],
+            [{ header: [1, 2, 3, false] }],
             [{ list: "ordered" }, { list: "bullet" }],
             [{ align: [] }],
             ["bold", "italic", "underline", "strike"],
@@ -38,119 +82,315 @@ const Sugestao = () => {
         },
       });
     }
-  }, []);
+
+    handleSetProgresso(tab);
+  }, [tab]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const editor = document.querySelector("#editor") as HTMLElement;
-    const content = editor.innerHTML;
-    console.log(content);
+    const descricaoHTML = quillRef.current?.root.innerHTML || "";
+    console.log({
+      salvarContato,
+      tipoSugestao,
+      titulo,
+      descricao: descricaoHTML,
+    });
+    // lógica de envio...
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4">
-      <form onSubmit={handleSubmit} className="space-y-6 mt-10 mb-5">
-        <h1 className="text-4xl font-semibold mb-10">Sugestão</h1>
-
-        <div>
-          <h3 className="mb-1">Deseja fazer a sugestão de forma anônima?</h3>
-          <Checkbox
-            id="anonimo"
-            checked={anonimo}
-            className="data-[state=checked]:bg-[#16aa51] data-[state=checked]:border-[#16aa51]"
-            onCheckedChange={(checked: boolean) => setAnonimo(checked)}
+    <BlankLayout showHeader showNavbar showFooter={false}>
+      <form onSubmit={handleSubmit} className="flex justify-center p-6 my-4">
+        <div className="w-[850px]">
+          
+          <Progress
+            value={progresso}
+            className="w-[100%] mb-6 h-3 [&>div]:bg-[var(--color-primary)]"
           />
-        </div>
 
-        {!anonimo && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <h3 className="mb-1">Nome</h3>
-              <Input
-                id="nome"
-                type="text"
-                placeholder="Digite seu nome"
-                required
+          <Tabs
+            value={tab}
+            onValueChange={(value) =>
+              setTab(value as "contato" | "tipo" | "descricao" | "finalizar")
+            }
+          >
+            <TabsList className="flex justify-between w-full overflow-auto">
+              <TabsTrigger value="contato">Contato</TabsTrigger>
+              <TabsTrigger value="tipo">Tipo de Sugestão</TabsTrigger>
+              <TabsTrigger value="descricao">Descrição</TabsTrigger>
+              <TabsTrigger value="finalizar">Finalizar</TabsTrigger>
+            </TabsList>
+
+            <AnimatePresence mode="wait">
+              {tab === "contato" && (
+                <TabsContent value="contato" forceMount>
+                  <motion.div
+                    key="contato"
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    variants={tabVariants}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Contato</CardTitle>
+                        <CardDescription>
+                          Você deseja enviar suas informações de contato?
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-2">
+                        <Checkbox
+                          id="enviarContato"
+                          checked={salvarContato}
+                          className="data-[state=checked]:bg-[#16aa51] data-[state=checked]:border-[#16aa51]"
+                          onCheckedChange={(c) => setSalvarContato(!!c)}
+                        />
+                        <span className="ml-2 text-sm text-muted-foreground">
+                          Sim, desejo enviar minhas informações de contato.
+                        </span>
+                      </CardContent>
+                      <CardFooter className="border-t">
+                        <p className="text-sm text-red-700">
+                          *OBS: Estas informações serão usadas para entrar em
+                          contato com você.
+                        </p>
+                      </CardFooter>
+                    </Card>
+                  </motion.div>
+                </TabsContent>
+              )}
+
+              {tab === "tipo" && (
+                <TabsContent value="tipo" forceMount>
+                  <motion.div
+                    key="tipo"
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    variants={tabVariants}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Tipo de Sugestão</CardTitle>
+                        <CardDescription>
+                          Selecione o tipo do seu sugestão.
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-2">
+                        <Select
+                          name="tipoSugestao"
+                          onValueChange={(value) => setTipoSugestao(value)}
+                        >
+                          <SelectTrigger className="custom-select">
+                            <SelectValue placeholder="Selecione..." />
+                          </SelectTrigger>
+                          <SelectContent className="custom-select-content">
+                            <SelectItem value="infraestrutura">
+                              Estrutura e Espaços
+                            </SelectItem>
+                            <SelectItem value="atendimento">
+                              Atendimento
+                            </SelectItem>
+                            <SelectItem value="servico">Serviço</SelectItem>
+                            <SelectItem value="seguranca">Segurança</SelectItem>
+                            <SelectItem value="higiene">Higiene</SelectItem>
+                            <SelectItem value="alimentacao">
+                              Alimentação
+                            </SelectItem>
+                            <SelectItem value="equipamentos">
+                              Equipamentos
+                            </SelectItem>
+                            <SelectItem value="docentes">Docentes</SelectItem>
+                            <SelectItem value="servidores">
+                              Servidores
+                            </SelectItem>
+                            <SelectItem value="acessibilidade">
+                              Acessibilidade
+                            </SelectItem>
+                            <SelectItem value="eventos">Eventos</SelectItem>
+                            <SelectItem value="burocracia">
+                              Burocracia
+                            </SelectItem>
+                            <SelectItem value="outros">Outros</SelectItem>
+                          </SelectContent>
+                        </Select>
+
+                        {tipoSugestao === "infraestrutura" && (
+                          <div>
+                            <h3 className="mb-2 mt-4">Área do Campus</h3>
+                            <Select name="areaCampus">
+                              <SelectTrigger className="custom-select">
+                                <SelectValue placeholder="Selecione..." />
+                              </SelectTrigger>
+                              <SelectContent className="custom-select-content">
+                                <SelectItem value="portaria">
+                                  Portaria
+                                </SelectItem>
+                                <SelectItem value="biblioteca">
+                                  Biblioteca
+                                </SelectItem>
+                                <SelectItem value="setor-administrativo">
+                                  Setor Administrativo
+                                </SelectItem>
+                                <SelectItem value="predio-pedagogico-1">
+                                  Prédio Pedagógico I
+                                </SelectItem>
+                                <SelectItem value="auditório">
+                                  Auditório
+                                </SelectItem>
+                                <SelectItem value="semirresidencial">
+                                  Semirresidencial
+                                </SelectItem>
+                                <SelectItem value="nucleo-assuntos-estudantis">
+                                  Núcleo de Assuntos Estudantis
+                                </SelectItem>
+                                <SelectItem value="lanchonete">
+                                  Lanchonete
+                                </SelectItem>
+                                <SelectItem value="refeitorio">
+                                  Refeitório
+                                </SelectItem>
+                                <SelectItem value="nucleo-estudos-agroecologia">
+                                  Núcleo de Estudos em Agroecologia
+                                </SelectItem>
+                                <SelectItem value="predio-pedagogico-2">
+                                  Prédio Pedagógico II
+                                </SelectItem>
+                                <SelectItem value="moradia-estudantil">
+                                  Moradia Estudantil - Residencial
+                                </SelectItem>
+                                <SelectItem value="laboratorio-solos">
+                                  Laboratório de Solos
+                                </SelectItem>
+                                <SelectItem value="ginasio">Ginásio</SelectItem>
+                                <SelectItem value="suinocultura">
+                                  Suinocultura
+                                </SelectItem>
+                                <SelectItem value="casa-racao">
+                                  Casa de Ração
+                                </SelectItem>
+                                <SelectItem value="laboratorio-campo">
+                                  Laboratório de Campo
+                                </SelectItem>
+                                <SelectItem value="bovinocultura">
+                                  Bovinocultura
+                                </SelectItem>
+                                <SelectItem value="avicultura">
+                                  Avicultura
+                                </SelectItem>
+                                <SelectItem value="casa-maquinas">
+                                  Casa de Máquinas
+                                </SelectItem>
+                                <SelectItem value="outros">Outros</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                </TabsContent>
+              )}
+
+              {tab === "descricao" && (
+                <TabsContent value="descricao" forceMount>
+                  <motion.div
+                    key="descricao"
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    variants={tabVariants}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Descrição da sugestão</CardTitle>
+                        <CardDescription>
+                          Descreva o motivo e contexto da sugestão.
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div>
+                          <h3 className="mb-2">Título</h3>
+                          <Input
+                            value={titulo}
+                            onChange={(e) => setTitulo(e.target.value)}
+                            placeholder="Digite um título"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <h3 className="mb-2">Detalhes</h3>
+                          <div
+                            ref={quillContainerRef}
+                            className="min-h-[200px] bg-white"
+                          />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                </TabsContent>
+              )}
+              {tab === "finalizar" && (
+                <TabsContent value="finalizar">
+                  <motion.div
+                    key="contato"
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    variants={tabVariants}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Card>
+                      <CardContent className="space-y-2">
+                        <Icon
+                          icon={"line-md:check-list-3-filled"}
+                          className="text-center w-full text-8xl text-[var(--color-success)] my-4"
+                        ></Icon>
+                      </CardContent>
+                      <CardFooter className="border-t">
+                        <p className="text-center text-muted-foreground w-full">
+                          Tudo Pronto! Clique em "Enviar" para enviar sua
+                          sugestão.
+                        </p>
+                      </CardFooter>
+                    </Card>
+                  </motion.div>
+                </TabsContent>
+              )}
+            </AnimatePresence>
+
+            <div className="flex justify-between w-full gap-4 mt-4">
+              <Button
+                texto="Voltar"
+                color="secondary"
+                type="button"
+                onClick={() => {
+                  const order = ["contato", "tipo", "descricao", "finalizar"];
+                  const idx = order.indexOf(tab);
+                  if (idx > 0) setTab(order[idx - 1] as any);
+                }}
               />
+              {tab === "finalizar" ? (
+                <Button texto="Enviar" type="submit" />
+              ) : (
+                <Button
+                  texto="Avançar"
+                  type="button"
+                  onClick={() => {
+                    const order = ["contato", "tipo", "descricao", "finalizar"];
+                    const idx = order.indexOf(tab);
+                    if (idx < order.length - 1) setTab(order[idx + 1] as any);
+                  }}
+                />
+              )}
             </div>
-            <div>
-              <h3 className="mb-1">E-mail</h3>
-              <Input
-                id="email"
-                type="email"
-                placeholder="Digite seu e-mail"
-                required
-              />
-            </div>
-            <div className="md:col-span-1">
-              <h3 className="mb-1">Telefone</h3>
-              <Input id="telefone" type="tel" placeholder="(00) 00000-0000" />
-            </div>
-          </div>
-        )}
-
-        <div>
-          <h3 className="mb-1">Tipo de Sugestão</h3>
-          <Select name="tipoSugestao">
-            <SelectTrigger className="custom-select">
-              <SelectValue placeholder="Selecione..." />
-            </SelectTrigger>
-            <SelectContent className="custom-select-content">
-              <SelectItem value="melhoria-infraestrutura">
-                Melhoria na Infraestrutura
-              </SelectItem>
-              <SelectItem value="novos-servicos">Novos Serviços</SelectItem>
-              <SelectItem value="processos-burocraticos">
-                Otimização de Processos
-              </SelectItem>
-              <SelectItem value="eventos-atividades">
-                Sugestão de Eventos e Atividades
-              </SelectItem>
-              <SelectItem value="tecnologia-sistemas">
-                Aprimoramento Tecnológico
-              </SelectItem>
-              <SelectItem value="alimentacao">
-                Sugestões para Alimentação
-              </SelectItem>
-              <SelectItem value="espacos-estudo">
-                Melhoria nos Espaços de Estudo
-              </SelectItem>
-              <SelectItem value="sustentabilidade">
-                Ações de Sustentabilidade
-              </SelectItem>
-              <SelectItem value="outros">Outros</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div>
-          <h3 className="mb-1">Título</h3>
-          <Input
-            id="titulo"
-            type="text"
-            placeholder="Digite o título da sugestão"
-            required
-          />
-        </div>
-
-        <div>
-          <h3 className="mb-1">Descreva sua sugestão</h3>
-          <div
-            id="editor"
-            className="inputSugestao border border-border bg-background quill-textarea"
-          ></div>
-        </div>
-
-        <div className="flex justify-start">
-          <Button
-            type="submit"
-            texto="Enviar sugestão"
-            icon="material-symbols:send-rounded"
-            iconPosition="right"
-          />
+          </Tabs>
         </div>
       </form>
-    </div>
+    </BlankLayout>
   );
 };
 
