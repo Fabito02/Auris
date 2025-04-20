@@ -100,7 +100,7 @@ const Reclamacao = () => {
 
   return (
     <BlankLayout showHeader showNavbar showFooter={false}>
-      <form onSubmit={handleSubmit} className="flex justify-center p-6 my-4">
+      <form onSubmit={handleSubmit} className="flex justify-center p-4 my-4">
         <div className="w-[850px]">
           <Progress
             value={progresso}
@@ -113,7 +113,7 @@ const Reclamacao = () => {
               setTab(value as "contato" | "tipo" | "descricao" | "finalizar")
             }
           >
-            <TabsList className="flex justify-between w-full overflow-auto">
+            <TabsList className="grid grid-cols-2 grid-rows-2 h-[80px] md:grid-cols-4 md:grid-rows-1 md:h-[40px] w-[100%]">
               <TabsTrigger value="contato">Contato</TabsTrigger>
               <TabsTrigger value="tipo">Tipo de Reclamação</TabsTrigger>
               <TabsTrigger value="descricao">Descrição</TabsTrigger>
