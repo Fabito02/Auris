@@ -78,14 +78,16 @@ export default function Faq() {
           </p>
         </div>
       </div>
-      <AnimarAoVer className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-6">
         {Informacoes.map((faq, index) => (
+        <AnimarAoVer>
           <Card key={index} className="p-6 faq-card">
             <h4 className="text-[18px] font-semibold">{faq.title}</h4>
             <p className="text-base text-muted-foreground leading-relaxed">{faq.content}</p>
           </Card>
+        </AnimarAoVer>
         ))}
-      </AnimarAoVer>
+      </div>
     </section>
   )
 }
