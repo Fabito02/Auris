@@ -104,7 +104,7 @@ const Denuncia = () => {
         <div className="w-[850px]">
           <Progress
             value={progresso}
-            className="w-[100%] mb-2 h-3 [&>div]:bg-[var(--color-primary)]"
+            className="w-[100%] mb-2 h-3 [&>div]:bg-[var(--color-primary)] bg-gray-200"
           />
 
           <Tabs
@@ -131,7 +131,7 @@ const Denuncia = () => {
                     variants={tabVariants}
                     transition={{ duration: 0.3 }}
                   >
-                    <Card>
+                    <Card className="rounded-lg">
                       <CardHeader>
                         <CardTitle>Contato</CardTitle>
                         <CardDescription>
