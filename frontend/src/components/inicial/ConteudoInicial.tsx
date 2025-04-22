@@ -19,7 +19,7 @@ const ConteudoHome = () => {
             <h1 className="title">Auris – Ouvidoria Digital</h1>
             <p className="complemento flex flex-col items-center lg:items-end">
               Envie sua manifestação na plataforma para construir um IFNMG - Campus Almenara melhor para todos(as).
-              <Link to="/login" className="mt-4">
+              <Link to="/home" className="mt-4">
                 <Button texto="acessar plataforma" className="plataforma-btn" />
               </Link>
             </p>
@@ -82,7 +82,7 @@ const ConteudoHome = () => {
               <p className="complemento">
                 Acesse a plataforma, compartilhe sua opinião e ajude a construir um ambiente ainda melhor.
               </p>
-              <Link to="/login">
+              <Link to="/home">
                 <Button texto="acessar plataforma" className="plataforma-btn" />
               </Link>
             </div>
