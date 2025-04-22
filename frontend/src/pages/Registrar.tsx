@@ -2,14 +2,80 @@ import Button from "@/components/buttons/Button"
 import { Input } from "@/components/ui/input"
 import { Icon } from "@iconify-icon/react"
 import { BlankLayout } from '../components/BlankLayout/BlankLayout'
-import { useEffect } from 'react'
-import { Link } from "react-router-dom"
+import { useEffect, useState } from 'react'
+import { Link, useNavigate } from "react-router-dom"
+import { postRegistrar } from "../api/api_routes"
 import './LoginERegistrar.css'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogDescription
+} from "@/components/ui/dialog"
 
 const Registrar = () => {
+  const [formData, setFormData] = useState({
+    nome: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  })
+
+  const [error, setError] = useState<string | null>(null)
+  const [registrarSucesso, setRegistrarSucesso] = useState(false)
+  const navigate = useNavigate()
+
   useEffect(() => {
     document.title = "Registrar"
-  })
+  }, [])
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormData({ ...formData, [name]: value })
+  }
+
+  const validarSenha = (password: string): string | null => {
+    if (formData.password !== formData.confirmPassword) {
+      return "As senhas não coincidem."
+    }
+    if (password.length < 8) {
+      return "A senha deve ter pelo menos 8 caracteres."
+    }
+    return null
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+  
+    const senhaInsegura = validarSenha(formData.password)
+    if (senhaInsegura) {
+      setError(senhaInsegura)
+      return
+    }
+  
+    try {
+      const response = await postRegistrar({
+        Nome: formData.nome,
+        Email: formData.email,
+        Senha: formData.password
+      })
+  
+      if (response.success) {
+        setRegistrarSucesso(true)
+        setFormData({ nome: '', email: '', password: '', confirmPassword: '' })
+        setError(null)
+      }
+    } catch (err: any) {
+      setError(err.message)
+    }
+  }
+
+  const closeModal = () => {
+    setRegistrarSucesso(false)
+    navigate('/login')
+  }
 
   return (
     <BlankLayout showFooter={false} showHeader={false} showNavbar={false} removeBodyPadding>
@@ -35,25 +101,21 @@ const Registrar = () => {
 
           <div className="col-lg-7 formulario">
             <div className="max-w-md mx-auto w-full">
-              <h1 className="title2 mb-4">CRIAR CONTA</h1>
-              
-              <div className="mb-5">
-                <img 
-                  src="/google-icon.svg" 
-                  alt="Google logo" 
-                  className="w-10 h-10 cursor-pointer mx-auto" 
-                />
-              </div>
+              <h1 className="title2 mb-12">CRIAR CONTA</h1>
 
-              <p className="mb-4">ou use seu e-mail para registrar</p>
+              <form className="px-15" onSubmit={handleSubmit}>
+                {error && <p className="text-red-500 mb-3">{error}</p>}
 
-              <form className="px-15">
                 <div className="relative mb-3">
                   <Icon className="iconeForm" icon="material-symbols:group-rounded" />
                   <Input
                     className="custom-input"
                     type="text"
-                    placeholder="Nome de Usuário"
+                    name="nome"
+                    placeholder="Nome completo"
+                    value={formData.nome}
+                    onChange={handleInputChange}
+                    required
                   />
                 </div>
 
@@ -62,7 +124,11 @@ const Registrar = () => {
                   <Input
                     className="custom-input"
                     type="email"
+                    name="email"
                     placeholder="E-mail"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
                   />
                 </div>
 
@@ -71,7 +137,11 @@ const Registrar = () => {
                   <Input
                     className="custom-input"
                     type="password"
+                    name="password"
                     placeholder="Senha"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    required
                   />
                 </div>
 
@@ -80,12 +150,16 @@ const Registrar = () => {
                   <Input
                     className="custom-input"
                     type="password"
+                    name="confirmPassword"
                     placeholder="Confirmar senha"
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                    required
                   />
                 </div>
 
                 <div className="w-full flex justify-center">
-                  <Button full_rounded style={{ width: "220px" }}>
+                  <Button full_rounded style={{ width: "220px" }} type="submit">
                     REGISTRAR
                   </Button>
                 </div>
@@ -94,6 +168,28 @@ const Registrar = () => {
           </div>
         </div>
       </div>
+
+      <Dialog open={registrarSucesso} onOpenChange={closeModal}>
+        <DialogContent className="sm:max-w-[400px] rounded-xl [&>button]:hidden">
+          <DialogHeader>
+            <DialogTitle className="text-center text-[var(--color-primary)] text-3xl mb-4">
+              Conta criada com sucesso!
+            </DialogTitle>
+            <DialogDescription className="text-center">
+              Você já pode fazer login.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="sm:justify-center mt-4">
+            <Button 
+              onClick={closeModal}
+              full_rounded
+              color="success"
+              className="w-full sm:max-w-[200px] px-5"
+              texto="login"
+            />
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </BlankLayout>
   )
 }

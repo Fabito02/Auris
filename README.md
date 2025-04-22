@@ -159,7 +159,18 @@ cd backend
 cp .env_exemplo .env
 ```
 
-**• Edite o arquivo trocando "SUA_SENHA_AQUI" pela senha que você configurou no Mysql**
+**• Edite o arquivo**
+
+ - troque "SUA_SENHA_AQUI" pela senha que você configurou no Mysql
+ - troque "sua_chave_secreta_muito_forte_aqui" por uma chave secreta aleatória
+ 
+Você pode gerar uma chave com o comando 
+
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
+Agora abra o arquivo .env para adicionar os valores.
 
 ```bash
 nano .env

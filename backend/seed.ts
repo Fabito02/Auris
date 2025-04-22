@@ -37,16 +37,16 @@ async function createDatabase(conn: mysql.Connection) {
 async function createTables(conn: mysql.Connection) {
     const queries = [
         `CREATE TABLE IF NOT EXISTS Users (
-            User_ID INT AUTO_INCREMENT PRIMARY KEY,
+            User_ID INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
             Nome VARCHAR(100) NOT NULL,
             Email VARCHAR(100) UNIQUE NOT NULL,
             Telefone VARCHAR(20),
             Foto_Perfil VARCHAR(255),
             SIAPE VARCHAR(50),
-            Tipo ENUM('servidor', 'discente', 'docente', 'direção', 'outro') NOT NULL,
+            Tipo ENUM('servidor', 'discente', 'docente', 'direção', 'outro'),
             Senha VARCHAR(255) NOT NULL,
-            Data_Criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
-            Role ENUM('user', 'admin') DEFAULT 'user'
+            Data_Criacao DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+            Role ENUM('user', 'admin', 'moderador') DEFAULT 'user'
         ) ENGINE=InnoDB`,
         
         `CREATE TABLE IF NOT EXISTS Endereco (
@@ -136,6 +136,7 @@ async function insertSeeds(conn: mysql.Connection) {
                 Telefone: '(11) 98888-8888',
                 SIAPE: '1234567',
                 Tipo: 'docente',
+                Role: 'moderador',
                 Senha: hashedSenha
             },
             {

@@ -1,0 +1,21 @@
+import { RowDataPacket } from 'mysql2';
+
+export interface User {
+  User_ID: number;
+  Nome: string;
+  Email: string;
+  Senha?: string;
+  Telefone?: string;
+  Foto_Perfil?: string;
+  SIAPE?: string;
+  Tipo?: string;
+  Data_Criacao?: Date;
+  Role?: string;
+}
+
+export interface IUser extends RowDataPacket {
+  User_ID: number;
+  Email: string;
+  Senha?: string;
+  Role?: string;
+}

@@ -1,13 +1,13 @@
-import { useEffect } from "react"
-import { Link } from "react-router-dom"
+import { useEffect  } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import { Icon } from "@iconify-icon/react"
 import Slider from "../components/Slider"
 import CardInfo from "../components/card-info/CardInfo"
 import Button from "../components/buttons/Button"
-import { getUsuarios } from "../api/api_routes"
 import AnimarAoVer from "@/components/AnimarAoVer"
 import { motion } from "framer-motion"
 import "./Home.css"
+import { checkAuth } from "@/api/auth"
 
 const slides = [
   "/home/slides/1.png",
@@ -30,18 +30,13 @@ const data_cards = [
 ]
 
 const Home = () => {
+  const navigate = useNavigate();
+
   useEffect(() => {
     document.title = "Home"
-    const fetchData = async () => {
-      try {
-        const usuarios = await getUsuarios()
-        console.log(usuarios)
-      } catch (error) {
-        console.error("Erro ao buscar usuários:", error)
-      }
-    }
-    fetchData()
-  }, [])
+    checkAuth(navigate);
+  }, [checkAuth])
+
 
   return (
     <div className="ouvidoria-home">
