@@ -4,7 +4,7 @@ import { RowDataPacket } from 'mysql2';
 import { User } from "../models/User";
 import bcrypt from "bcryptjs";
 import { ResultSetHeader } from 'mysql2';
-
+import { registrarLog } from "../utils/logger";
 
 export const getUsuarioAtual = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -116,6 +116,9 @@ export const updateUser = (
             .status(404)
             .json({ success: false, error: "Usuário não encontrado" });
         }
+
+        registrarLog("Usuário atualizado", userId);
+
         return res
           .status(200)
           .json({ success: true, message: "Usuário atualizado com sucesso" });
@@ -124,8 +127,8 @@ export const updateUser = (
   }
 };
 
-export const deleteUser = (req: Request<{ id: string }>, res: Response) => {
-  const userId = Number(req.params.id);
+export const deleteUser = (req: Request<{ User_ID: string }>, res: Response) => {
+  const userId = Number(req.params.User_ID);
 
   connection.beginTransaction((transactionErr) => {
     if (transactionErr) {
@@ -186,6 +189,8 @@ export const deleteUser = (req: Request<{ id: string }>, res: Response) => {
                     });
                 });
               }
+
+              registrarLog(`Usuário deletado`, userId);
 
               return res
                 .status(200)

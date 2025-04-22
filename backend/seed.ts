@@ -43,7 +43,7 @@ async function createTables(conn: mysql.Connection) {
             Telefone VARCHAR(20),
             Foto_Perfil VARCHAR(255),
             SIAPE VARCHAR(50),
-            Tipo ENUM('servidor', 'discente', 'docente', 'direção', 'outro'),
+            Tipo ENUM('servidor', 'discente', 'docente', 'direção', 'outro') DEFAULT 'outro',
             Senha VARCHAR(255) NOT NULL,
             Data_Criacao DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
             Role ENUM('user', 'admin', 'moderador') DEFAULT 'user'
@@ -118,21 +118,21 @@ async function createTables(conn: mysql.Connection) {
 
 async function insertSeeds(conn: mysql.Connection) {
     try {
-        const senhaPadrao = '123456';
+        const senhaPadrao = '12345678';
         const hashedSenha = await bcrypt.hash(senhaPadrao, 10);
 
         const users = [
             {
-                Nome: 'Admin Sistema',
-                Email: 'admin@auris.com',
+                Nome: 'admin',
+                Email: 'teste@admin.com',
                 Telefone: '(11) 99999-9999',
                 Tipo: 'direção',
                 Role: 'admin',
                 Senha: hashedSenha
             },
             {
-                Nome: 'Professor João Silva',
-                Email: 'joao.silva@escola.com',
+                Nome: 'moderador',
+                Email: 'moderador@moderador.com',
                 Telefone: '(11) 98888-8888',
                 SIAPE: '1234567',
                 Tipo: 'docente',
@@ -140,8 +140,8 @@ async function insertSeeds(conn: mysql.Connection) {
                 Senha: hashedSenha
             },
             {
-                Nome: 'Aluna Maria Souza',
-                Email: 'maria.souza@escola.com',
+                Nome: 'user',
+                Email: 'user@user.com',
                 Telefone: '(11) 97777-7777',
                 Tipo: 'discente',
                 Senha: hashedSenha

@@ -5,7 +5,7 @@ import { ResultSetHeader, RowDataPacket } from "mysql2";
 import passport from "passport";
 import { User, IUser } from "../models/User";
 import { generateToken } from "../config/passport";
-import jwt from "jsonwebtoken";
+import { registrarLog } from "../utils/logger";
 
 // Login
 export const login = (req: Request, res: Response) => {
@@ -38,18 +38,9 @@ export const login = (req: Request, res: Response) => {
         });
       }
       
-      const { Senha, User_ID, ...userWithoutPassword } = user;
-
-      
       const token = generateToken(user as IUser);
 
-      const response = {
-        success: true,
-        message: "Login realizado com sucesso",
-        token,
-        user: userWithoutPassword,
-        expiresIn: 3600
-      };
+      registrarLog(`Novo login de ${user.Email}`, user.User_ID);
 
       return res.json({
         success: true,
@@ -85,12 +76,10 @@ export const registrar = (req: Request, res: Response): void => {
     [user.Email],
     (err, results: RowDataPacket[]) => {
       if (err) {
-        res
-          .status(500)
-          .json({
-            success: false,
-            error: `Erro ao verificar email: ${err.message}`,
-          });
+        res.status(500).json({
+          success: false,
+          error: `Erro ao verificar email: ${err.message}`,
+        });
         return;
       }
 
@@ -101,12 +90,10 @@ export const registrar = (req: Request, res: Response): void => {
 
       bcrypt.hash(user.Senha, 10, (hashErr, hashedPassword) => {
         if (hashErr) {
-          res
-            .status(500)
-            .json({
-              success: false,
-              error: `Erro ao encriptar a senha: ${hashErr.message}`,
-            });
+          res.status(500).json({
+            success: false,
+            error: `Erro ao encriptar a senha: ${hashErr.message}`,
+          });
           return;
         }
 
@@ -117,14 +104,15 @@ export const registrar = (req: Request, res: Response): void => {
           user,
           (insertErr, results: ResultSetHeader) => {
             if (insertErr) {
-              res
-                .status(500)
-                .json({
-                  success: false,
-                  error: `Erro ao criar usuário: ${insertErr.message}`,
-                });
+              res.status(500).json({
+                success: false,
+                error: `Erro ao criar usuário: ${insertErr.message}`,
+              });
               return;
             }
+
+            registrarLog(`Novo usuário registrado: ${user.Email}`, results.insertId);
+            
             res.status(201).json({
               success: true,
               message: "Usuário criado com sucesso!",
