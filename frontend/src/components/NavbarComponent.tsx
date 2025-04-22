@@ -24,10 +24,11 @@ const NavbarComponent = () => {
 
     checkRole("admin").then((role) => {
       setPermissao(role);
-    });
-
-    checkRole("moderador").then((role) => {
-      setPermissao(role);
+      if (role != true) {
+        checkRole("moderador").then((role) => {
+          setPermissao(role);
+        });
+    }
     });
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -50,6 +51,7 @@ const NavbarComponent = () => {
         <Link to="/regulamento" className="link-navbar">POLÍTICAS E REGULAMENTOS</Link>
         {permissao && (
           <>
+            <div className="border-r"></div>
             <Link to="/admin/gerenciar" className="link-navbar">GERENCIAR</Link>
             <Link to="/admin/acompanhamento" className="link-navbar">ACOMPANHAMENTO</Link>
           </>

@@ -132,7 +132,7 @@ async function insertSeeds(conn: mysql.Connection) {
             },
             {
                 Nome: 'moderador',
-                Email: 'moderador@moderador.com',
+                Email: 'teste@moderador.com',
                 Telefone: '(11) 98888-8888',
                 SIAPE: '1234567',
                 Tipo: 'docente',
@@ -141,7 +141,7 @@ async function insertSeeds(conn: mysql.Connection) {
             },
             {
                 Nome: 'user',
-                Email: 'user@user.com',
+                Email: 'teste@user.com',
                 Telefone: '(11) 97777-7777',
                 Tipo: 'discente',
                 Senha: hashedSenha
