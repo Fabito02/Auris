@@ -11,14 +11,14 @@ interface ButtonProps {
   href?: string;
   icon?: string;
   outline?: boolean;
-  iconPosition?: "left" | "right";
+  iconPosition?: "left" | "right" | "center";
   onClick?: () => void;
   color?: "primary" | "secondary" | "success" | "danger" | "warning" | "info" | "white" | "muted";
   style?: CSSProperties;
   full_rounded?: boolean;
 }
 
-const iconSeExistir = (icon: string | undefined, iconPosition?: "left" | "right") => {
+const iconSeExistir = (icon: string | undefined, iconPosition?: "left" | "right" | "center") => {
   if (icon) {
     return <Icon icon={icon} className={`icon-button ${iconPosition ?? "left"}`} />;
   }
@@ -45,7 +45,8 @@ export default function Button({
     <>
       {iconPosition === "left" && iconSeExistir(icon, iconPosition)}
       {children}
-      {texto?.toUpperCase()}
+      {iconPosition === "center" && iconSeExistir(icon, iconPosition)}
+      {texto?.toUpperCase().trim()}
       {iconPosition === "right" && iconSeExistir(icon, iconPosition)}
     </>
   );
