@@ -57,6 +57,7 @@ const Registrar = () => {
   
     try {
       const response = await postRegistrar({
+        User_ID: 0, // Default value for User_ID
         Nome: formData.nome,
         Email: formData.email,
         Senha: formData.password
@@ -80,8 +81,8 @@ const Registrar = () => {
   return (
     <BlankLayout showFooter={false} showHeader={false} showNavbar={false} removeBodyPadding>
       <div className="container">
-        <div className="grid grid-cols-1 lg:grid-cols-2 min-h-screen">
-          <div className="col-lg-5 box">
+        <div className="grid grid-cols-1 lg:grid-cols-5 min-h-screen">
+          <div className="col-lg-5 col-span-2 box">
             <h1 className="title-login">Bem Vindo!</h1>
             <p className="subtitle mt-4">
               Caso você já possua uma conta,<br />
@@ -99,7 +100,7 @@ const Registrar = () => {
             </Link>
           </div>
 
-          <div className="col-lg-7 formulario">
+          <div className="col-span-3 formulario h-screen">
             <div className="max-w-md mx-auto w-full">
               <h1 className="title2 mb-12">CRIAR CONTA</h1>
 
