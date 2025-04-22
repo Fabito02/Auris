@@ -9,11 +9,10 @@ const router = Router();
 router.post('/auth/registrar', authController.registrar);
 router.post('/auth/login', authController.login);
 router.post('/logout', (req, res) => {
-  res.clearCookie('Auris_Token', {
-    httpOnly: true,
-    path: '/',
+  res.json({
+    success: true,
+    message: 'Logout realizado com sucesso. O token deve removido do localStorage no frontend.',
   });
-  res.json({ success: true });
 });
 
 // rotas para usuário atual

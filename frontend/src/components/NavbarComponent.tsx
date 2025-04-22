@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import "./NavbarComponent.css";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "./ui/dropdown-menu";
 import { Icon } from "@iconify-icon/react";
-import { checkRole } from "@/api/auth";
+import { checkRole } from "../api/auth";
 
 const NavbarComponent = () => {
   const [isVisible, setIsVisible] = useState(true);

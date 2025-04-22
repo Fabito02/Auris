@@ -37,3 +37,8 @@ export const postLogin = async (credenciais: Pick<User, 'Email' | 'Senha'>) => {
   const response = await api.post("/auth/login", credenciais);
   return response.data;
 };
+
+export const postLogout = async () => {
+  const response = await api.post("/logout");
+  return response.data;
+};

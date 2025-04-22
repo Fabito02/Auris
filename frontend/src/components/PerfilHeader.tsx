@@ -3,9 +3,36 @@ import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import { Icon } from "@iconify-icon/react";
 import { Link } from "react-router-dom";
 import "./PerfilHeader.css";
+import { postLogout } from "@/api/api_routes";
 import Button from "./buttons/Button";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
-const PerfilHeader = () => {
+  const PerfilHeader = () => {
+    const navigate = useNavigate();
+
+    const [logoutSucesso, setLogoutSucesso] = useState<boolean | undefined>(
+      undefined
+    );
+
+  const handleLogout = async () => {
+    try {
+      await postLogout();
+      localStorage.removeItem('auris_token');
+      setLogoutSucesso(true);
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+    }
+  };
+
   return (
     <div className="flex flex-row justify-end items-center w-[125px]">
       <DropdownMenu modal={false}>
@@ -141,13 +168,38 @@ const PerfilHeader = () => {
           </DropdownMenuItem>
 
           <DropdownMenuItem asChild className=" rounded-[12px] item-dropdown">
-            <Link to="" className="flex items-center gap-2 link_item">
+            <div onClick={() => handleLogout()} className="flex items-center gap-2 link_item">
               <Icon icon="material-symbols:logout-rounded" className="iconMenu" />
               Sair
-            </Link>
+            </div>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <Dialog open={logoutSucesso} onOpenChange={(open) => setLogoutSucesso(open)}>
+        <DialogContent className="sm:max-w-[400px] rounded-xl [&>button]:hidden">
+          <DialogHeader>
+            <DialogTitle className="text-center text-[var(--color-primary)] text-3xl mb-4">
+              Logout realizado com sucesso!
+            </DialogTitle>
+            <DialogDescription className="text-center">
+              Você precisa fazer login.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="sm:justify-center mt-4">
+            <Button
+              onClick={() => {
+                setLogoutSucesso(false);
+                navigate("/login");
+              }}
+              full_rounded
+              color="success"
+              className="w-full sm:max-w-[200px] px-5"
+              texto="login"
+            />
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

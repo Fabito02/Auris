@@ -1,100 +1,101 @@
-import Button from "@/components/buttons/Button"
-import { Input } from "@/components/ui/input"
-import { Icon } from "@iconify-icon/react"
-import { BlankLayout } from '../components/BlankLayout/BlankLayout'
-import { useEffect, useState } from 'react'
-import { Link, useNavigate } from "react-router-dom"
-import { postRegistrar } from "../api/api_routes"
-import './LoginERegistrar.css'
+import Button from "@/components/buttons/Button";
+import { Input } from "@/components/ui/input";
+import { Icon } from "@iconify-icon/react";
+import { BlankLayout } from "../components/BlankLayout/BlankLayout";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { postRegistrar } from "../api/api_routes";
+import "./LoginERegistrar.css";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-  DialogDescription
-} from "@/components/ui/dialog"
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 const Registrar = () => {
   const [formData, setFormData] = useState({
-    nome: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-  })
+    nome: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
-  const [error, setError] = useState<string | null>(null)
-  const [registrarSucesso, setRegistrarSucesso] = useState(false)
-  const navigate = useNavigate()
+  const [error, setError] = useState<string | null>(null);
+  const [registrarSucesso, setRegistrarSucesso] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    document.title = "Registrar"
-  }, [])
+    document.title = "Registrar";
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData({ ...formData, [name]: value })
-  }
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
   const validarSenha = (password: string): string | null => {
     if (formData.password !== formData.confirmPassword) {
-      return "As senhas não coincidem."
+      return "As senhas não coincidem.";
     }
     if (password.length < 8) {
-      return "A senha deve ter pelo menos 8 caracteres."
+      return "A senha deve ter pelo menos 8 caracteres.";
     }
-    return null
-  }
+    return null;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-  
-    const senhaInsegura = validarSenha(formData.password)
+    e.preventDefault();
+
+    const senhaInsegura = validarSenha(formData.password);
     if (senhaInsegura) {
-      setError(senhaInsegura)
-      return
+      setError(senhaInsegura);
+      return;
     }
-  
+
     try {
       const response = await postRegistrar({
         User_ID: 0, // Default value for User_ID
         Nome: formData.nome,
         Email: formData.email,
-        Senha: formData.password
-      })
-  
+        Senha: formData.password,
+      });
+
       if (response.success) {
-        setRegistrarSucesso(true)
-        setFormData({ nome: '', email: '', password: '', confirmPassword: '' })
-        setError(null)
+        setRegistrarSucesso(true);
+        setFormData({ nome: "", email: "", password: "", confirmPassword: "" });
+        setError(null);
       }
     } catch (err: any) {
-      setError(err.message)
+      setError(err.message);
     }
-  }
+  };
 
   const closeModal = () => {
-    setRegistrarSucesso(false)
-    navigate('/login')
-  }
+    setRegistrarSucesso(false);
+    navigate("/login");
+  };
 
   return (
-    <BlankLayout showFooter={false} showHeader={false} showNavbar={false} removeBodyPadding>
+    <BlankLayout
+      showFooter={false}
+      showHeader={false}
+      showNavbar={false}
+      removeBodyPadding
+    >
       <div className="container">
         <div className="grid grid-cols-1 lg:grid-cols-5 min-h-screen">
           <div className="col-lg-5 col-span-2 box">
             <h1 className="title-login">Bem Vindo!</h1>
             <p className="subtitle mt-4">
-              Caso você já possua uma conta,<br />
+              Caso você já possua uma conta,
+              <br />
               entre com o botão abaixo
             </p>
             <Link to="/login">
-              <Button 
-                outline
-                full_rounded
-                color="white"
-                className="mt-4"
-              >
+              <Button outline full_rounded color="white" className="mt-4">
                 LOGIN
               </Button>
             </Link>
@@ -108,7 +109,10 @@ const Registrar = () => {
                 {error && <p className="text-red-500 mb-3">{error}</p>}
 
                 <div className="relative mb-3">
-                  <Icon className="iconeForm" icon="material-symbols:group-rounded" />
+                  <Icon
+                    className="iconeForm"
+                    icon="material-symbols:group-rounded"
+                  />
                   <Input
                     className="custom-input"
                     type="text"
@@ -121,7 +125,10 @@ const Registrar = () => {
                 </div>
 
                 <div className="relative mb-3">
-                  <Icon className="iconeForm" icon="material-symbols:stacked-email-rounded" />
+                  <Icon
+                    className="iconeForm"
+                    icon="material-symbols:stacked-email-rounded"
+                  />
                   <Input
                     className="custom-input"
                     type="email"
@@ -134,7 +141,10 @@ const Registrar = () => {
                 </div>
 
                 <div className="relative mb-3">
-                  <Icon className="iconeForm" icon="material-symbols:password-rounded" />
+                  <Icon
+                    className="iconeForm"
+                    icon="material-symbols:password-rounded"
+                  />
                   <Input
                     className="custom-input"
                     type="password"
@@ -147,7 +157,10 @@ const Registrar = () => {
                 </div>
 
                 <div className="relative mb-3">
-                  <Icon className="iconeForm" icon="material-symbols:password-rounded" />
+                  <Icon
+                    className="iconeForm"
+                    icon="material-symbols:password-rounded"
+                  />
                   <Input
                     className="custom-input"
                     type="password"
@@ -181,7 +194,7 @@ const Registrar = () => {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="sm:justify-center mt-4">
-            <Button 
+            <Button
               onClick={closeModal}
               full_rounded
               color="success"
@@ -192,7 +205,7 @@ const Registrar = () => {
         </DialogContent>
       </Dialog>
     </BlankLayout>
-  )
-}
+  );
+};
 
-export default Registrar
+export default Registrar;
