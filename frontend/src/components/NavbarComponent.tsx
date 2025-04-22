@@ -3,9 +3,11 @@ import { Link } from "react-router-dom";
 import "./NavbarComponent.css";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "./ui/dropdown-menu";
 import { Icon } from "@iconify-icon/react";
+import { checkRole } from "@/api/auth";
 
 const NavbarComponent = () => {
   const [isVisible, setIsVisible] = useState(true);
+  const [permissao, setPermissao] = useState(false);
   const lastScrollY = useRef(0);
 
   const handleScroll = useCallback(() => {
@@ -19,6 +21,15 @@ const NavbarComponent = () => {
   }, []);
 
   useEffect(() => {
+
+    checkRole("admin").then((role) => {
+      setPermissao(role);
+    });
+
+    checkRole("moderador").then((role) => {
+      setPermissao(role);
+    });
+
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -37,9 +48,12 @@ const NavbarComponent = () => {
         <Link to="/fale-conosco" className="link-navbar">FALE CONOSCO</Link>
         <Link to="/informacoes" className="link-navbar">INFORMAÇÕES E FAQs</Link>
         <Link to="/regulamento" className="link-navbar">POLÍTICAS E REGULAMENTOS</Link>
-        <div className="border-r"></div>
-        <Link to="/admin/gerenciar" className="link-navbar">GERENCIAR</Link>
-        <Link to="/admin/acompanhamento" className="link-navbar">ACOMPANHAMENTO</Link>
+        {permissao && (
+          <>
+            <Link to="/admin/gerenciar" className="link-navbar">GERENCIAR</Link>
+            <Link to="/admin/acompanhamento" className="link-navbar">ACOMPANHAMENTO</Link>
+          </>
+        )}
       </div>
       <div className="xl:hidden ml-auto flex items-center justify-end">
         <DropdownMenu modal={false}>
@@ -59,13 +73,17 @@ const NavbarComponent = () => {
             <Link to="/regulamento">
               <DropdownMenuItem className="link-navbar-menu">POLÍTICAS EREGULAMENTOS</DropdownMenuItem>
             </Link>
-            <DropdownMenuItem className="border-t mt-3 rounded-[0]"></DropdownMenuItem>
-            <Link to="/admin/gerenciar">
-              <DropdownMenuItem className="link-navbar-menu">GERENCIAR</DropdownMenuItem>
-            </Link>
-            <Link to="/admin/acompanhamento">
-              <DropdownMenuItem className="link-navbar-menu">ACOMPANHAMENTO</DropdownMenuItem>
-            </Link>
+            {permissao && (
+              <>
+                <DropdownMenuItem className="border-t mt-3 rounded-[0]"></DropdownMenuItem>
+                <Link to="/admin/gerenciar">
+                  <DropdownMenuItem className="link-navbar-menu">GERENCIAR</DropdownMenuItem>
+                </Link>
+                <Link to="/admin/acompanhamento">
+                  <DropdownMenuItem className="link-navbar-menu">ACOMPANHAMENTO</DropdownMenuItem>
+                </Link>
+              </>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

@@ -46,3 +46,12 @@ export const checkAuth = async (navigate: ReturnType<typeof useNavigate>): Promi
     navigate('/login');
   }
 };
+
+export const checkRole = async (role: string) => {
+  const res = await getUsuarioAtual();
+  if (!res.success || res.user?.Role !== role) {
+    return false;
+  } else {
+    return true
+  }
+};
