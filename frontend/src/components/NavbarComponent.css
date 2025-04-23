@@ -1,16 +1,16 @@
 .link-navbar {
-  background-color: var(--color-cinza-semitransparente-claro) !important;
+  background-color: var(--color-cinza-semitransparente-claro);
   color: rgb(0, 0, 0, 0.55);
   border-radius: 10px;
   padding: 5px 10px;
   font-size: 14px;
   text-decoration: none;
-  transition: all 0.2s !important;
+  transition: all 0.2s;
   cursor: pointer;
 }
 
 .link-navbar-menu {
-  background-color: var(--color-cinza-semitransparente-claro) !important;
+  background-color: var(--color-cinza-semitransparente-claro);
   color: rgb(0, 0, 0, 0.55);
   border-radius: 12px;
   padding: 5px 10px;
@@ -18,12 +18,12 @@
   height: 35px;
   text-decoration: none;
   width: 100%;
-  transition: all 0.2s !important;
+  transition: all 0.2s;
   cursor: pointer;
 }
 
-.link-navbar:hover .link-navbar-menu:hover {
-  background-color: #d2ffda !important;
+.link-navbar:hover, .link-navbar-menu:hover {
+  background-color: #69ff7b39;
 }
 
 .menu-mobile-content {

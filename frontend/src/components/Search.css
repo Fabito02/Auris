@@ -1,67 +1,36 @@
-.search-bar-customizado {
-  max-width: 400px !important;
-  width: 300px !important;
-  transition: all 0.3s ease-out !important;
+ .search-input {
+  max-width: 240px;
+  transition: all 0.6s ease-out;
+  
 }
-.container-search:hover .search-bar-customizado,
-.search-bar-customizado:has(input:focus) {
-  width: 400px !important;
-}
-.search-bar-customizado input {
-  background-color: #c9c9c938 !important;
-  width: 100% !important;
-  transition: all 0.3s ease-out !important;
-  border: none !important;
-  height: 2.4rem !important;
-}
-
-.search-bar-customizado input:focus {
-  background-color: #00000013 !important;
-  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0) !important;
-}
-
-.submit-button {
-  padding: 0;
-  position: absolute;
-  right: -40px;
-  background-color: var(--color-primary) !important;
-  display: flex !important;
-  justify-content: center;
-  align-items: center;
-  height: 32.5px !important;
-  width: 32.5px !important;
-  border-radius: 50% !important;
+ .search-input {
+  width: 100%;
   border: none;
-  color: white !important;
+  height: 2.4rem;
+  padding-right: 25px;
+}
+ .search-input:focus {
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
 }
 
-.submit-button:hover {
-  background-color: var(--color-primary-hover) !important;
+.search-input-container {
+  height: 35px;
+  background-color: var(--color-cinza-semitransparente-claro);
 }
 
-input[type="search"]::-webkit-search-cancel-button {
-  filter: brightness(0) opacity(0.4);
-  margin-right: 25px;
+.container-search {
+  transition: all 0.3s ease-out;
 }
 
-@media (max-width: 680px) {
-  .search-bar-customizado {
-    width: auto !important;
-    max-width: 100% !important;
-  }
-  .container-search {
-    transition: all 0.3s ease-out;
-  }
-  .container-search:has(input:focus),
-  .container-search:has(.search-bar-customizado:hover) {
-    padding: 0px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    z-index: 1000;
-    width: 100%;
-    height: 100%;
-    background-color: #ffffff;
-  }
+.lista-comandos-searchbar {
+  visibility: hidden;
+}
+
+.lista-comandos-searchbar.visivel{
+  visibility: visible;
+}
+
+.search-item:hover {
+  background-color: var(--color-cinza-semitransparente-claro);
+  cursor: pointer;
 }

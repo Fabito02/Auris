@@ -10,8 +10,8 @@ const Informacoes = [
     content: (
       <>
         Você pode entrar em contato através do {" "}
-        <Link className="text-primary underline" to="/fale-conosco">formulário online</Link> disponível no site da
-        ouvidoria, por e-mail (<a className="text-primary underline" href="mailto:ouvidoria.almenara@ifnmg.edu.br">ouvidoria.almenara@ifnmg.edu.br</a>), por telefone (<a className="text-primary underline" href="tel:+553344028922">+55 33 4402-8922</a>) ou pessoalmente
+        <Link className="text-primary" to="/fale-conosco">formulário online</Link> disponível no site da
+        ouvidoria, por e-mail (<a className="text-primary link" href="mailto:ouvidoria.almenara@ifnmg.edu.br">ouvidoria.almenara@ifnmg.edu.br</a>), por telefone (<a className="text-primary link" href="tel:+553344028922">+55 33 4402-8922</a>) ou pessoalmente
         no setor da Ouvidoria no campus, de segunda a sexta-feira, das 8h às
         17h.
       </>
@@ -21,7 +21,7 @@ const Informacoes = [
     title: "Quanto tempo leva para receber uma resposta da Ouvidoria?",
     content: (
       <>
-        O prazo máximo para resposta é de 20 dias corridos, prorrogáveis por mais 10 dias mediante justificativa, conforme estabelece o <a className="text-primary underline" href="https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2019/decreto/d10153.htm">Decreto nº 10.153/2019</a>, posteriormente alterado pelo decreto <a className="text-primary underline" href="https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2021/decreto/d10890.htm">Decreto nº 10.890/2021</a>. Ainda assim, buscamos responder o mais rápido possível, geralmente em até 3 dias úteis.
+        O prazo máximo para resposta é de 20 dias corridos, prorrogáveis por mais 10 dias mediante justificativa, conforme estabelece o <a className="text-primary link" href="https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2019/decreto/d10153.htm">Decreto nº 10.153/2019</a>, posteriormente alterado pelo decreto <a className="text-primary link" href="https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2021/decreto/d10890.htm">Decreto nº 10.890/2021</a>. Ainda assim, buscamos responder o mais rápido possível, geralmente em até 3 dias úteis.
       </>
     ),
   },
@@ -44,7 +44,7 @@ const Informacoes = [
     title: "Como acompanho o andamento da minha manifestação?",
     content: (
       <>
-        Ao registrar sua manifestação, você pode acompanhar o andamento através do sistema, em <a href="/minhas-manifestacoes" className="text-primary underline">Minhas manifestações</a> ou entrar em contato diretamente com a Ouvidoria para solicitar informações.
+        Ao registrar sua manifestação, você pode acompanhar o andamento através do sistema, em <a href="/minhas-manifestacoes" className="text-primary link">Minhas manifestações</a> ou entrar em contato diretamente com a Ouvidoria para solicitar informações.
       </>
     ),
   },
