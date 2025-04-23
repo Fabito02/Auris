@@ -63,6 +63,7 @@
 .notificacao {
   transition: all 0.3s ease;
   cursor: pointer;
+  background-color: #00000009;
 }
 
 .notificacao:hover {
