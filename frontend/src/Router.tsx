@@ -8,10 +8,11 @@ const pageModules = import.meta.glob("./pages/**/*.tsx");
 const Router: React.FC = () => {
   const routes = Object.entries(pageModules).map(([path, module]) => {
     const routePath = path
-      .replace("./pages", "")
-      .replace(/\.tsx$/, "")
-      .replace(/\/index$/, "")
-      .toLowerCase();
+    .replace("./pages", "")
+    .replace(/\.tsx$/, "")
+    .replace(/\/index$/, "")
+    .replace(/\[([^\]]+)\]/g, ":$1")
+    .toLowerCase();
 
     const Component = React.lazy(
       () => module() as Promise<{ default: React.ComponentType }>
