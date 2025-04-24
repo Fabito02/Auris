@@ -33,6 +33,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    document.title = "Home";
     const token = localStorage.getItem("auris_token");
     if (!token) {
       navigate("/errors/401");
