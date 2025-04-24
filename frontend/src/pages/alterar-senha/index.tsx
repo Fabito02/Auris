@@ -3,10 +3,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Button from "@/components/buttons/Button";
 import { BlankLayout } from "@/components/BlankLayout/BlankLayout";
+import { useNavigate } from "react-router-dom";
+import { checkAuth } from "@/api/auth";
 
 const AlterarSenha = () => {
+
+  const navigate = useNavigate();
+
   useEffect(() => {
     document.title = "Alterar Senha";
+    const token = localStorage.getItem("auris_token");
+    if (!token) {
+      navigate("/errors/401");
+    } else {
+      checkAuth(navigate, ["admin", "moderador", "user"]);
+    }
   }, []);
 
   const [senhaAtual, setSenhaAtual] = useState("");

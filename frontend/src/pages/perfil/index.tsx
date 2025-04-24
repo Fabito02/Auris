@@ -4,11 +4,18 @@ import { Icon } from "@iconify-icon/react";
 import { BlankLayout } from "../../components/BlankLayout/BlankLayout";
 import { Input } from "../../components/ui/input";
 import { Card, CardContent } from "../../components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../components/ui/select";
 import Button from "../../components/buttons/Button";
 import "./Perfil.css";
 import Cropper, { Area } from "react-easy-crop";
 import { getCroppedImg } from "../../utils/cropImage";
+import { checkAuth } from "@/api/auth";
 
 const Perfil = () => {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -17,9 +24,14 @@ const Perfil = () => {
   const [showCropper, setShowCropper] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-
   useEffect(() => {
     document.title = "Perfil";
+    const token = localStorage.getItem("auris_token");
+    if (!token) {
+      navigate("/errors/401");
+    } else {
+      checkAuth(navigate, ["admin", "moderador", "user"]);
+    }
   }, []);
 
   const [profilePic, setProfilePic] = useState<string | null>(null);
@@ -43,16 +55,18 @@ const Perfil = () => {
       };
       reader.readAsDataURL(file);
     }
-  
+
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
-  
 
-  const onCropComplete = useCallback((_croppedArea: Area, croppedAreaPixels: Area) => {
-    setCroppedAreaPixels(croppedAreaPixels);
-  }, []);
+  const onCropComplete = useCallback(
+    (_croppedArea: Area, croppedAreaPixels: Area) => {
+      setCroppedAreaPixels(croppedAreaPixels);
+    },
+    []
+  );
 
   const handleCropSave = async () => {
     if (!originalImage || !croppedAreaPixels) return;
@@ -99,7 +113,6 @@ const Perfil = () => {
             {showCropper && originalImage && (
               <div className="fixed inset-0 bg-black/80 z-50 flex flex-col justify-center items-center p-4">
                 <div className="relative w-full max-w-md h-[400px] bg-black rounded-[20px] overflow-hidden">
-
                   <Cropper
                     image={originalImage}
                     crop={crop}

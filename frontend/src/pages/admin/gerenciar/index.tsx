@@ -9,6 +9,8 @@ import Usuarios from "@/components/admin/gerenciar/Usuarios";
 import Permissoes from "@/components/admin/gerenciar/Permissoes";
 import Historico from "@/components/admin/gerenciar/Historico";
 import { checkRole } from "@/api/auth";
+import { useNavigate } from "react-router-dom";
+import { checkAuth } from "@/api/auth";
 
 const Gerenciar = () => {
   const [expandido, setExpandido] = useState(false);
@@ -19,8 +21,18 @@ const Gerenciar = () => {
     return checkRole("admin");
   }
 
+  const navigate = useNavigate();
+
   useEffect(() => {
-    document.title = "Gerenciar";
+    document.title = "Acompanhamento";
+    const token = localStorage.getItem("auris_token");
+    if (!token) {
+      navigate("/errors/401");
+    } else {
+      checkAuth(navigate, ["admin", "moderador"]);
+    }
+    
+    setIsAdminResult(isAdmin());
 
     const handleExibirTab = () => {
       const tabs = document.querySelectorAll(".tabContainer");
@@ -35,10 +47,6 @@ const Gerenciar = () => {
     handleExibirTab();
     setExpandido(false);
   }, [abaSelecionada]);
-
-  useEffect(() => {
-    isAdmin().then((result) => setIsAdminResult(result));
-  }, []);
 
   const toggleSidebar = () => {
     setExpandido(!expandido);

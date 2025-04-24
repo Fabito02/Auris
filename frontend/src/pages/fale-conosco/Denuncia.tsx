@@ -24,6 +24,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
+import { useNavigate } from "react-router-dom";
+import { checkAuth } from "@/api/auth";
 
 const tabVariants = {
   initial: { opacity: 0, y: 20 },
@@ -43,8 +45,16 @@ const Denuncia = () => {
   const quillRef = useRef<Quill | null>(null);
   const [progresso, setProgresso] = useState(1);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     document.title = "Enviar Denúncia";
+    const token = localStorage.getItem("auris_token");
+    if (!token) {
+      navigate("/errors/401");
+    } else {
+      checkAuth(navigate, ["admin", "moderador", "user"]);
+    }
   }, []);
 
   const handleSetProgresso = (

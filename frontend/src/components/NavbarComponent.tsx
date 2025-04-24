@@ -21,15 +21,15 @@ const NavbarComponent = () => {
   }, []);
 
   useEffect(() => {
-
-    checkRole("admin").then((role) => {
-      setPermissao(role);
-      if (role != true) {
-        checkRole("moderador").then((role) => {
-          setPermissao(role);
-        });
-    }
-    });
+    const checkPermissao = async () => {
+      const isAdmin = await checkRole("admin");
+      setPermissao(isAdmin);
+      if (!isAdmin) {
+        const isModerador = await checkRole("moderador");
+        setPermissao(isModerador);
+      }
+    };
+    checkPermissao();
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {

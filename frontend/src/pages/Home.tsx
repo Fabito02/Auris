@@ -32,6 +32,15 @@ const data_cards = [
 const Home = () => {
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const token = localStorage.getItem("auris_token");
+    if (!token) {
+      navigate("/errors/401");
+    } else {
+      checkAuth(navigate, ["admin", "moderador", "user"]);
+    }
+  }, []);
+
   return (
     <div className="ouvidoria-home">
       <section className="hero-banner bg-gray-100 py-12">

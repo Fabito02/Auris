@@ -9,13 +9,23 @@ import Reclamacoes from "@/components/admin/acompanhamento/Reclamacoes";
 import Elogios from "@/components/admin/acompanhamento/Elogios";
 import Denuncias from "@/components/admin/acompanhamento/Denuncias";
 import Sugestoes from "@/components/admin/acompanhamento/Sugestoes";
+import { useNavigate } from "react-router-dom";
+import { checkAuth } from "@/api/auth";
 
 const Acompanhamento = () => {
   const [expandido, setExpandido] = useState(false);
   const [abaSelecionada, setAbaSelecionada] = useState("0");
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     document.title = "Acompanhamento";
+    const token = localStorage.getItem("auris_token");
+    if (!token) {
+      navigate("/errors/401");
+    } else {
+      checkAuth(navigate, ["admin", "moderador"]);
+    }
 
     const handleExibirTab = () => {
       const tabs = document.querySelectorAll(".tabContainer");
