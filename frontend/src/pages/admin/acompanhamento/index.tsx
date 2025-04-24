@@ -1,22 +1,21 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
 import "../admin.css";
 import { BlankLayout } from "@/components/BlankLayout/BlankLayout";
 import { useEffect } from "react";
-import Geral from "@/components/acompanhamento/Geral";
-import Reclamacoes from "@/components/acompanhamento/Reclamacoes";
-import Elogios from "@/components/acompanhamento/Elogios";
-import Denuncias from "@/components/acompanhamento/Denuncias";
-import Sugestoes from "@/components/acompanhamento/Sugestoes";
+import Geral from "@/components/admin/acompanhamento/Geral";
+import Reclamacoes from "@/components/admin/acompanhamento/Reclamacoes";
+import Elogios from "@/components/admin/acompanhamento/Elogios";
+import Denuncias from "@/components/admin/acompanhamento/Denuncias";
+import Sugestoes from "@/components/admin/acompanhamento/Sugestoes";
 
 const Acompanhamento = () => {
   const [expandido, setExpandido] = useState(false);
   const [abaSelecionada, setAbaSelecionada] = useState("0");
 
   useEffect(() => {
-
-    document.title = "Acompanhamento"
+    document.title = "Acompanhamento";
 
     const handleExibirTab = () => {
       const tabs = document.querySelectorAll(".tabContainer");
@@ -45,13 +44,15 @@ const Acompanhamento = () => {
   ];
 
   return (
-    <BlankLayout showFooter={false} showHeader={true} showNavbar={true} removeBodyPadding={false}>   
+    <BlankLayout
+      showFooter={false}
+      showHeader={true}
+      showNavbar={true}
+      removeBodyPadding={false}
+    >
       <div className="corpoDoSite">
         <div className={`barraLateral ${expandido ? "expandido" : ""}`}>
-          <Button
-            onClick={toggleSidebar}
-            className="toggle-expandir"
-          >
+          <Button onClick={toggleSidebar} className="toggle-expandir">
             <Icon
               icon={
                 expandido
@@ -61,15 +62,22 @@ const Acompanhamento = () => {
             />
           </Button>
           {opcoes.map((opcao, index) => (
-            <div key={index} className={`opcao ${expandido ? "expandido" : ""}`} onClick={() => setAbaSelecionada(index.toString())}>
-            <Icon icon={opcao.icon} className="icone" />
-            {expandido && <span className="label">{opcao.label}</span>}
+            <div
+              key={index}
+              className={`opcao ${expandido ? "expandido" : ""}`}
+              onClick={() => setAbaSelecionada(index.toString())}
+            >
+              <Icon icon={opcao.icon} className="icone" />
+              {expandido && <span className="label">{opcao.label}</span>}
             </div>
           ))}
         </div>
 
-        <div className={`conteudo ${expandido ? "escurecido" : ""}`} onClick={() => setExpandido(false)}>
-            <div className="conteudoContainer">
+        <div
+          className={`conteudo ${expandido ? "escurecido" : ""}`}
+          onClick={() => setExpandido(false)}
+        >
+          <div className="conteudoContainer">
             <div className="tabContainer hidden" id="tab-0">
               <Geral />
             </div>

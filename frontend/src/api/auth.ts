@@ -2,8 +2,10 @@ import axios from "axios";
 import { User } from "../types/api";
 import { useNavigate } from "react-router-dom";
 
+const hostname = window.location.hostname;
+
 const api = axios.create({
-  baseURL: "http://localhost:4000/api",
+  baseURL: `http://${hostname}:4000/api`,
 });
 
 interface UserResponse {

@@ -26,7 +26,13 @@
   --color-muted: #6c757d;
   --color-muted-hover: #7a868f;
 
-  --color-cinza-semitransparente-claro: #0000000f;
+  --color-cinza-semitransparente-claro: #00000013;
+
+  --sonner-toast-icon-color: var(--color-primary);
+  --sonner-toast-icon-color-danger: var(--color-danger);
+  --sonner-toast-icon-color-warning: var(--color-warning);
+  --sonner-toast-icon-color-info: var(--color-info);
+  --sonner-toast-icon-color-success: var(--color-success);
 
   --radius: 0.8rem;
 
@@ -132,11 +138,6 @@ body {
 ::-webkit-scrollbar {
   width: 11px;
   height: 11px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f0f0f0;
-  border-radius: 11px;
 }
 
 ::-webkit-scrollbar-thumb {

@@ -32,11 +32,6 @@ const data_cards = [
 const Home = () => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    document.title = "Home";
-    checkAuth(navigate);
-  }, [checkAuth]);
-
   return (
     <div className="ouvidoria-home">
       <section className="hero-banner bg-gray-100 py-12">

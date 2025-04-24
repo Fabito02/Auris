@@ -1,0 +1,90 @@
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { getLogs } from "@/api/api_routes";
+import { useEffect, useState, useMemo } from "react";
+import { Log } from "@/types/api";
+import { Icon } from "@iconify-icon/react";
+
+export default function Component() {
+  const [logs, setLogs] = useState<Log[]>([]);
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    getLogs().then((res) => {
+      setLogs(res.data);
+    });
+  }, []);
+
+  const logsFiltrados = useMemo(() => {
+    return logs.filter(
+      (log) =>
+        log.Acao.toLowerCase().includes(search.toLowerCase()) ||
+        log.User_ID.toString().includes(search)
+    );
+  }, [search, logs]);
+
+  return (
+    <Card className="border-0 shadow-none flex items-center">
+      <CardContent className="w-full max-w-[950px] mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 className="text-3xl my-6">Histórico de Atividades</h1>
+        <div className="relative">
+          <Icon
+            icon="lucide:search"
+            height={18}
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
+          />
+          <Input
+            placeholder="Pesquisar ação ou ID do usuário..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="mb-4 md:max-w-md pl-9"
+          />
+        </div>
+        <Table>
+          <TableCaption>Registros de ações rastreadas no sistema</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Ação</TableHead>
+              <TableHead className="w-[160px]">Data da ação</TableHead>
+              <TableHead className="text-right w-[120px]">
+                ID do Usuário
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {logsFiltrados
+              .slice()
+              .reverse()
+              .map((log: Log) => (
+                <TableRow key={log.Log_ID}>
+                  <TableCell>{log.Acao}</TableCell>
+                  <TableCell>
+                    {new Date(log.Data_Acao).toLocaleString("pt-BR", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: false,
+                    })}
+                  </TableCell>
+                  <TableCell className="text-right">{log.User_ID}</TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+          <TableFooter />
+        </Table>
+      </CardContent>
+    </Card>
+  );
+}

@@ -12,7 +12,6 @@ import {
   CommandList,
   CommandSeparator,
 } from '@/components/ui/command';
-
 const SearchBar = () => {
   const {
     transcript,
@@ -35,11 +34,15 @@ const SearchBar = () => {
 
   const toggleListening = () => {
     if (!browserSupportsSpeechRecognition) {
-      toast.info('Seu navegador não suporta reconhecimento de voz.');
+      toast.info('Seu navegador não suporta reconhecimento de voz.', {
+        icon: <Icon icon="mdi:information" height={20} className="text-[var(--color-info)]" />,
+      });
       return;
     }
     if (!isMicrophoneAvailable) {
-      toast.warning('Microfone não disponível. Você ainda pode digitar sua pesquisa.');
+      toast.warning('Microfone não disponível, ative a permissão. Você ainda pode digitar sua pesquisa.', {
+        icon: <Icon icon="mdi:microphone-off" height={20} className="text-[var(--color-warning)]" />,
+      });
       return;
     }
     if (listening) {
@@ -51,7 +54,9 @@ const SearchBar = () => {
         language: 'pt-BR',
       }).catch((error?: unknown) => {
         console.error('Erro ao iniciar reconhecimento de voz:', error);
-        toast.error('Erro ao acessar o microfone. Você ainda pode digitar sua pesquisa.');
+        toast.error('Erro ao acessar o microfone. Você ainda pode digitar sua pesquisa.', {
+          icon: <Icon icon="mdi:alert-circle" height={20} className="text-[var(--color-danger)]" />,
+        });
       });
     }
   };
@@ -98,26 +103,27 @@ const SearchBar = () => {
           role="button"
           tabIndex={0}
         />
-
-        <CommandList className={`top-full mt-2 w-full max-w-[450px] max-h-[470px] lista-comandos-searchbar rounded-md fixed shadow-lg bg-white ${
-          visibilidade ? 'visivel' : ''
-        }`}>
+        <CommandList
+          className={`left-1/2 transform -translate-x-1/2 w-full max-w-[500px] max-h-[470px] lista-comandos-searchbar rounded-lg fixed shadow-lg bg-white mt-15 mr-4 ${
+            visibilidade ? 'visivel' : ''
+          }`}
+        >
           {resultadosFiltrados.length === 0 ? (
             <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
           ) : (
             grupos.map(grupo => (
               <>
-                <CommandGroup heading={grupo} key={grupo}>
-                  {resultadosFiltrados
-                    .filter(item => item.grupo === grupo)
-                    .map(item => (
-                      <CommandItem key={item.label} onSelect={() => console.log(item.label)} className='search-item'>
-                        <Icon icon={item.icon} className="text-[var(--color-secondary)]" style={{ color: item.color }} />
-                        <span>{item.label}</span>
-                      </CommandItem>
-                    ))}
-                </CommandGroup>
-                <CommandSeparator />
+          <CommandGroup heading={grupo} key={grupo}>
+            {resultadosFiltrados
+              .filter(item => item.grupo === grupo)
+              .map(item => (
+                <CommandItem key={item.label} onSelect={() => console.log(item.label)} className="search-item">
+            <Icon icon={item.icon} className="text-[var(--color-secondary)]" style={{ color: item.color }} />
+            <span>{item.label}</span>
+                </CommandItem>
+              ))}
+          </CommandGroup>
+          <CommandSeparator />
               </>
             ))
           )}

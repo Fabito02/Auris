@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, RequestHandler } from "express";
 import connection from "../db";
 import bcrypt from "bcryptjs";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
@@ -7,7 +7,6 @@ import { User, IUser } from "../models/User";
 import { generateToken } from "../config/passport";
 import { registrarLog } from "../utils/logger";
 
-// Login
 export const login = (req: Request, res: Response) => {
   passport.authenticate("local", { session: false }, (
     err: Error | null,
@@ -62,7 +61,6 @@ export const login = (req: Request, res: Response) => {
   })(req, res);
 };
 
-// Registrar
 export const registrar = (req: Request, res: Response): void => {
   const user = req.body;
 
@@ -121,6 +119,56 @@ export const registrar = (req: Request, res: Response): void => {
           }
         );
       });
+    }
+  );
+};
+
+export const getRoleById: RequestHandler<{ id: string }> = (req, res, next) => {
+  const userId = Number(req.params.id);
+
+  connection.query(
+    "SELECT Role FROM Users WHERE User_ID = ?",
+    [userId],
+    (err, results: RowDataPacket[]) => {
+      if (err) {
+        next(err);
+        return;
+      }
+
+      if (results.length === 0) {
+        res.status(404).json({ success: false, error: "Usuário não encontrado" });
+        return;
+      }
+
+      res.status(200).json({ success: true, data: results[0] });
+    }
+  );
+};
+
+export const updateRole: RequestHandler<{ id: string }> = (req, res, next) => {
+  const userId = Number(req.params.id);
+  const newRole = req.body.Role;
+
+  if (!newRole) {
+    res.status(400).json({ success: false, error: "'Role' é necessário." });
+    return;
+  }
+
+  connection.query(
+    "UPDATE Users SET Role = ? WHERE User_ID = ?",
+    [newRole, userId],
+    (err, results: ResultSetHeader) => {
+      if (err) {
+        next(err);
+        return;
+      }
+
+      if (results.affectedRows === 0) {
+        res.status(404).json({ success: false, error: "Usuário não encontrado" });
+        return;
+      }
+
+      res.status(200).json({ success: true, message: "Permissão atualizada com sucesso." });
     }
   );
 };

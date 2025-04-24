@@ -29,9 +29,7 @@ const Header = () => {
           style={{
             maxHeight: "55px",
             minHeight: "55px",
-            width: "auto",
-            marginRight: "10px",
-            objectFit: "contain",
+            objectFit: "cover",
           }}
         />
       </Link>

@@ -1,6 +1,3 @@
-export type UserType = 'servidor' | 'discente' | 'docente' | 'direção' | 'outro';
-export type UserRole = 'user' | 'admin' | 'moderador';
-
 export interface User {
   User_ID?: number;
   Nome: string;
@@ -8,9 +5,9 @@ export interface User {
   Telefone?: string | null;
   Foto_Perfil?: string | null;
   SIAPE?: string | null;
-  Tipo?: UserType;
+  Tipo?: 'servidor' | 'discente' | 'docente' | 'direção' | 'outro';
   Data_Criacao?: string;
-  Role?: UserRole;
+  Role?: 'user' | 'admin' | 'moderador';
   Senha?: string;
 }
 
@@ -18,4 +15,11 @@ export interface UserApiResponse {
   success: boolean;
   user?: User;
   error?: string;
+}
+
+export interface Log {
+  Log_ID: number;
+  Acao: string;
+  Data_Acao: string;
+  User_ID: number;
 }

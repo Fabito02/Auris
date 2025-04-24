@@ -28,6 +28,16 @@ export const getUsuarios = async () => {
   return response.data;
 };
 
+export const getLogs = async () => {
+  const response = await api.get("/logs");
+  return response.data;
+};
+
+export const getRole = async (usuario: User) => {
+  const response = await api.post("/auth/role", usuario);
+  return response.data;
+};
+
 export const postRegistrar = async (usuario: User) => {
   const response = await api.post("/auth/registrar", usuario);
   return response.data;
@@ -41,4 +51,14 @@ export const postLogin = async (credenciais: Pick<User, 'Email' | 'Senha'>) => {
 export const postLogout = async () => {
   const response = await api.post("/logout");
   return response.data;
+};
+
+export const updateRole = async ({ User_ID, Role }: Pick<User, 'User_ID' | 'Role'>) => {
+  try {
+    const response = await api.put(`/auth/role/${User_ID}`, { Role });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };

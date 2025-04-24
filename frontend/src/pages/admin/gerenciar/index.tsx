@@ -1,22 +1,20 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
 import "../admin.css";
 import { BlankLayout } from "@/components/BlankLayout/BlankLayout";
 import { useEffect } from "react";
-import Geral from "@/components/acompanhamento/Geral";
-import Reclamacoes from "@/components/acompanhamento/Reclamacoes";
-import Elogios from "@/components/acompanhamento/Elogios";
-import Denuncias from "@/components/acompanhamento/Denuncias";
-import Sugestoes from "@/components/acompanhamento/Sugestoes";
+import Manifestacoes from "@/components/admin/gerenciar/Manifestacoes";
+import Usuarios from "@/components/admin/gerenciar/Usuarios";
+import Permissoes from "@/components/admin/gerenciar/Permissoes";
+import Historico from "@/components/admin/gerenciar/Historico";
 
 const Gerenciar = () => {
   const [expandido, setExpandido] = useState(false);
   const [abaSelecionada, setAbaSelecionada] = useState("0");
 
   useEffect(() => {
-
-    document.title = "Gerenciar"
+    document.title = "Gerenciar";
 
     const handleExibirTab = () => {
       const tabs = document.querySelectorAll(".tabContainer");
@@ -37,20 +35,25 @@ const Gerenciar = () => {
   };
 
   const opcoes = [
-    { icon: "material-symbols:record-voice-over-rounded", label: "Manifestações" },
+    {
+      icon: "material-symbols:record-voice-over-rounded",
+      label: "Manifestações",
+    },
     { icon: "material-symbols:groups-rounded", label: "Usuários" },
     { icon: "material-symbols:security-rounded", label: "Permissões" },
     { icon: "material-symbols:work-history-rounded", label: "Histórico" },
   ];
 
   return (
-    <BlankLayout showFooter={false} showHeader={true} showNavbar={true} removeBodyPadding={false}>   
+    <BlankLayout
+      showFooter={false}
+      showHeader={true}
+      showNavbar={true}
+      removeBodyPadding={false}
+    >
       <div className="corpoDoSite">
         <div className={`barraLateral ${expandido ? "expandido" : ""}`}>
-          <Button
-            onClick={toggleSidebar}
-            className="toggle-expandir"
-          >
+          <Button onClick={toggleSidebar} className="toggle-expandir">
             <Icon
               icon={
                 expandido
@@ -60,29 +63,33 @@ const Gerenciar = () => {
             />
           </Button>
           {opcoes.map((opcao, index) => (
-            <div key={index} className={`opcao ${expandido ? "expandido" : ""}`} onClick={() => setAbaSelecionada(index.toString())}>
-            <Icon icon={opcao.icon} className="icone" />
-            {expandido && <span className="label">{opcao.label}</span>}
+            <div
+              key={index}
+              className={`opcao ${expandido ? "expandido" : ""}`}
+              onClick={() => setAbaSelecionada(index.toString())}
+            >
+              <Icon icon={opcao.icon} className="icone" />
+              {expandido && <span className="label">{opcao.label}</span>}
             </div>
           ))}
         </div>
 
-        <div className={`conteudo ${expandido ? "escurecido" : ""}`} onClick={() => setExpandido(false)}>
-            <div className="conteudoContainer">
+        <div
+          className={`conteudo ${expandido ? "escurecido" : ""}`}
+          onClick={() => setExpandido(false)}
+        >
+          <div className="conteudoContainer">
             <div className="tabContainer hidden" id="tab-0">
-              <Geral />
+              <Manifestacoes />
             </div>
             <div className="tabContainer hidden" id="tab-1">
-              <Reclamacoes />
+              <Usuarios />
             </div>
             <div className="tabContainer hidden" id="tab-2">
-              <Elogios />
+              <Permissoes />
             </div>
             <div className="tabContainer hidden" id="tab-3">
-              <Denuncias />
-            </div>
-            <div className="tabContainer hidden" id="tab-4">
-              <Sugestoes />
+              <Historico />
             </div>
           </div>
         </div>
