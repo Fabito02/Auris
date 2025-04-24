@@ -5,7 +5,7 @@ export interface User {
   Telefone?: string | null;
   Foto_Perfil?: string | null;
   SIAPE?: string | null;
-  Tipo?: 'servidor' | 'discente' | 'docente' | 'direção' | 'outro';
+  Tipo?: 'aluno' | 'servidor';
   Data_Criacao?: string;
   Role?: 'user' | 'admin' | 'moderador';
   Senha?: string;
