@@ -8,10 +8,16 @@ import Manifestacoes from "@/components/admin/gerenciar/Manifestacoes";
 import Usuarios from "@/components/admin/gerenciar/Usuarios";
 import Permissoes from "@/components/admin/gerenciar/Permissoes";
 import Historico from "@/components/admin/gerenciar/Historico";
+import { checkRole } from "@/api/auth";
 
 const Gerenciar = () => {
   const [expandido, setExpandido] = useState(false);
   const [abaSelecionada, setAbaSelecionada] = useState("0");
+  const [isAdminResult, setIsAdminResult] = useState(false);
+
+  function isAdmin() {
+    return checkRole("admin");
+  }
 
   useEffect(() => {
     document.title = "Gerenciar";
@@ -30,6 +36,10 @@ const Gerenciar = () => {
     setExpandido(false);
   }, [abaSelecionada]);
 
+  useEffect(() => {
+    isAdmin().then((result) => setIsAdminResult(result));
+  }, []);
+
   const toggleSidebar = () => {
     setExpandido(!expandido);
   };
@@ -40,9 +50,12 @@ const Gerenciar = () => {
       label: "Manifestações",
     },
     { icon: "material-symbols:groups-rounded", label: "Usuários" },
-    { icon: "material-symbols:security-rounded", label: "Permissões" },
-    { icon: "material-symbols:work-history-rounded", label: "Histórico" },
   ];
+
+  if (isAdminResult) {
+    opcoes.push({ icon: "material-symbols:security-rounded", label: "Permissoes" });
+    opcoes.push({ icon: "material-symbols:work-history-rounded", label: "Histórico" });
+  }
 
   return (
     <BlankLayout
@@ -68,8 +81,12 @@ const Gerenciar = () => {
               className={`opcao ${expandido ? "expandido" : ""}`}
               onClick={() => setAbaSelecionada(index.toString())}
             >
-              <Icon icon={opcao.icon} className="icone" />
-              {expandido && <span className="label">{opcao.label}</span>}
+              {opcao && (
+                <>
+                  <Icon icon={opcao.icon} className="icone" />
+                  {expandido && <span className="label">{opcao.label}</span>}
+                </>
+              )}
             </div>
           ))}
         </div>
@@ -85,12 +102,16 @@ const Gerenciar = () => {
             <div className="tabContainer hidden" id="tab-1">
               <Usuarios />
             </div>
-            <div className="tabContainer hidden" id="tab-2">
-              <Permissoes />
-            </div>
-            <div className="tabContainer hidden" id="tab-3">
-              <Historico />
-            </div>
+            {isAdminResult && (
+              <>
+                <div className="tabContainer hidden" id="tab-2">
+                  <Permissoes />
+                </div>
+                <div className="tabContainer hidden" id="tab-3">
+                  <Historico />
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -99,3 +120,4 @@ const Gerenciar = () => {
 };
 
 export default Gerenciar;
+
