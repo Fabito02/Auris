@@ -15,63 +15,68 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 
+type FormData = {
+  email: string;
+  password: string;
+};
+
+type LoginResponse = {
+  success: boolean;
+  token?: string;
+  error?: string;
+  user?: {
+    User_ID: number;
+    Email: string;
+    role: string;
+  };
+};
+
 const Login = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
   });
 
   const [error, setError] = useState<string | null>(null);
-  const [loginSucesso, setLoginSucesso] = useState<boolean | undefined>(
-    undefined
-  );
+  const [loginSucesso, setLoginSucesso] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     document.title = "Login";
-  });
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      const response = await postLogin({
+      const response: LoginResponse = await postLogin({
         Email: formData.email,
         Senha: formData.password,
       });
 
-      if (response?.success) {
-        setLoginSucesso(true);
-        setFormData({ email: "", password: "" });
-        setError(null);
-      } else {
-        setError(response?.error || "Credenciais inválidas");
-      }
-      if (response.success && response.token) {
+      if (response.success && response.token && response.user) {
         localStorage.setItem("auris_token", response.token);
+        localStorage.setItem("auris_role", response.user.role);
+        setLoginSucesso(true);
+        setError(null);
+        setFormData({ email: "", password: "" });
+      } else {
+        setError(response.error || "Credenciais inválidas");
       }
     } catch (err: any) {
-      const errorMessage =
-        err.response?.data?.error ||
-        err.message ||
-        "Erro ao conectar com o servidor";
-
-      setError(errorMessage);
-
-      console.error("Erro no login:", {
-        error: err,
-        response: err.response?.data,
-      });
+      setError(err.message || "Erro ao conectar com o servidor");
+      console.error("Erro no login:", err);
     }
   };
 
   const closeModal = () => {
     setLoginSucesso(false);
+    navigate("/home");
   };
 
   return (
@@ -100,7 +105,6 @@ const Login = () => {
           <div className="col-span-3 formulario h-screen">
             <div className="max-w-md mx-auto w-full">
               <h1 className="title2 mb-12">LOGIN</h1>
-
               <form className="px-15" onSubmit={handleSubmit}>
                 {error && <p className="text-red-500 mb-3">{error}</p>}
 
@@ -159,10 +163,7 @@ const Login = () => {
           </DialogHeader>
           <DialogFooter className="sm:justify-center mt-4">
             <Button
-              onClick={() => {
-                setLoginSucesso(false);
-                navigate("/home");
-              }}
+              onClick={closeModal}
               full_rounded
               color="success"
               className="w-full sm:max-w-[200px] px-5"

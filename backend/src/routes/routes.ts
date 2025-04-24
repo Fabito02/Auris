@@ -2,7 +2,7 @@ import { Router } from 'express';
 import * as userController from '../controllers/userController';
 import * as authController from '../controllers/authController';
 import * as logController from '../controllers/logController';
-import {verifyToken} from '../middlewares/auth';
+import {verifyToken, verifyRole} from '../middlewares/auth';
 
 const router = Router();
 
@@ -15,19 +15,19 @@ router.post('/logout', (req, res) => {
     message: 'Logout realizado com sucesso. O token deve removido do localStorage no frontend.',
   });
 });
-router.get('/auth/role/:id', authController.getRoleById);
-router.put('/auth/role/:id', authController.updateRole);
+router.get('/auth/role/:id', verifyToken, verifyRole((['admin'])), authController.getRoleById);
+router.put('/auth/role/:id', verifyToken, verifyRole((['admin'])), authController.updateRole);
 
 // rotas para usuário atual
 router.get('/me', verifyToken, userController.getUsuarioAtual);
 
 // rotas para usuários
-router.get('/users', userController.listUsers);
-router.get('/users/:id', userController.getUserById);
-router.put('/users/:id', userController.updateUser);
-router.delete('/users/:User_ID', userController.deleteUser);
+router.get('/users', verifyToken, verifyRole((['admin', 'moderador'])), userController.listUsers);
+router.get('/users/:id', verifyToken, verifyRole((['admin', 'moderador'])), userController.getUserById);
+router.put('/users/:id', verifyToken, verifyRole((['admin', 'moderador'])), userController.updateUser);
+router.delete('/users/:User_ID', verifyToken, verifyRole((['admin'])), userController.deleteUser);
 
 // rotas de logs
-router.get('/logs', logController.getLogs);
+router.get('/logs', verifyToken, verifyRole((['admin'])), logController.getLogs);
 
 export default router;

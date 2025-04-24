@@ -15,7 +15,6 @@ export const login = (req: Request, res: Response) => {
   ) => {
     try {
       if (err) {
-        console.error('Erro na autenticação:', err);
         return res.status(500).json({
           success: false,
           error: "Erro interno no servidor"
@@ -30,13 +29,12 @@ export const login = (req: Request, res: Response) => {
       }
 
       if (!user.User_ID) {
-        console.error('Usuário sem ID:', user);
         return res.status(500).json({
           success: false,
           error: "Dados do usuário incompletos"
         });
       }
-      
+
       const token = generateToken(user as IUser);
 
       registrarLog(`Novo login de ${user.Email}`, user.User_ID);
@@ -47,12 +45,12 @@ export const login = (req: Request, res: Response) => {
         user: {
           User_ID: user.User_ID,
           Email: user.Email,
+          role: user.Role,
         },
         expiresIn: '1d'
       });
 
     } catch (error) {
-      console.error('Erro no processo de login:', error);
       return res.status(500).json({
         success: false,
         error: "Erro interno no servidor"

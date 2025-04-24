@@ -13,12 +13,11 @@ passport.use(new LocalStrategy(
   async (email, password, done) => {
     try {
       const [rows] = await connection.promise().query<IUser[]>(
-        'SELECT User_ID, Email, Senha FROM Users WHERE Email = ?',
+        'SELECT User_ID, Email, Senha, Role FROM Users WHERE Email = ?',
         [email]
       );
 
       const user = rows[0] as IUser;
-      
       if (!user) return done(null, false, { message: 'Usuário não encontrado' });
       if (!await bcrypt.compare(password, user.Senha!)) {
         return done(null, false, { message: 'Senha incorreta' });
@@ -40,7 +39,7 @@ passport.use(new JWTStrategy(
   async (payload: IUser, done) => {
     try {
       const [rows] = await connection.promise().query<IUser[]>(
-        'SELECT User_ID, Email FROM Users WHERE User_ID = ?',
+        'SELECT User_ID, Email, Role FROM Users WHERE User_ID = ?',
         [payload.User_ID]
       );
 
@@ -57,7 +56,7 @@ export const generateToken = (user: IUser) => {
     { 
       User_ID: user.User_ID,
       Email: user.Email,
-      Role: user.Role,
+      role: user.Role,
     },
     jwtSecret,
     { expiresIn: '1d' }
