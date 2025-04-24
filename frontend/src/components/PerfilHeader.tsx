@@ -47,8 +47,8 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
       </PopoverTrigger>
 
       <PopoverContent className="shadow-lg w-[220px] mr-2 mt-5 rounded-lg dropdown border-0 rounded-[16px] menu-opcoes w-[100vw] max-w-[420px] max-h-[600px] mx-2 p-3 gap-2">
-        <div className="py-2">
-        <p className="text-center font-semibold">NOTIFICAÇÕES</p>
+        <div className="pb-2">
+          <h1 className="text-center font-semibold">NOTIFICAÇÕES</h1>
         </div>
 
         <div className="my-1 border-t border-gray-200" />
