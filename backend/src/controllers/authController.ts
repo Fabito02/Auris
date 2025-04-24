@@ -166,7 +166,25 @@ export const updateRole: RequestHandler<{ id: string }> = (req, res, next) => {
         return;
       }
 
-      res.status(200).json({ success: true, message: "Permissão atualizada com sucesso." });
+      connection.query(
+        "SELECT Email FROM Users WHERE User_ID = ?",
+        [userId],
+        (err, results: RowDataPacket[]) => {
+          if (err) {
+            next(err);
+            return;
+          }
+
+          if (results.length === 0) {
+            res.status(404).json({ success: false, error: "Usuário não encontrado" });
+            return;
+          }
+
+          const email = results[0].Email;
+          res.status(200).json({ success: true, message: "Permissão atualizada com sucesso." });
+          registrarLog(`Permissão de ${email} atualizada para ${newRole}`, userId);
+        }
+      );
     }
   );
 };
