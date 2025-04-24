@@ -132,7 +132,7 @@ npm run dev
 **• Entre no terminal do Mysql como root**
 
 ```bash
-sudo mysql -u root -p
+mysql -u root -p
 ```
 
 **• Crie o Banco de Dados**
