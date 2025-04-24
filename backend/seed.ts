@@ -43,7 +43,7 @@ async function createTables(conn: mysql.Connection) {
             Telefone VARCHAR(20),
             Foto_Perfil VARCHAR(255),
             SIAPE VARCHAR(50),
-            Tipo ENUM('servidor', 'discente', 'docente', 'direção', 'outro') DEFAULT 'outro',
+            Tipo ENUM('servidor', 'aluno') DEFAULT 'servidor',
             Senha VARCHAR(255) NOT NULL,
             Data_Criacao DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
             Role ENUM('user', 'admin', 'moderador') DEFAULT 'user'
@@ -51,14 +51,14 @@ async function createTables(conn: mysql.Connection) {
         
         `CREATE TABLE IF NOT EXISTS Endereco (
             Endereco_ID INT AUTO_INCREMENT PRIMARY KEY,
-            Logradouro VARCHAR(100) NOT NULL,
-            Bairro VARCHAR(50) NOT NULL,
-            Cidade VARCHAR(50) NOT NULL,
-            Numero VARCHAR(10),
+            Logradouro VARCHAR(100),
+            Bairro VARCHAR(50),
+            Cidade VARCHAR(50),
+            Numero VARCHAR(30),
             Complemento VARCHAR(100),
-            Estado CHAR(2) NOT NULL,
-            CEP CHAR(9) NOT NULL,
-            User_ID INT NOT NULL,
+            Estado CHAR(2),
+            CEP CHAR(9),
+            User_ID INT,
             FOREIGN KEY (User_ID) REFERENCES Users(User_ID) ON DELETE CASCADE
         ) ENGINE=InnoDB`,
         
@@ -72,7 +72,7 @@ async function createTables(conn: mysql.Connection) {
             Anonimo BOOLEAN DEFAULT FALSE,
             Local VARCHAR(100),
             Status ENUM('pendente', 'em_andamento', 'concluido') DEFAULT 'pendente',
-            Prioridade ENUM('baixa', 'media', 'alta', 'urgente') DEFAULT 'media', -- Novo campo
+            Prioridade ENUM('baixa', 'media', 'alta', 'urgente') DEFAULT 'media',
             User_ID INT NOT NULL,
             FOREIGN KEY (User_ID) REFERENCES Users(User_ID)
         ) ENGINE=InnoDB`,
@@ -126,7 +126,7 @@ async function insertSeeds(conn: mysql.Connection) {
                 Nome: 'admin',
                 Email: 'teste@admin.com',
                 Telefone: '(11) 99999-9999',
-                Tipo: 'direção',
+                Tipo: 'servidor',
                 Role: 'admin',
                 Senha: hashedSenha
             },
@@ -135,7 +135,7 @@ async function insertSeeds(conn: mysql.Connection) {
                 Email: 'teste@moderador.com',
                 Telefone: '(11) 98888-8888',
                 SIAPE: '1234567',
-                Tipo: 'docente',
+                Tipo: 'servidor',
                 Role: 'moderador',
                 Senha: hashedSenha
             },
@@ -143,7 +143,7 @@ async function insertSeeds(conn: mysql.Connection) {
                 Nome: 'user',
                 Email: 'teste@user.com',
                 Telefone: '(11) 97777-7777',
-                Tipo: 'discente',
+                Tipo: 'aluno',
                 Senha: hashedSenha
             }
         ];
