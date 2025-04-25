@@ -43,11 +43,13 @@ async function createTables(conn: mysql.Connection) {
             Telefone VARCHAR(20),
             Foto_Perfil VARCHAR(255),
             SIAPE VARCHAR(50),
-            Tipo ENUM('servidor', 'aluno') DEFAULT 'servidor',
+            Tipo ENUM('servidor', 'aluno'),
             Senha VARCHAR(255) NOT NULL,
             Data_Criacao DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-            Role ENUM('user', 'admin', 'moderador') DEFAULT 'user'
-        ) ENGINE=InnoDB`,
+            Role ENUM('user', 'admin', 'moderador') DEFAULT 'user',
+            Token_Verificacao VARCHAR(255),
+            Email_Verificado BOOLEAN DEFAULT FALSE
+        ) ENGINE=InnoDB;`,
         
         `CREATE TABLE IF NOT EXISTS Endereco (
             Endereco_ID INT AUTO_INCREMENT PRIMARY KEY,
@@ -128,7 +130,9 @@ async function insertSeeds(conn: mysql.Connection) {
                 Telefone: '(11) 99999-9999',
                 Tipo: 'servidor',
                 Role: 'admin',
-                Senha: hashedSenha
+                Senha: hashedSenha,
+                Token_Verificacao: '123456789',
+                Email_Verificado: true
             },
             {
                 Nome: 'moderador',
@@ -137,14 +141,18 @@ async function insertSeeds(conn: mysql.Connection) {
                 SIAPE: '1234567',
                 Tipo: 'servidor',
                 Role: 'moderador',
-                Senha: hashedSenha
+                Senha: hashedSenha,
+                Token_Verificacao: '123456789',
+                Email_Verificado: true
             },
             {
                 Nome: 'user',
                 Email: 'teste@user.com',
                 Telefone: '(11) 97777-7777',
                 Tipo: 'aluno',
-                Senha: hashedSenha
+                Senha: hashedSenha,
+                Token_Verificacao: '123456789',
+                Email_Verificado: true
             }
         ];
 

@@ -12,6 +12,6 @@
 }
 
 .loading-icon {
-  font-size: 4rem;
-  color: #e1d54e;
+  font-size: 4.3rem;
+  color: var(--color-primary);
 }

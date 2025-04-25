@@ -15,6 +15,7 @@ router.post('/logout', (req, res) => {
     message: 'Logout realizado com sucesso. O token deve removido do localStorage no frontend.',
   });
 });
+router.get('/confirmar', authController.confirmarEmail);
 router.get('/auth/role/:id', verifyToken, verifyRole((['admin'])), authController.getRoleById);
 router.put('/auth/role/:id', verifyToken, verifyRole((['admin'])), authController.updateRole);
 

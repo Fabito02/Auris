@@ -14,6 +14,7 @@ import {
   DialogFooter,
   DialogDescription,
 } from "@/components/ui/dialog";
+import {toast} from "sonner";
 
 const Registrar = () => {
   const [formData, setFormData] = useState({
@@ -48,16 +49,21 @@ const Registrar = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormData({ nome: "", email: "", password: "", confirmPassword: "" });
+    toast.loading("Carregando...", {
+      id: "carregando",
+    });
 
     const senhaInsegura = validarSenha(formData.password);
     if (senhaInsegura) {
       setError(senhaInsegura);
+      toast.dismiss("carregando");
       return;
     }
 
     try {
       const response = await postRegistrar({
-        User_ID: 0, // Default value for User_ID
+        User_ID: 0,
         Nome: formData.nome,
         Email: formData.email,
         Senha: formData.password,
@@ -65,11 +71,12 @@ const Registrar = () => {
 
       if (response.success) {
         setRegistrarSucesso(true);
-        setFormData({ nome: "", email: "", password: "", confirmPassword: "" });
         setError(null);
+        toast.dismiss("carregando");
       }
     } catch (err: any) {
       setError(err.message);
+      toast.dismiss("carregando");
     }
   };
 
@@ -190,7 +197,7 @@ const Registrar = () => {
               Conta criada com sucesso!
             </DialogTitle>
             <DialogDescription className="text-center">
-              Você já pode fazer login.
+              Verifique seu e-mail para ativar sua conta.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="sm:justify-center mt-4">

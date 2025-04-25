@@ -1,5 +1,5 @@
 import { DropdownMenu, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "../components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
+import { Avatar, AvatarImage } from "../components/ui/avatar";
 import { Icon } from "@iconify-icon/react";
 import { Link } from "react-router-dom";
 import "./PerfilHeader.css";
