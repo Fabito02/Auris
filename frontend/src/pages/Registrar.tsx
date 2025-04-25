@@ -103,7 +103,7 @@ const Registrar = () => {
             </p>
             <Link to="/login">
               <Button outline full_rounded color="white" className="mt-4">
-                LOGIN
+                FAZER LOGIN
               </Button>
             </Link>
           </div>
@@ -206,7 +206,7 @@ const Registrar = () => {
               full_rounded
               color="success"
               className="w-full sm:max-w-[200px] px-5"
-              texto="login"
+              texto="fazer login"
             />
           </DialogFooter>
         </DialogContent>
