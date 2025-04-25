@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, RequestHandler } from 'express';
 import connection from '../db';
 import { RowDataPacket } from 'mysql2';
 import { User } from "../models/User";
@@ -258,4 +258,50 @@ export const getEnderecoUsuarioAtual = async (req: Request, res: Response): Prom
   } catch (error) {
     res.status(500).json({ success: false, error: "Erro interno." });
   }
+};
+
+export const updateEnderecoByUserId: RequestHandler<{ id: string }> = (req, res, next) => {
+  const userId = Number(req.params.id);
+  const endereco = req.body;
+
+  if (!endereco) {
+    res.status(400).json({ success: false, error: "Endereço é necessário." });
+    return;
+  }
+
+  connection.query(
+    "UPDATE Endereco SET ? WHERE User_ID = ?",
+    [endereco, userId],
+    (err, results: ResultSetHeader) => {
+      if (err) {
+        next(err);
+        return;
+      }
+
+      if (results.affectedRows === 0) {
+        res.status(404).json({ success: false, error: "Endereço não encontrado" });
+        return;
+      }
+
+      connection.query(
+        "SELECT Email FROM Users WHERE User_ID = ?",
+        [userId],
+        (err, results: RowDataPacket[]) => {
+          if (err) {
+            next(err);
+            return;
+          }
+
+          if (results.length === 0) {
+            res.status(404).json({ success: false, error: "Usuário não encontrado" });
+            return;
+          }
+
+          const email = results[0].Email;
+          res.status(200).json({ success: true, message: "Endereço atualizado com sucesso." });
+          registrarLog(`Endereço de ${email} atualizado.`, userId);
+        }
+      );
+    }
+  );
 };

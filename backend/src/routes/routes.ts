@@ -28,6 +28,7 @@ router.get('/users', verifyToken, verifyRole((['admin', 'moderador'])), userCont
 router.get('/users/:id', verifyToken, verifyRole((['admin', 'moderador'])), userController.getUserById);
 router.put('/users/:id', verifyToken, verifyRole((['admin', 'moderador'])), userController.updateUser);
 router.get('/users/:id/endereco', verifyToken, verifyRole((['admin', 'moderador'])), userController.getEnderecoByUserId);
+router.put('/users/:id/endereco', verifyToken, verifyRole((['admin'])), userController.updateEnderecoByUserId);
 router.delete('/users/:User_ID', verifyToken, verifyRole((['admin'])), userController.deleteUser);
 
 // rotas de logs
