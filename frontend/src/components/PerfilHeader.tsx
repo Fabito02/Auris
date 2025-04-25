@@ -167,9 +167,8 @@ import { User } from "@/types/api";
           <div className="flex gap-3 pl-2 py-2">
           <Avatar className="w-[45px] h-[45px]">
             <AvatarImage src={user?.Foto_Perfil || "/user_placeholder.png"} alt="Ícone do Usuário" />
-            <AvatarFallback>PN</AvatarFallback>
           </Avatar>
-          <p className="font-medium username">Username</p>
+          <p className="font-medium username">{user?.Nome?.split(' ')[0] || "Usuário"}</p>
           </div>
 
           <DropdownMenuSeparator className="my-1" />
