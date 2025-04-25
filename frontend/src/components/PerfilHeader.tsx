@@ -6,7 +6,7 @@ import "./PerfilHeader.css";
 import { postLogout } from "@/api/api_routes";
 import Button from "./buttons/Button";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -16,13 +16,26 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { getUsuarioAtual } from "@/api/api_routes";
+import { User } from "@/types/api";
 
   const PerfilHeader = () => {
     const navigate = useNavigate();
 
+    const [user, setUser] = useState<User | null>(null);
     const [logoutSucesso, setLogoutSucesso] = useState<boolean | undefined>(
       undefined
     );
+
+    useEffect(() => {
+    
+        const fetchUser = async () => {
+          const usuario = await getUsuarioAtual();
+          setUser(usuario.user);
+        };
+    
+        fetchUser();
+      }, []);
 
   const handleLogout = async () => {
     try {
@@ -146,14 +159,14 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Avatar className="w-10  h-10 mr-2 cursor-pointer">
-            <AvatarImage src="/pudim.png" alt="Ícone do Usuário" />
+            <AvatarImage src={user?.Foto_Perfil || "/user_placeholder.png"} alt="Ícone do Usuário" />
           </Avatar>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent className="shadow-md w-[220px] mr-2 mt-4 rounded-lg dropdown border-0 rounded-[16px] menu-opcoes">
           <div className="flex gap-3 pl-2 py-2">
           <Avatar className="w-[45px] h-[45px]">
-            <AvatarImage src="/pudim.png" alt="Ícone do Usuário" />
+            <AvatarImage src={user?.Foto_Perfil || "/user_placeholder.png"} alt="Ícone do Usuário" />
             <AvatarFallback>PN</AvatarFallback>
           </Avatar>
           <p className="font-medium username">Username</p>
