@@ -20,11 +20,13 @@ router.put('/auth/role/:id', verifyToken, verifyRole((['admin'])), authControlle
 
 // rotas para usuário atual
 router.get('/me', verifyToken, userController.getUsuarioAtual);
+router.get('/me/endereco', verifyToken, userController.getEnderecoUsuarioAtual);
 
 // rotas para usuários
 router.get('/users', verifyToken, verifyRole((['admin', 'moderador'])), userController.listUsers);
 router.get('/users/:id', verifyToken, verifyRole((['admin', 'moderador'])), userController.getUserById);
 router.put('/users/:id', verifyToken, verifyRole((['admin', 'moderador'])), userController.updateUser);
+router.get('/users/:id/endereco', verifyToken, verifyRole((['admin', 'moderador'])), userController.getEnderecoByUserId);
 router.delete('/users/:User_ID', verifyToken, verifyRole((['admin'])), userController.deleteUser);
 
 // rotas de logs

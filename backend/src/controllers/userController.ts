@@ -205,3 +205,57 @@ export const deleteUser = (req: Request<{ User_ID: string }>, res: Response) => 
     );
   });
 };
+
+export const getEnderecoByUserId = (
+  req: Request<{ id: string }>,
+  res: Response
+) => {
+  const userId = Number(req.params.id);
+
+  connection.query(
+    "SELECT * FROM Endereco WHERE User_ID = ?",
+    [userId],
+    (err, results: RowDataPacket[]) => {
+      if (err) {
+        return res
+          .status(500)
+          .json({
+            success: false,
+            error: `Erro ao buscar endereço: ${err.message}`,
+          });
+      }
+      if (results.length === 0) {
+        return res
+          .status(404)
+          .json({ success: false, error: "Endereço nao encontrado" });
+      }
+      return res.status(200).json({ success: true, data: results[0] });
+    }
+  );
+};
+
+export const getEnderecoUsuarioAtual = async (req: Request, res: Response): Promise<void> => {
+  try {
+    if (!req.user || !('User_ID' in req.user)) {
+      res.status(403).json({ success: false, error: "Acesso não autorizado." });
+      return;
+    }
+
+    const userId = req.user.User_ID;
+
+    const [rows] = await connection.promise().query<RowDataPacket[]>(
+      "SELECT * FROM Endereco WHERE User_ID = ?",
+      [userId]
+    );
+
+    if (rows.length === 0) {
+      res.status(404).json({ success: false, error: "Endereço não encontrado." });
+      return;
+    }
+
+    res.json({ success: true, endereco: rows[0] });
+
+  } catch (error) {
+    res.status(500).json({ success: false, error: "Erro interno." });
+  }
+};

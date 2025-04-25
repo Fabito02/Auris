@@ -11,6 +11,18 @@ export interface User {
   Senha?: string;
 }
 
+export interface Endereco {
+  Endereco_ID: number;
+  Logradouro: string;
+  Bairro: string;
+  Cidade: string;
+  Numero: string;
+  Complemento: string;
+  Estado: string;
+  CEP: string;
+  User_ID: number;
+}
+
 export interface UserApiResponse {
   success: boolean;
   user?: User;

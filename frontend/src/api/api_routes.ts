@@ -39,6 +39,30 @@ export const getRole = async (usuario: User) => {
   return response.data;
 };
 
+export const getUsuarioAtual = async () => {
+  try {
+    const response = await api.get("/me");
+    return response.data;
+  } catch (error: any) {
+    return {
+      success: false,
+      error: error.response?.data?.error || error.message || "Erro ao buscar usuário atual",
+    };
+  }
+};
+
+export const getEnderecoUsuarioAtual = async () => {
+  try {
+    const response = await api.get("/me/endereco");
+    return response.data;
+  } catch (error: any) {
+    return {
+      success: false,
+      error: error.response?.data?.error || error.message || "Erro ao buscar endereço do usuário atual",
+    };
+  }
+};
+
 export const postRegistrar = async (usuario: User) => {
   const response = await api.post("/auth/registrar", usuario);
   return response.data;
