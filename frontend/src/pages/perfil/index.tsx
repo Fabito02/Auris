@@ -109,7 +109,6 @@ const Perfil: React.FC = () => {
     };
     const usuarioData: Partial<User> = {
       Nome: dados.nome?.toString() || "",
-      Email: dados.email?.toString() || "",
       Telefone: dados.telefone?.toString() || "",
     };
     try {
@@ -118,16 +117,22 @@ const Perfil: React.FC = () => {
         const file = new File([blob], "avatar.png", { type: blob.type });
         await updateAvatarUsuarioAtual(file);
       }
-      await updateEnderecoUsuarioAtual(enderecoData);
       await updateUsuarioAtual(usuarioData);
+      await updateEnderecoUsuarioAtual(enderecoData);
       toast.success("Usuário atualizado com sucesso!", {
         icon: <Icon icon="mdi:check-circle" height={20} className="text-[var(--color-success)]" />,      
       });
-    } catch (err) {
-      console.error(err);
-      toast.error("Erro ao atualizar usuário!", {
-        icon: <Icon icon="mdi:alert-circle" height={20} className="text-[var(--color-danger)]" />,      
-      });
+    } catch (err: any) {
+      if (err.response?.data?.error) {
+        toast.error(err.response.data.error, {
+          icon: <Icon icon="mdi:alert-circle" height={20} className="text-[var(--color-danger)]" />,      
+        });
+      } else {
+        console.error(err);
+        toast.error("Erro ao atualizar usuário!", {
+          icon: <Icon icon="mdi:alert-circle" height={20} className="text-[var(--color-danger)]" />,      
+        });
+      }
     }
   };
 
