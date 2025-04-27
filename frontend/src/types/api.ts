@@ -3,11 +3,11 @@ export interface User {
   Nome: string;
   Email: string;
   Telefone?: string | null;
-  Foto_Perfil?: string | null;
+  Avatar?: string | null;
   SIAPE?: string | null;
-  Tipo?: 'aluno' | 'servidor';
+  Tipo?: "aluno" | "servidor";
   Data_Criacao?: string;
-  Role?: 'user' | 'admin' | 'moderador';
+  Role?: "user" | "admin" | "moderador";
   Senha?: string;
 }
 

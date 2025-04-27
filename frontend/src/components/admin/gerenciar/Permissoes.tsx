@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Icon } from "@iconify-icon/react"
+import { Icon } from "@iconify-icon/react";
 import { toast } from "sonner";
 import { updateRole } from "@/api/api_routes";
 
@@ -26,18 +26,30 @@ export default function Component() {
   }, []);
 
   const handleRoleChange = async (User_ID: number, Role: User["Role"]) => {
-  try {
-    await updateRole({ User_ID, Role });
-    toast.success("Permissão atualizada com sucesso", {
-      icon: <Icon icon="mdi:check-circle" height={20} className="text-[var(--color-success)]" />,
-    });
-  } catch (error) {
-    console.error("Erro ao atualizar permissão:", error);
-    toast.error("Erro ao atualizar permissão!", {
-      icon: <Icon icon="mdi:alert-circle" height={20} className="text-[var(--color-danger)]" />,
-    });
-  }
-}
+    try {
+      await updateRole({ User_ID, Role });
+      toast.success("Permissão atualizada com sucesso", {
+        icon: (
+          <Icon
+            icon="mdi:check-circle"
+            height={20}
+            className="text-[var(--color-success)]"
+          />
+        ),
+      });
+    } catch (error) {
+      console.error("Erro ao atualizar permissão:", error);
+      toast.error("Erro ao atualizar permissão!", {
+        icon: (
+          <Icon
+            icon="mdi:alert-circle"
+            height={20}
+            className="text-[var(--color-danger)]"
+          />
+        ),
+      });
+    }
+  };
 
   const usersFiltrados = useMemo(() => {
     return Users.filter(
@@ -76,9 +88,7 @@ export default function Component() {
               >
                 <div className="flex items-center">
                   <Avatar className="h-[65px] w-[65px]">
-                    <AvatarImage
-                      src={User.Foto_Perfil ?? "/user_placeholder.png"}
-                    />
+                    <AvatarImage src={User.Avatar ?? "/user_placeholder.png"} />
                   </Avatar>
                   <div className="grid grid-rows-2 pl-2">
                     <p className="text-base pt-2">{User.Nome}</p>
@@ -90,7 +100,7 @@ export default function Component() {
                 <div className="col-span-2 sm:col-span-1">
                   <Select
                     defaultValue={User.Role}
-                    onValueChange={(valor: 'user' | 'admin' | 'moderador') => {
+                    onValueChange={(valor: "user" | "admin" | "moderador") => {
                       handleRoleChange(Number(User.User_ID), valor);
                     }}
                   >
@@ -111,4 +121,3 @@ export default function Component() {
     </Card>
   );
 }
-

@@ -1,4 +1,4 @@
-import { RowDataPacket } from 'mysql2';
+import { RowDataPacket } from "mysql2";
 
 export interface User {
   User_ID: number;
@@ -6,7 +6,7 @@ export interface User {
   Email: string;
   Senha?: string;
   Telefone?: string;
-  Foto_Perfil?: string;
+  Avatar?: string;
   SIAPE?: string;
   Tipo?: string;
   Data_Criacao?: Date;

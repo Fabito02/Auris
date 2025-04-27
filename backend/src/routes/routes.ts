@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import * as userController from '../controllers/userController';
+import * as meController from '../controllers/meController';
 import * as authController from '../controllers/authController';
 import * as logController from '../controllers/logController';
 import {verifyToken, verifyRole} from '../middlewares/auth';
@@ -20,8 +21,11 @@ router.get('/auth/role/:id', verifyToken, verifyRole((['admin'])), authControlle
 router.put('/auth/role/:id', verifyToken, verifyRole((['admin'])), authController.updateRole);
 
 // rotas para usuário atual
-router.get('/me', verifyToken, userController.getUsuarioAtual);
-router.get('/me/endereco', verifyToken, userController.getEnderecoUsuarioAtual);
+router.get('/me', verifyToken, meController.getUsuarioAtual);
+router.put('/me', verifyToken, meController.updateUsuarioAtual);
+router.get('/me/endereco', verifyToken, meController.getEnderecoUsuarioAtual);
+router.put('/me/endereco', verifyToken, meController.updateEnderecoUsuarioAtual);
+router.put('/me/avatar', verifyToken, meController.updateAvatar);
 
 // rotas para usuários
 router.get('/users', verifyToken, verifyRole((['admin', 'moderador'])), userController.listUsers);
@@ -30,6 +34,7 @@ router.put('/users/:id', verifyToken, verifyRole((['admin', 'moderador'])), user
 router.get('/users/:id/endereco', verifyToken, verifyRole((['admin', 'moderador'])), userController.getEnderecoByUserId);
 router.put('/users/:id/endereco', verifyToken, verifyRole((['admin'])), userController.updateEnderecoByUserId);
 router.delete('/users/:User_ID', verifyToken, verifyRole((['admin'])), userController.deleteUser);
+router.get('/users/avatar/:id', verifyToken, userController.getAvatar);
 
 // rotas de logs
 router.get('/logs', verifyToken, verifyRole((['admin'])), logController.getLogs);

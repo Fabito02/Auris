@@ -1,41 +1,14 @@
-import { Request, Response, RequestHandler } from 'express';
-import connection from '../db';
-import { RowDataPacket } from 'mysql2';
+import { Request, Response, RequestHandler } from "express";
+import connection from "../db";
+import { RowDataPacket } from "mysql2";
 import { User } from "../models/User";
 import bcrypt from "bcryptjs";
-import { ResultSetHeader } from 'mysql2';
+import { ResultSetHeader } from "mysql2";
 import { registrarLog } from "../utils/logger";
-
-export const getUsuarioAtual = async (req: Request, res: Response): Promise<void> => {
-  try {
-    if (!req.user || !('User_ID' in req.user)) {
-      res.status(403).json({ success: false, error: "Acesso não autorizado" });
-      return;
-    }
-
-    const userId = req.user.User_ID;
-
-    const [rows] = await connection.promise().query<RowDataPacket[]>(
-      "SELECT User_ID, Nome, Email, Telefone, Foto_Perfil, SIAPE, Tipo, Data_Criacao, Role FROM Users WHERE User_ID = ?",
-      [userId]
-    );
-
-    if (rows.length === 0) {
-      res.status(404).json({ success: false, error: "Usuário não encontrado" });
-      return;
-    }
-
-    res.json({ success: true, user: rows[0] });
-
-  } catch (error) {
-    console.error('Erro ao buscar usuário:', error);
-    res.status(500).json({ success: false, error: "Erro interno" });
-  }
-};
 
 export const listUsers = (req: Request, res: Response): void => {
   connection.query(
-    "SELECT User_ID, Nome, Email, Telefone, Foto_Perfil, SIAPE, Tipo, Data_Criacao, Role FROM Users",
+    "SELECT User_ID, Nome, Email, Telefone, Avatar, SIAPE, Tipo, Data_Criacao, Role FROM Users",
     (err, results: RowDataPacket[]) => {
       if (err) {
         res.status(500).json({
@@ -53,16 +26,14 @@ export const getUserById = (req: Request<{ id: string }>, res: Response) => {
   const userId = Number(req.params.id);
 
   connection.query(
-    "SELECT User_ID, Nome, Email, Telefone, Foto_Perfil, SIAPE, Tipo, Data_Criacao, Role FROM Users WHERE User_ID = ?",
+    "SELECT User_ID, Nome, Email, Telefone, Avatar, SIAPE, Tipo, Data_Criacao, Role FROM Users WHERE User_ID = ?",
     [userId],
     (err, results: RowDataPacket[]) => {
       if (err) {
-        return res
-          .status(500)
-          .json({
-            success: false,
-            error: `Erro ao buscar usuário: ${err.message}`,
-          });
+        return res.status(500).json({
+          success: false,
+          error: `Erro ao buscar usuário: ${err.message}`,
+        });
       }
       if (results.length === 0) {
         return res
@@ -84,12 +55,10 @@ export const updateUser = (
   if (userData.Senha) {
     bcrypt.hash(userData.Senha, 10, (err, hashed) => {
       if (err) {
-        return res
-          .status(500)
-          .json({
-            success: false,
-            error: `Erro ao encriptar a senha: ${err.message}`,
-          });
+        return res.status(500).json({
+          success: false,
+          error: `Erro ao encriptar a senha: ${err.message}`,
+        });
       }
       userData.Senha = hashed;
       performUpdate();
@@ -104,12 +73,10 @@ export const updateUser = (
       [userData, userId],
       (err, results: ResultSetHeader) => {
         if (err) {
-          return res
-            .status(500)
-            .json({
-              success: false,
-              error: `Erro ao atualizar usuário: ${err.message}`,
-            });
+          return res.status(500).json({
+            success: false,
+            error: `Erro ao atualizar usuário: ${err.message}`,
+          });
         }
         if (results.affectedRows === 0) {
           return res
@@ -127,17 +94,18 @@ export const updateUser = (
   }
 };
 
-export const deleteUser = (req: Request<{ User_ID: string }>, res: Response) => {
+export const deleteUser = (
+  req: Request<{ User_ID: string }>,
+  res: Response
+) => {
   const userId = Number(req.params.User_ID);
 
   connection.beginTransaction((transactionErr) => {
     if (transactionErr) {
-      return res
-        .status(500)
-        .json({
-          success: false,
-          error: `Erro ao iniciar transação: ${transactionErr.message}`,
-        });
+      return res.status(500).json({
+        success: false,
+        error: `Erro ao iniciar transação: ${transactionErr.message}`,
+      });
     }
 
     connection.query(
@@ -146,12 +114,10 @@ export const deleteUser = (req: Request<{ User_ID: string }>, res: Response) => 
       (deleteErr) => {
         if (deleteErr) {
           return connection.rollback(() => {
-            res
-              .status(500)
-              .json({
-                success: false,
-                error: `Erro ao deletar manifestações: ${deleteErr.message}`,
-              });
+            res.status(500).json({
+              success: false,
+              error: `Erro ao deletar manifestações: ${deleteErr.message}`,
+            });
           });
         }
 
@@ -161,12 +127,10 @@ export const deleteUser = (req: Request<{ User_ID: string }>, res: Response) => 
           (userDeleteErr, results: ResultSetHeader) => {
             if (userDeleteErr) {
               return connection.rollback(() => {
-                res
-                  .status(500)
-                  .json({
-                    success: false,
-                    error: `Erro ao deletar usuário: ${userDeleteErr.message}`,
-                  });
+                res.status(500).json({
+                  success: false,
+                  error: `Erro ao deletar usuário: ${userDeleteErr.message}`,
+                });
               });
             }
 
@@ -181,23 +145,19 @@ export const deleteUser = (req: Request<{ User_ID: string }>, res: Response) => 
             connection.commit((commitErr) => {
               if (commitErr) {
                 return connection.rollback(() => {
-                  res
-                    .status(500)
-                    .json({
-                      success: false,
-                      error: `Erro ao confirmar transação: ${commitErr.message}`,
-                    });
+                  res.status(500).json({
+                    success: false,
+                    error: `Erro ao confirmar transação: ${commitErr.message}`,
+                  });
                 });
               }
 
               registrarLog(`Usuário deletado`, userId);
 
-              return res
-                .status(200)
-                .json({
-                  success: true,
-                  message: "Usuário deletado com sucesso",
-                });
+              return res.status(200).json({
+                success: true,
+                message: "Usuário deletado com sucesso",
+              });
             });
           }
         );
@@ -217,12 +177,10 @@ export const getEnderecoByUserId = (
     [userId],
     (err, results: RowDataPacket[]) => {
       if (err) {
-        return res
-          .status(500)
-          .json({
-            success: false,
-            error: `Erro ao buscar endereço: ${err.message}`,
-          });
+        return res.status(500).json({
+          success: false,
+          error: `Erro ao buscar endereço: ${err.message}`,
+        });
       }
       if (results.length === 0) {
         return res
@@ -234,33 +192,11 @@ export const getEnderecoByUserId = (
   );
 };
 
-export const getEnderecoUsuarioAtual = async (req: Request, res: Response): Promise<void> => {
-  try {
-    if (!req.user || !('User_ID' in req.user)) {
-      res.status(403).json({ success: false, error: "Acesso não autorizado." });
-      return;
-    }
-
-    const userId = req.user.User_ID;
-
-    const [rows] = await connection.promise().query<RowDataPacket[]>(
-      "SELECT * FROM Endereco WHERE User_ID = ?",
-      [userId]
-    );
-
-    if (rows.length === 0) {
-      res.status(404).json({ success: false, error: "Endereço não encontrado." });
-      return;
-    }
-
-    res.json({ success: true, endereco: rows[0] });
-
-  } catch (error) {
-    res.status(500).json({ success: false, error: "Erro interno." });
-  }
-};
-
-export const updateEnderecoByUserId: RequestHandler<{ id: string }> = (req, res, next) => {
+export const updateEnderecoByUserId: RequestHandler<{ id: string }> = (
+  req,
+  res,
+  next
+) => {
   const userId = Number(req.params.id);
   const endereco = req.body;
 
@@ -279,29 +215,57 @@ export const updateEnderecoByUserId: RequestHandler<{ id: string }> = (req, res,
       }
 
       if (results.affectedRows === 0) {
-        res.status(404).json({ success: false, error: "Endereço não encontrado" });
+        res
+          .status(404)
+          .json({ success: false, error: "Endereço não encontrado" });
         return;
       }
 
-      connection.query(
-        "SELECT Email FROM Users WHERE User_ID = ?",
-        [userId],
-        (err, results: RowDataPacket[]) => {
-          if (err) {
-            next(err);
-            return;
-          }
+      res
+        .status(200)
+        .json({ success: true, message: "Endereço atualizado com sucesso." });
+    }
+  );
+};
 
-          if (results.length === 0) {
-            res.status(404).json({ success: false, error: "Usuário não encontrado" });
-            return;
-          }
+export const getAvatar = (req: Request, res: Response): void => {
+  const userId = req.params.id;
 
-          const email = results[0].Email;
-          res.status(200).json({ success: true, message: "Endereço atualizado com sucesso." });
-          registrarLog(`Endereço de ${email} atualizado.`, userId);
-        }
-      );
+  if (!userId) {
+    res.status(400).json({ success: false, error: "ID do usuário não fornecido" });
+    return 
+  }
+
+  connection.query(
+    "SELECT Avatar FROM Users WHERE User_ID = ?",
+    [userId],
+    (err, results: RowDataPacket[]) => {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          error: `Erro ao buscar avatar: ${err.message}`,
+        });
+      }
+      if (results.length === 0) {
+        return res
+          .status(404)
+          .json({ success: false, error: "Avatar não encontrado" });
+      }
+
+      const avatarFilename = results[0].Avatar;
+      
+      if (!avatarFilename) {
+        return res
+          .status(404)
+          .json({ success: false, error: "Usuário não possui avatar" });
+      }
+
+      const avatarUrl = `${req.protocol}://${req.get('host')}/uploads/avatars/${avatarFilename}`;
+
+      return res.status(200).json({
+        success: true,
+        avatarUrl,
+      });
     }
   );
 };

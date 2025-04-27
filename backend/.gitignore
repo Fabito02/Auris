@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 .env
+
+src/uploads/avatars/*
+!src/uploads/avatars/.gitkeep

@@ -12,14 +12,22 @@ import {
   SelectValue,
 } from "../../components/ui/select";
 import Button from "../../components/buttons/Button";
-import "./Perfil.css";
 import Cropper, { Area } from "react-easy-crop";
 import { getCroppedImg } from "../../utils/cropImage";
 import { checkAuth } from "@/api/auth";
 import { User, Endereco } from "@/types/api";
-import { getUsuarioAtual, getEnderecoUsuarioAtual } from "@/api/api_routes";
+import {
+  getUsuarioAtual,
+  getEnderecoUsuarioAtual,
+  updateEnderecoUsuarioAtual,
+  updateUsuarioAtual,
+  updateAvatarUsuarioAtual,
+  getAvatar
+} from "@/api/api_routes";
+import { toast } from "sonner";
 
-const Perfil = () => {
+const Perfil: React.FC = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
   const [endereco, setEndereco] = useState<Endereco | null>(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -27,179 +35,154 @@ const Perfil = () => {
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
   const [showCropper, setShowCropper] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [originalImage, setOriginalImage] = useState<string | null>(null);
+  const [profilePic, setProfilePic] = useState<string | null>(null);
 
   useEffect(() => {
     document.title = "Perfil";
     const token = localStorage.getItem("auris_token");
     if (!token) {
       navigate("/errors/401");
-    } else {
-      checkAuth(navigate, ["admin", "moderador", "user"]);
+      return;
     }
+    checkAuth(navigate, ["admin", "moderador", "user"]);
+    (async () => {
+      const respUser = await getUsuarioAtual();
+      setUser(respUser.user);
+      const respEnd = await getEnderecoUsuarioAtual();
+      setEndereco(respEnd.endereco);
+    })();
+  }, [navigate]);
 
-    const fetchUser = async () => {
-      const usuario = await getUsuarioAtual();
-      setUser(usuario.user);
-    };
-
-    fetchUser();
-
-    const fetchEndereco = async () => {
-      const endereco = await getEnderecoUsuarioAtual();
-      setEndereco(endereco.endereco);
-    };
-
-    fetchEndereco();
-
-    console.log(user);
-  }, []);
-
-  const [profilePic, setProfilePic] = useState<string | null>(null);
-  const [originalImage, setOriginalImage] = useState<string | null>(null);
-  const [name, setName] = useState("Seu Nome");
-  const [email, setEmail] = useState("email@exemplo.com");
-  const [phone, setPhone] = useState("(00) 00000-0000");
-
-  const navigate = useNavigate();
+  useEffect(() => {
+    if (user) {
+      const fetchAvatar = async () => {
+        if (!user?.User_ID) return;
+        const avatar = await getAvatar(user.User_ID);
+        setProfilePic(avatar.avatarUrl);
+      };
+  
+      fetchAvatar()
+    }
+  }, [user]);
 
   const handlePicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setOriginalImage(null);
-        setTimeout(() => {
-          setOriginalImage(reader.result as string);
-          setShowCropper(true);
-        }, 50);
-      };
-      reader.readAsDataURL(file);
-    }
-
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setOriginalImage(null);
+      setTimeout(() => {
+        setOriginalImage(reader.result as string);
+        setShowCropper(true);
+      }, 50);
+    };
+    reader.readAsDataURL(file);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const onCropComplete = useCallback(
-    (_croppedArea: Area, croppedAreaPixels: Area) => {
-      setCroppedAreaPixels(croppedAreaPixels);
-    },
-    []
-  );
+  const onCropComplete = useCallback((_: unknown, croppedPixels: Area) => {
+    setCroppedAreaPixels(croppedPixels);
+  }, []);
 
   const handleCropSave = async () => {
     if (!originalImage || !croppedAreaPixels) return;
     const cropped = await getCroppedImg(originalImage, croppedAreaPixels);
     setProfilePic(cropped);
-    setOriginalImage(null);
     setShowCropper(false);
+    setOriginalImage(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ name, email, phone, profilePic });
+    const form = e.currentTarget as HTMLFormElement;
+    const formData = new FormData(form);
+    const dados = Object.fromEntries(formData.entries());
+    const enderecoData: Partial<Endereco> = {
+      CEP: dados.cep?.toString() || "",
+      Estado: dados.estado?.toString() || "",
+      Cidade: dados.cidade?.toString() || "",
+      Bairro: dados.bairro?.toString() || "",
+      Logradouro: dados.logradouro?.toString() || "",
+      Numero: dados.numero?.toString() || "",
+      Complemento: dados.complemento?.toString() || "",
+    };
+    const usuarioData: Partial<User> = {
+      Nome: dados.nome?.toString() || "",
+      Email: dados.email?.toString() || "",
+      Telefone: dados.telefone?.toString() || "",
+    };
+    try {
+      if (profilePic && profilePic.startsWith("data:")) {
+        const blob = await fetch(profilePic).then((r) => r.blob());
+        const file = new File([blob], "avatar.png", { type: blob.type });
+        await updateAvatarUsuarioAtual(file);
+      }
+      await updateEnderecoUsuarioAtual(enderecoData);
+      await updateUsuarioAtual(usuarioData);
+      toast.success("Usuário atualizado com sucesso!", {
+        icon: <Icon icon="mdi:check-circle" height={20} className="text-[var(--color-success)]" />,      
+      });
+    } catch (err) {
+      console.error(err);
+      toast.error("Erro ao atualizar usuário!", {
+        icon: <Icon icon="mdi:alert-circle" height={20} className="text-[var(--color-danger)]" />,      
+      });
+    }
   };
 
   return (
-    <BlankLayout showFooter={false} showHeader={true} showNavbar={true}>
+    <BlankLayout showFooter={false} showHeader showNavbar>
       <div className="py-10 max-w-5xl mx-auto">
-        <Card className="p-2 border-0 card-configuracoes shadow-none ">
-          <CardContent className="">
-          <form onSubmit={handleSubmit} className="grid grid-cols-3 gap-4">
-            <div className="col-span-3 md:col-span-1 flex justify-center">
-              <div className="relative w-[100%] w-[220px] h-[220px] aspect-[1/1] rounded-full overflow-hidden">
-                <img
-                  src={user?.Foto_Perfil || "/user_placeholder.png"}
-                  alt="Foto de perfil"
-                  className="w-full h-full object-cover"
-                />
-                <label
-                  htmlFor="profilePicInput"
-                  className="absolute inset-0 bg-black/40 flex items-center justify-center cursor-pointer"
-                >
-                  <Icon icon="mdi:pencil" width={42} className="text-white" />
-                </label>
-                <input
-                  id="profilePicInput"
-                  type="file"
-                  accept="image/*"
-                  onChange={handlePicChange}
-                  className="hidden"
-                  ref={fileInputRef}
-                />
+        <Card className="p-2 border-0 shadow-none">
+          <CardContent>
+            <form onSubmit={handleSubmit} className="grid grid-cols-3 gap-4">
+              <div className="col-span-3 md:col-span-1 flex justify-center">
+                <div className="relative w-[220px] h-[220px] rounded-full overflow-hidden">
+                  <img src={profilePic || "/user_placeholder.png"} alt="Foto de perfil" className="w-full h-full object-cover" />
+                  <label htmlFor="imageInput" className="absolute inset-0 bg-black/40 flex items-center justify-center cursor-pointer">
+                    <Icon icon="mdi:pencil" width={42} className="text-white" />
+                  </label>
+                  <input id="imageInput" type="file" accept="image/*" onChange={handlePicChange} ref={fileInputRef} className="hidden" />
+                </div>
               </div>
-            </div>
-
               <div className="col-span-3 md:col-span-2 grid grid-cols-2 gap-4">
                 <div className="col-span-2">
                   <h3 className="mb-1">Nome</h3>
-                  <Input
-                    type="text"
-                    value={user?.Nome}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Seu nome completo"
-                  />
+                  <Input name="nome" defaultValue={user?.Nome || ""} placeholder="Seu nome completo" />
                 </div>
-
                 <div className="col-span-1">
                   <h3 className="mb-1 mt-4">Permissão</h3>
-                  <Input
-                    type="text"
-                    value={user?.Role}
-                    disabled
-                    placeholder="Seu SIAPE"
-                  />
+                  <Input value={user?.Role} disabled />
                 </div>
-
                 <div className="col-span-1">
                   <h3 className="mb-1 mt-4">SIAPE</h3>
-                  <Input
-                    type="text"
-                    value={user?.SIAPE? user.SIAPE : "Sem SIAPE"}
-                    disabled
-                    placeholder="Seu SIAPE"
-                  />
+                  <Input value={user?.SIAPE || "Sem SIAPE"} disabled />
                 </div>
-
-                <div className="col-span-1 md:col-span-1">
+                <div className="col-span-1">
                   <h3 className="mb-1">Tipo</h3>
-                  <Input
-                    type="text"
-                    value={user?.Tipo}
-                    disabled
-                    placeholder="Seu tipo de usuário"
-                  />
+                  <Input value={user?.Tipo} disabled />
                 </div>
               </div>
-
               <div className="col-span-3 lg:col-span-2">
                 <h3 className="mb-1">Email</h3>
-                <Input
-                  type="email"
-                  value={user?.Email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="email@exemplo.com"
-                />
+                <Input name="email" value={user?.Email || ""} disabled placeholder="email@exemplo.com" />
               </div>
-
               <div className="col-span-3 sm:col-span-2 md:col-span-1">
                 <h3 className="mb-1">Telefone</h3>
-                <Input
-                  type="tel"
-                  value={user?.Telefone ? user.Telefone : ""}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="(00) 00000-0000"
-                />
+                <Input name="telefone" defaultValue={user?.Telefone || ""} placeholder="(00) 00000-0000" />
               </div>
-
               <div className="col-span-1">
                 <h3 className="mb-1">Estado</h3>
-                <Select value={endereco?.Estado} onValueChange={(value) => console.log(value)}>
-                  <SelectTrigger className="custom-select w-full">
+                <Select
+                  name="estado"
+                  value={endereco?.Estado || ""}
+                  onValueChange={(value) => setEndereco((prev) => ({ ...prev, Estado: value } as Endereco))}
+                >
+                  <SelectTrigger className="w-full custom-select">
                     <SelectValue placeholder="Selecione seu estado" />
                   </SelectTrigger>
-                  <SelectContent className="custom-select-content">
+                  <SelectContent>
                     <SelectItem value="AC">Acre</SelectItem>
                     <SelectItem value="AL">Alagoas</SelectItem>
                     <SelectItem value="AP">Amapá</SelectItem>
@@ -230,67 +213,30 @@ const Perfil = () => {
                   </SelectContent>
                 </Select>
               </div>
-
               <div className="col-span-2 sm:col-span-2 md:col-span-1">
                 <h3 className="mb-1">Cidade</h3>
-                <Input
-                  type="text"
-                  value={endereco?.Cidade}
-                  // onChange={(e) => }
-                  placeholder="Sua cidade"
-                />
+                <Input name="cidade" defaultValue={endereco?.Cidade || ""} placeholder="Sua cidade" />
               </div>
-
               <div className="col-span-1">
                 <h3 className="mb-1">Número</h3>
-                <Input
-                  type="text"
-                  value={endereco?.Numero}
-                  // onChange={(e) => }
-                  placeholder="Seu bairro"
-                />
+                <Input name="numero" defaultValue={endereco?.Numero || ""} placeholder="Número da residência" />
               </div>
-
               <div className="col-span-2 sm:col-span-1">
                 <h3 className="mb-1">CEP</h3>
-                <Input
-                  type="text"
-                  value={endereco?.CEP}
-                  // onChange={(e) => }
-                  placeholder="Seu bairro"
-                />
+                <Input name="cep" defaultValue={endereco?.CEP || ""} placeholder="Seu CEP" />
               </div>
-
               <div className="col-span-3 sm:col-span-2 md:col-span-1">
                 <h3 className="mb-1">Bairro</h3>
-                <Input
-                  type="text"
-                  value={endereco?.Bairro}
-                  // onChange={(e) => }
-                  placeholder="Seu bairro"
-                />
+                <Input name="bairro" defaultValue={endereco?.Bairro || ""} placeholder="Seu bairro" />
               </div>
-
               <div className="col-span-3 md:col-span-1">
                 <h3 className="mb-1">Logradouro</h3>
-                <Input
-                  type="text"
-                  value={endereco?.Logradouro}
-                  // onChange={(e) => }
-                  placeholder="Seu bairro"
-                />
+                <Input name="logradouro" defaultValue={endereco?.Logradouro || ""} placeholder="Rua/Avenida" />
               </div>
-
               <div className="col-span-3">
                 <h3 className="mb-1">Complemento</h3>
-                <Input
-                  type="text"
-                  value={endereco?.Complemento}
-                  // onChange={(e) => }
-                  placeholder="Seu bairro"
-                />
+                <Input name="complemento" defaultValue={endereco?.Complemento || ""} placeholder="Complemento" />
               </div>
-
               <div className="grid md:grid-cols-2 md:flex-row gap-3 col-span-3">
                 <Button
                   type="button"
@@ -314,10 +260,9 @@ const Perfil = () => {
           </CardContent>
         </Card>
       </div>
-
       {showCropper && originalImage && (
         <div className="fixed inset-0 bg-black/80 z-50 flex flex-col justify-center items-center p-4">
-          <div className="relative w-full max-w-md h-[400px] bg-black rounded-[20px] overflow-hidden">
+          <div className="relative w-full max-w-md h-[400px] rounded-[20px] overflow-hidden">
             <Cropper
               image={originalImage}
               crop={crop}
@@ -329,27 +274,9 @@ const Perfil = () => {
             />
           </div>
           <div className="flex gap-4 mt-4">
-            <input
-              type="range"
-              min={1}
-              max={3}
-              step={0.1}
-              value={zoom}
-              className="bg-green"
-              onChange={(e) => setZoom(Number(e.target.value))}
-            />
-            <Button
-              onClick={handleCropSave}
-              texto="Salvar Recorte"
-              color="success"
-              className="bg-blue-500 text-white"
-            />
-            <Button
-              onClick={() => setShowCropper(false)}
-              texto="Cancelar"
-              color="danger"
-              className="bg-red-500 text-white"
-            />
+            <input type="range" min={1} max={3} step={0.1} defaultValue={zoom} onChange={e => setZoom(Number(e.target.value))} />
+            <Button onClick={handleCropSave} texto="Salvar Recorte" color="success" />
+            <Button onClick={() => setShowCropper(false)} texto="Cancelar" color="danger" />
           </div>
         </div>
       )}
