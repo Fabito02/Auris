@@ -40,53 +40,23 @@ export const getRole = async (usuario: User) => {
 };
 
 export const getUsuarioAtual = async () => {
-  try {
-    const response = await api.get("/me");
-    return response.data;
-  } catch (error: any) {
-    return {
-      success: false,
-      error:
-        error.response?.data?.error ||
-        error.message ||
-        "Erro ao buscar usuário atual",
-    };
-  }
+  const response = await api.get("/me");
+  return response.data;
 };
 
 export const getEnderecoUsuarioAtual = async () => {
-  try {
-    const response = await api.get("/me/endereco");
-    return response.data;
-  } catch (error: any) {
-    return {
-      success: false,
-      error:
-        error.response?.data?.error ||
-        error.message ||
-        "Erro ao buscar endereço do usuário atual",
-    };
-  }
+  const response = await api.get("/me/endereco");
+  return response.data;
 };
 
 export const updateEnderecoUsuarioAtual = async (
   enderecoData: Partial<Endereco>
 ) => {
-  try {
-    const response = await api.put(`/me/endereco`, enderecoData);
-    return {
-      success: true,
-      data: response.data,
-    };
-  } catch (error: any) {
-    return {
-      success: false,
-      error:
-        error.response?.data?.error ||
-        error.message ||
-        "Erro ao atualizar endereço do usuário",
-    };
-  }
+  const response = await api.put(`/me/endereco`, enderecoData);
+  return {
+    success: true,
+    data: response.data,
+  };
 };
 
 export const postRegistrar = async (usuario: User) => {
@@ -108,67 +78,34 @@ export const updateRole = async ({
   User_ID,
   Role,
 }: Pick<User, "User_ID" | "Role">) => {
-  try {
-    const response = await api.put(`/auth/role/${User_ID}`, { Role });
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  const response = await api.put(`/auth/role/${User_ID}`, { Role });
+  return response.data;
 };
 
 export const updateUsuarioAtual = async (userData: Partial<User>) => {
-  try {
-    const response = await api.put(`/me`, userData);
-    return {
-      success: true,
-      data: response.data,
-    };
-  } catch (error: any) {
-    return {
-      success: false,
-      error:
-        error.response?.data?.error ||
-        error.message ||
-        "Erro ao atualizar usuário",
-    };
-  }
+  const response = await api.put(`/me`, userData);
+  return {
+    success: true,
+    data: response.data,
+  };
 };
 
 export const updateAvatarUsuarioAtual = async (avatar: File) => {
   const formData = new FormData();
   formData.append("avatar", avatar, "avatar");
 
-  try {
-    const response = await api.put("/me/avatar", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    return {
-      success: true,
-      data: response.data,
-    };
-  } catch (error) {
-    console.error("Erro ao atualizar avatar:", error);
-    return {
-      success: false,
-      error: "Erro ao atualizar avatar",
-    };
-  }
+  const response = await api.put("/me/avatar", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return {
+    success: true,
+    data: response.data,
+  };
 };
 
 export const getAvatar = async (id: number) => {
-  try {
-    const response = await api.get(`/users/avatar/${id}`);
-    return response.data;
-  } catch (error: any) {
-    return {
-      success: false,
-      error:
-        error.response?.data?.error ||
-        error.message ||
-        "Erro ao buscar avatar do usuário atual",
-    };
-  }
+  const response = await api.get(`/users/avatar/${id}`);
+  return response.data;
 };
