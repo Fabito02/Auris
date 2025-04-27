@@ -14,16 +14,45 @@ import { Input } from "@/components/ui/input";
 import { Icon } from "@iconify-icon/react";
 import { toast } from "sonner";
 import { updateRole } from "@/api/api_routes";
+import { getAvatar } from "@/api/api_routes";
+import { useNavigate } from "react-router-dom";
 
 export default function Component() {
+
   const [Users, setUsuarios] = useState([]);
   const [search, setSearch] = useState("");
+  const [avatars, setAvatars] = useState<Record<number, string>>({});
 
   useEffect(() => {
     getUsuarios().then((res) => {
       setUsuarios(res.data);
     });
   }, []);
+
+  useEffect(() => {
+    async function fetchAvatars() {
+      const avatarPromises = Users.map(async (user: User) => {
+        try {
+          const res = await getAvatar(user.User_ID || 0);
+          return { id: user.User_ID, url: res?.avatarUrl || "/user_placeholder.png" };
+        } catch (error) {
+          return { id: user.User_ID, url: "/user_placeholder.png" };
+        }
+      });
+  
+      const avatarResults = await Promise.all(avatarPromises);
+      const avatarMap: Record<number, string> = {};
+      avatarResults.forEach(({ id, url }) => {
+        avatarMap[id as number] = url;
+      });
+  
+      setAvatars(avatarMap);
+    }
+  
+    if (Users.length > 0) {
+      fetchAvatars();
+    }
+  }, [Users]);
 
   const handleRoleChange = async (User_ID: number, Role: User["Role"]) => {
     try {
@@ -88,7 +117,7 @@ export default function Component() {
               >
                 <div className="flex items-center">
                   <Avatar className="h-[65px] w-[65px]">
-                    <AvatarImage src={User.Avatar ?? "/user_placeholder.png"} />
+                    <AvatarImage src={avatars[User.User_ID || 0] ?? "/user_placeholder.png"} />
                   </Avatar>
                   <div className="grid grid-rows-2 pl-2">
                     <p className="text-base pt-2">{User.Nome}</p>

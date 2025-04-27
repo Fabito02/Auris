@@ -5,16 +5,47 @@ import { User } from "@/types/api";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Icon } from "@iconify-icon/react";
+import { getAvatar } from "@/api/api_routes";
+import { useNavigate } from "react-router-dom";
 
 export default function Component() {
+
+  const navigate = useNavigate();
+
   const [Users, setUsuarios] = useState([]);
   const [search, setSearch] = useState("");
+  const [avatars, setAvatars] = useState<Record<number, string>>({});
 
   useEffect(() => {
     getUsuarios().then((res) => {
       setUsuarios(res.data);
     });
   }, []);
+
+  useEffect(() => {
+    async function fetchAvatars() {
+      const avatarPromises = Users.map(async (user: User) => {
+        try {
+          const res = await getAvatar(user.User_ID || 0);
+          return { id: user.User_ID, url: res?.avatarUrl || "/user_placeholder.png" };
+        } catch (error) {
+          return { id: user.User_ID, url: "/user_placeholder.png" };
+        }
+      });
+  
+      const avatarResults = await Promise.all(avatarPromises);
+      const avatarMap: Record<number, string> = {};
+      avatarResults.forEach(({ id, url }) => {
+        avatarMap[id as number] = url;
+      });
+  
+      setAvatars(avatarMap);
+    }
+  
+    if (Users.length > 0) {
+      fetchAvatars();
+    }
+  }, [Users]);
 
   const usersFiltrados = useMemo(() => {
     return Users.filter(
@@ -52,10 +83,11 @@ export default function Component() {
                 key={User.User_ID}
                 className="grid grid-cols-2 items-center gap-2 p-3 cursor-pointer hover:bg-[var(--color-cinza-semitransparente-claro)]"
                 style={{ transition: "background-color 0.3s ease-in-out" }}
+                onClick={() => navigate(`/admin/gerenciar/${User.User_ID}/perfil`)}
               >
                 <div className="flex items-center">
                   <Avatar className="h-[65px] w-[65px]">
-                    <AvatarImage src={User.Avatar ?? "/user_placeholder.png"} />
+                    <AvatarImage src={avatars[User.User_ID || 0] ?? "/user_placeholder.png"} />
                   </Avatar>
                   <div className="grid grid-rows-2 pl-2">
                     <p className="text-base pt-2">{User.Nome}</p>
