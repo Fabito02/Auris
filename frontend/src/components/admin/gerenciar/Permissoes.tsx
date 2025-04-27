@@ -15,7 +15,6 @@ import { Icon } from "@iconify-icon/react";
 import { toast } from "sonner";
 import { updateRole } from "@/api/api_routes";
 import { getAvatar } from "@/api/api_routes";
-import { useNavigate } from "react-router-dom";
 
 export default function Component() {
 
