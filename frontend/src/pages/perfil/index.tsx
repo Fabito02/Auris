@@ -162,8 +162,8 @@ const Perfil: React.FC = () => {
                   <Input value={user?.Role} disabled />
                 </div>
                 <div className="col-span-1">
-                  <h3 className="mb-1 mt-4">SIAPE</h3>
-                  <Input value={user?.SIAPE || "Sem SIAPE"} disabled />
+                  <h3 className="mb-1 mt-4">{user?.Tipo === "servidor" ? "SIAPE" : "Matrícula"}</h3>
+                  <Input value={user?.SIAPE || "Indefinido"} disabled />
                 </div>
                 <div className="col-span-1">
                   <h3 className="mb-1">Tipo</h3>
