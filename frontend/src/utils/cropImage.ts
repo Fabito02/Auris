@@ -16,6 +16,9 @@ export const getCroppedImg = async (
 
   if (!ctx) throw new Error("Erro ao criar o contexto do canvas.");
 
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
   ctx.drawImage(
     image,
     pixelCrop.x,

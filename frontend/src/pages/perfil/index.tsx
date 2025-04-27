@@ -25,6 +25,7 @@ import {
   getAvatar
 } from "@/api/api_routes";
 import { toast } from "sonner";
+import "./Perfil.css";
 
 const Perfil: React.FC = () => {
   const navigate = useNavigate();
@@ -146,7 +147,7 @@ const Perfil: React.FC = () => {
                 <div className="relative w-[220px] h-[220px] rounded-full overflow-hidden">
                   <img src={profilePic || "/user_placeholder.png"} alt="Foto de perfil" className="w-full h-full object-cover" />
                   <label htmlFor="imageInput" className="absolute inset-0 bg-black/40 flex items-center justify-center cursor-pointer">
-                    <Icon icon="mdi:pencil" width={42} className="text-white" />
+                    <Icon icon="material-symbols:edit-outline-rounded" width={42} className="text-white" />
                   </label>
                   <input id="imageInput" type="file" accept="image/*" onChange={handlePicChange} ref={fileInputRef} className="hidden" />
                 </div>
@@ -266,8 +267,8 @@ const Perfil: React.FC = () => {
         </Card>
       </div>
       {showCropper && originalImage && (
-        <div className="fixed inset-0 bg-black/80 z-50 flex flex-col justify-center items-center p-4">
-          <div className="relative w-full max-w-md h-[400px] rounded-[20px] overflow-hidden">
+        <div className="fixed inset-0 bg-black/65 z-50 flex flex-col justify-center items-center p-4">
+          <div className="relative w-full max-w-lg w-full h-[400px] overflow-hidden bg-white rounded-t-[1rem] rounded-b-none">
             <Cropper
               image={originalImage}
               crop={crop}
@@ -278,10 +279,10 @@ const Perfil: React.FC = () => {
               onCropComplete={onCropComplete}
             />
           </div>
-          <div className="flex gap-4 mt-4">
-            <input type="range" min={1} max={3} step={0.1} defaultValue={zoom} onChange={e => setZoom(Number(e.target.value))} />
-            <Button onClick={handleCropSave} texto="Salvar Recorte" color="success" />
-            <Button onClick={() => setShowCropper(false)} texto="Cancelar" color="danger" />
+          <div className="grid grid-cols-2 gap-4 max-w-lg w-full bg-black/40 rounded-b-[1rem] p-4">
+            <input type="range" min={1} max={5} step={0.1} defaultValue={zoom} onChange={e => setZoom(Number(e.target.value))} className="col-span-2" />
+            <Button onClick={() => setShowCropper(false)} texto="Cancelar" color="danger" className="col-span-1" />
+            <Button onClick={handleCropSave} texto="Salvar Recorte" color="success" className="col-span-1" />
           </div>
         </div>
       )}
