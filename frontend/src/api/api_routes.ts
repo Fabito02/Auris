@@ -59,6 +59,16 @@ export const updateEnderecoUsuarioAtual = async (
   };
 };
 
+export const getEnderecoByUserId = async (id: number) => {
+  const response = await api.get(`/users/${id}/endereco`);
+  return response.data;
+};
+
+export const getUsuarioByUserId = async (id: number) => {
+  const response = await api.get(`/users/${id}`);
+  return response.data;
+}
+
 export const postRegistrar = async (usuario: User) => {
   const response = await api.post("/auth/registrar", usuario);
   return response.data;
