@@ -97,9 +97,23 @@ export const updateEnderecoUsuarioAtual = async (
       ]);
 
     if (updateResults.affectedRows === 0) {
+      const [insertResults] = await connection
+        .promise()
+        .query<ResultSetHeader>("INSERT INTO Endereco SET ?, User_ID = ?", [
+          endereco,
+          userId,
+        ]);
+
+      if (insertResults.affectedRows === 0) {
+        res
+          .status(500)
+          .json({ success: false, error: "Erro ao criar novo endereço." });
+        return;
+      }
+
       res
-        .status(404)
-        .json({ success: false, error: "Endereço não encontrado" });
+        .status(201)
+        .json({ success: true, message: "Endereço criado com sucesso." });
       return;
     }
 
