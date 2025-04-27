@@ -267,7 +267,7 @@ const Perfil: React.FC = () => {
         </Card>
       </div>
       {showCropper && originalImage && (
-        <div className="fixed inset-0 bg-black/65 z-50 flex flex-col justify-center items-center p-4">
+        <div className="fixed inset-0 bg-black/65 z-50 flex flex-col justify-center items-center p-4 backdrop-blur">
           <div className="relative w-full max-w-lg w-full h-[400px] overflow-hidden bg-white rounded-t-[1rem] rounded-b-none">
             <Cropper
               image={originalImage}
