@@ -145,7 +145,6 @@ export const updateAvatarUsuarioAtual = async (avatar: File) => {
         "Content-Type": "multipart/form-data",
       },
     });
-    console.log(response.data);
   } catch (error) {
     console.error("Erro ao atualizar avatar:", error);
   }

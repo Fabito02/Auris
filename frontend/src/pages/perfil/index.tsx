@@ -166,7 +166,7 @@ const Perfil: React.FC = () => {
               </div>
               <div className="col-span-3 lg:col-span-2">
                 <h3 className="mb-1">Email</h3>
-                <Input name="email" value={user?.Email || ""} disabled placeholder="email@exemplo.com" />
+                <Input name="email" defaultValue={user?.Email || ""} disabled placeholder="email@exemplo.com" />
               </div>
               <div className="col-span-3 sm:col-span-2 md:col-span-1">
                 <h3 className="mb-1">Telefone</h3>
