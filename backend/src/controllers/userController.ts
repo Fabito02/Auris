@@ -314,6 +314,7 @@ export const registrarUsuario = async (req: Request, res: Response) => {
 
     user.Tipo = isAluno(user.Email) ? "aluno" : "servidor";
     user.Senha = await bcrypt.hash(user.Senha, 10);
+    user.Email_Verificado = true;
 
     const [result] = await connection.promise().query<ResultSetHeader>(
       "INSERT INTO Users SET ?",
