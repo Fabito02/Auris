@@ -84,10 +84,7 @@ export const postLogout = async () => {
   return response.data;
 };
 
-export const updateRole = async ({
-  User_ID,
-  Role,
-}: Pick<User, "User_ID" | "Role">) => {
+export const updateRole = async ({User_ID, Role,}: Pick<User, "User_ID" | "Role">) => {
   const response = await api.put(`/auth/role/${User_ID}`, { Role });
   return response.data;
 };
@@ -118,4 +115,9 @@ export const updateAvatarUsuarioAtual = async (avatar: File) => {
 export const getAvatar = async (id: number) => {
   const response = await api.get(`/users/avatar/${id}`);
   return response.data;
+};
+
+export const registrarUsuario = async (user: User): Promise<void> => {
+  const response = await api.post("/users", user);
+  return response.data
 };

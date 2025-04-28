@@ -29,6 +29,7 @@ router.put('/me/avatar', verifyToken, meController.updateAvatar);
 
 // rotas para usuários
 router.get('/users', verifyToken, verifyRole((['admin', 'moderador'])), userController.listUsers);
+router.post('/users', verifyToken, verifyRole((['admin'])), userController.registrarUsuario);
 router.get('/users/:id', verifyToken, verifyRole((['admin', 'moderador'])), userController.getUserById);
 router.put('/users/:id', verifyToken, verifyRole((['admin', 'moderador'])), userController.updateUser);
 router.get('/users/:id/endereco', verifyToken, verifyRole((['admin', 'moderador'])), userController.getEnderecoByUserId);

@@ -15,6 +15,7 @@ import { Icon } from "@iconify-icon/react";
 import { toast } from "sonner";
 import { updateRole } from "@/api/api_routes";
 import { getAvatar } from "@/api/api_routes";
+import AnimarAoVer from "@/components/AnimarAoVer";
 
 export default function Component() {
 
@@ -91,7 +92,7 @@ export default function Component() {
   return (
     <Card className="border-0 shadow-none flex items-center">
       <CardContent className="w-full max-w-[950px] mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl my-6">Gerenciar Permissões</h1>
+        <h1 className="text-3xl my-6 font-[500]">Gerenciar Permissões</h1>
         <div className="relative">
           <Icon
             icon="lucide:search"
@@ -110,39 +111,41 @@ export default function Component() {
             .slice()
             .reverse()
             .map((User: User) => (
-              <Card
-                key={User.User_ID}
-                className="grid grid-cols-2 items-center gap-2 p-3"
-              >
-                <div className="flex items-center">
-                  <Avatar className="h-[65px] w-[65px]">
-                    <AvatarImage src={avatars[User.User_ID || 0] ?? "/user_placeholder.png"} />
-                  </Avatar>
-                  <div className="grid grid-rows-2 pl-2">
-                    <p className="text-base pt-2">{User.Nome}</p>
-                    <p className="text-sm pb-2 self-end text-muted-foreground">
-                      {User.Email}
-                    </p>
+              <AnimarAoVer>
+                <Card
+                  key={User.User_ID}
+                  className="grid grid-cols-2 items-center gap-2 p-3"
+                >
+                  <div className="flex items-center">
+                    <Avatar className="h-[65px] w-[65px]">
+                      <AvatarImage src={avatars[User.User_ID || 0] ?? "/user_placeholder.png"} />
+                    </Avatar>
+                    <div className="grid grid-rows-2 pl-2">
+                      <p className="text-base pt-2">{User.Nome}</p>
+                      <p className="text-sm pb-2 self-end text-muted-foreground">
+                        {User.Email}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div className="col-span-2 sm:col-span-1">
-                  <Select
-                    defaultValue={User.Role}
-                    onValueChange={(valor: "user" | "admin" | "moderador") => {
-                      handleRoleChange(Number(User.User_ID), valor);
-                    }}
-                  >
-                    <SelectTrigger className="ml-auto mr-2 mt-2 sm:mt-0 w-full sm:w-[180px]">
-                      <SelectValue placeholder="Permissão" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="admin">Admin</SelectItem>
-                      <SelectItem value="user">Usuário</SelectItem>
-                      <SelectItem value="moderador">Moderador</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </Card>
+                  <div className="col-span-2 sm:col-span-1">
+                    <Select
+                      defaultValue={User.Role}
+                      onValueChange={(valor: "user" | "admin" | "moderador") => {
+                        handleRoleChange(Number(User.User_ID), valor);
+                      }}
+                    >
+                      <SelectTrigger className="ml-auto mr-2 mt-2 sm:mt-0 w-full sm:w-[180px]">
+                        <SelectValue placeholder="Permissão" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="admin">Admin</SelectItem>
+                        <SelectItem value="user">Usuário</SelectItem>
+                        <SelectItem value="moderador">Moderador</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </Card>
+              </AnimarAoVer>
             ))}
         </div>
       </CardContent>

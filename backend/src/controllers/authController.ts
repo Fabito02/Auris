@@ -30,7 +30,6 @@ export const login = (req: Request, res: Response) => {
         return res.status(500).json({ success: false, error: "Dados do usuário incompletos" });
       }
 
-      // Verifica se o email foi confirmado
       const [rows] = await connection.promise().query<RowDataPacket[]>(
         "SELECT Email_Verificado FROM Users WHERE User_ID = ?",
         [user.User_ID]
@@ -49,7 +48,6 @@ export const login = (req: Request, res: Response) => {
         });
       }
 
-      // Gera token de autenticação
       const token = generateToken(user as IUser);
       registrarLog(`Novo login de ${user.Email}`, user.User_ID);
 

@@ -34,6 +34,7 @@
   "devDependencies": {
     "@eslint/js": "^9.24.0",
     "@types/cors": "^2.8.17",
+    "@types/csv-parse": "^1.1.12",
     "@types/express": "^5.0.1",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/mime-types": "^2.1.4",

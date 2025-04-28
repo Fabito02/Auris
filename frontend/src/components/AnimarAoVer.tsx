@@ -13,7 +13,7 @@ const AnimarAoVer = ({ children, className }: { children: React.ReactNode; class
             controls.start({
                 opacity: 1,
                 y: 0,
-                transition: { duration: 0.5, ease: "easeOut" },
+                transition: { duration: 0.35, ease: "easeOut" },
             });
         } else {
             controls.start({

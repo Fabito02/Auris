@@ -6,7 +6,9 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Icon } from "@iconify-icon/react";
 import { getAvatar } from "@/api/api_routes";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Button from "@/components/buttons/Button";
+import AnimarAoVer from "@/components/AnimarAoVer";
 
 export default function Component() {
 
@@ -60,7 +62,7 @@ export default function Component() {
   return (
     <Card className="border-0 shadow-none flex items-center">
       <CardContent className="w-full max-w-[950px] mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl my-6">Usuários</h1>
+        <h1 className="text-3xl my-6 font-[500]">Usuários</h1>
         <div className="relative">
           <Icon
             icon="lucide:search"
@@ -71,52 +73,62 @@ export default function Component() {
             placeholder="Pesquisar por nome, email, tipo ou permissão..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="mb-4 md:max-w-md pl-9"
+            className="mb-4 w-[calc(100%-55px)] md:max-w-md pl-9"
           />
+          <Link to="/admin/adicionar-usuario">
+            <Button
+              iconPosition="center"
+              icon="ic:round-plus"
+              color="secondary"
+              className="p-0 w-9 h-9 absolute right-0 top-1/2 transform -translate-y-1/2">
+            </Button>
+          </Link>
         </div>
         <div className="flex flex-col gap-4">
           {usersFiltrados
             .slice()
             .reverse()
             .map((User: User) => (
-              <Card
-                key={User.User_ID}
-                className="grid grid-cols-2 items-center gap-2 p-3 cursor-pointer hover:bg-[var(--color-cinza-semitransparente-claro)]"
-                style={{ transition: "background-color 0.3s ease-in-out" }}
-                onClick={() => navigate(`/admin/gerenciar/${User.User_ID}/perfil`)}
-              >
-                <div className="flex items-center">
-                  <Avatar className="h-[65px] w-[65px]">
-                    <AvatarImage src={avatars[User.User_ID || 0] ?? "/user_placeholder.png"} />
-                  </Avatar>
-                  <div className="grid grid-rows-2 pl-2">
-                    <p className="text-base pt-2">{User.Nome}</p>
-                    <p className="text-sm pb-2 self-end text-muted-foreground">
-                      {User.Email}
+              <AnimarAoVer>
+                <Card
+                  key={User.User_ID}
+                  className="grid grid-cols-6 items-center gap-2 p-3 cursor-pointer hover:bg-[var(--color-cinza-semitransparente-claro)]"
+                  style={{ transition: "background-color 0.3s ease-in-out" }}
+                  onClick={() => navigate(`/admin/gerenciar/${User.User_ID}/perfil`)}
+                >
+                  <div className="flex items-center col-span-5">
+                    <Avatar className="h-[65px] w-[65px]">
+                      <AvatarImage src={avatars[User.User_ID || 0] ?? "/user_placeholder.png"} />
+                    </Avatar>
+                    <div className="grid grid-rows-2 pl-2">
+                      <p className="text-base pt-2">{User.Nome}</p>
+                      <p className="text-sm pb-2 self-end text-muted-foreground">
+                        {User.Email}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="col-span-1 grid grid-rows-2 mr-2">
+                    <p className="text-sm text-right pb-2 text-[var(--color-muted)]">
+                      {User.Tipo
+                        ? User.Tipo.charAt(0).toUpperCase() + User.Tipo.slice(1)
+                        : ""}
+                    </p>
+                    <p
+                      className={`text-sm text-right pt-2 ${
+                        User.Role === "admin"
+                          ? "text-[var(--color-danger)]"
+                          : User.Role === "moderador"
+                          ? "text-[var(--color-warning)]"
+                          : "text-[var(--color-success)]"
+                      }`}
+                    >
+                      {User.Role
+                        ? User.Role.charAt(0).toUpperCase() + User.Role.slice(1)
+                        : ""}
                     </p>
                   </div>
-                </div>
-                <div className="col-span-1 grid grid-rows-2 mr-2">
-                  <p className="text-sm text-right pb-2 text-[var(--color-muted)]">
-                    {User.Tipo
-                      ? User.Tipo.charAt(0).toUpperCase() + User.Tipo.slice(1)
-                      : ""}
-                  </p>
-                  <p
-                    className={`text-sm text-right pt-2 ${
-                      User.Role === "admin"
-                        ? "text-[var(--color-danger)]"
-                        : User.Role === "moderador"
-                        ? "text-[var(--color-warning)]"
-                        : "text-[var(--color-success)]"
-                    }`}
-                  >
-                    {User.Role
-                      ? User.Role.charAt(0).toUpperCase() + User.Role.slice(1)
-                      : ""}
-                  </p>
-                </div>
-              </Card>
+                </Card>
+              </AnimarAoVer>
             ))}
         </div>
       </CardContent>
