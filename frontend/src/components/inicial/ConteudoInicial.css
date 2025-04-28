@@ -4,6 +4,9 @@
     max-height: 1200px;
     padding-bottom: 50px;
     padding-top: 50px;
+    max-width: 1800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .primeira-tela {
@@ -48,7 +51,7 @@
 
 .title {
     font-family: 'Poppins', sans-serif;
-    font-size: 3.5em;
+    font-size: 3.7em;
     color: #1c582e;
     font-weight: 300;
 }
