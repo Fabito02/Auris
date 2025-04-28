@@ -5,13 +5,13 @@
 
 :root {
   --color-primary: #16aa51;
-  --color-primary-hover: #1eb65b;
+  --color-primary-hover: #15b354;
 
-  --color-secondary: #e1d54e;
-  --color-secondary-hover: #e9dd5e;
+  --color-secondary: #FFCF50;
+  --color-secondary-hover: #ffd86b;
 
-  --color-info: #0dcaf0;
-  --color-info-hover: #1acff5;
+  --color-info: #22bcdb;
+  --color-info-hover: #25c7e8;
 
   --color-danger: #dc3545;
   --color-danger-hover: #df4755;

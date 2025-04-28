@@ -4,6 +4,12 @@ import { Card } from "@/components/ui/card";
 import "./Informacoes.css";
 import AnimarAoVer from "@/components/AnimarAoVer";
 import { checkAuth } from "@/api/auth";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 const Informacoes = [
   {
@@ -109,7 +115,7 @@ export default function Faq() {
   }, []);
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-8">
+    <section className="max-w-5xl mx-auto px-4 py-8">
       <div className="grid md:grid-cols-2 gap-6 items-center mb-24">
         <div className="w-full flex justify-center mt-5">
           <img
@@ -126,18 +132,18 @@ export default function Faq() {
           </p>
         </div>
       </div>
-      <div className="grid md:grid-cols-2 gap-6">
-        {Informacoes.map((faq, index) => (
-          <AnimarAoVer>
-            <Card key={index} className="p-6 faq-card">
-              <h4 className="text-[18px] font-semibold">{faq.title}</h4>
-              <p className="text-base text-muted-foreground leading-relaxed">
-                {faq.content}
-              </p>
-            </Card>
-          </AnimarAoVer>
-        ))}
-      </div>
+      <AnimarAoVer>
+        <Accordion type="single" collapsible className="mb-12 max-w-4xl mx-auto">
+          {Informacoes.map((faq, index) => (
+              <AccordionItem value={`item-${index}`} key={index}>
+                <AccordionTrigger className="text-1xl font-semibold">{faq.title}</AccordionTrigger>
+                <AccordionContent className="bg-gray-50 text-[15px] p-3">
+                  {faq.content}
+                </AccordionContent>
+              </AccordionItem>
+          ))}
+        </Accordion>
+      </AnimarAoVer>
     </section>
   );
 }

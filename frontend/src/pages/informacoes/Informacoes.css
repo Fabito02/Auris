@@ -22,8 +22,7 @@
 
 .faq-card {
     height: 100%;
-    border-color: #e1e1e1;
-    border-left: #28a745 10px solid;
+    background-color: #f5f5f5;
 }
 
 .colTop {
