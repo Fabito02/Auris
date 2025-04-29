@@ -48,7 +48,7 @@ async function createTables(conn: mysql.Connection) {
             Data_Criacao DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
             Role ENUM('user', 'admin', 'moderador') DEFAULT 'user',
             Token_Verificacao VARCHAR(255),
-            Email_Verificado BOOLEAN DEFAULT FALSE
+            Email_Verificado BOOLEAN DEFAULT FALSE,
             Requer_Alteracao_Senha BOOLEAN DEFAULT FALSE
         ) ENGINE=InnoDB;`,
 
