@@ -416,3 +416,45 @@ export const recuperarSenha: RequestHandler<void> = async (req, res, next) => {
     });
   }
 };
+
+export const checkPrecisaTrocarSenha = (req: Request, res: Response): void => {
+  const userId = req.user?.User_ID;
+
+  if (!userId) {
+    res.status(401).json({ success: false, error: "Usuário não autenticado" });
+    return;
+  }
+
+  connection.query(
+    "SELECT Requer_Alteracao_Senha, Senha, SIAPE FROM Users WHERE User_ID = ?",
+    [userId],
+    (err, results: RowDataPacket[]) => {
+      if (err) {
+        res.status(500).json({
+          success: false,
+          error: `Erro ao buscar usuários: ${err.message}`,
+        });
+        return;
+      }
+
+    if (results.length === 0) {
+      res.status(200).json({ success: false });
+      return;
+    } else if (results[0].Requer_Alteracao_Senha === 1) {
+      bcrypt.compare(results[0].SIAPE, results[0].Senha, (err, result) => {
+        if (err) {
+          res.status(500).json({
+            success: false,
+            error: `Erro ao comparar senhas: ${err.message}`,
+          });
+          return;
+        }
+        if (result) {
+          res.status(200).json({ success: true });
+          return;
+        }
+      });
+    } 
+    }
+  );
+};

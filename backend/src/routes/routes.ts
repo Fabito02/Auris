@@ -21,6 +21,7 @@ router.put('/auth/role/:id', verifyToken, verifyRole((['admin'])), authControlle
 router.get('/confirmar', authController.confirmarEmail);
 router.post('/confirmar/recuperar', authController.confirmarRecuperacao);
 router.post('/recuperar', authController.recuperarSenha);
+router.get("/auth/senha", verifyToken, authController.checkPrecisaTrocarSenha);
 
 // rotas para usuário atual
 router.get('/me', verifyToken, meController.getUsuarioAtual);

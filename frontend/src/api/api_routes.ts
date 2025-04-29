@@ -134,3 +134,8 @@ export const recuperarSenha = async (dados: { token: string, senha: string }): P
     data: response.data,
   };
 };
+
+export const getPrecisaTrocarSenha = async () => {
+  const response = await api.get(`/auth/senha`);
+  return response.data;
+}

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Icon } from "@iconify-icon/react";
 import Slider from "../components/Slider";
@@ -7,7 +7,16 @@ import Button from "../components/buttons/Button";
 import AnimarAoVer from "@/components/AnimarAoVer";
 import { motion } from "framer-motion";
 import "./Home.css";
-import { checkAuth } from "../api/auth";
+import { checkAuth} from "../api/auth";
+import { getPrecisaTrocarSenha } from "../api/api_routes";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 const slides = [
   "/home/slides/1.png",
@@ -32,6 +41,8 @@ const data_cards = [
 const Home = () => {
   const navigate = useNavigate();
 
+  const [precisaTrocarSenha, setPrecisaTrocarSenha] = useState(false);
+
   useEffect(() => {
     document.title = "Home";
     const token = localStorage.getItem("auris_token");
@@ -40,7 +51,21 @@ const Home = () => {
     } else {
       checkAuth(navigate, ["admin", "moderador", "user"]);
     }
+
+    (async () => {
+      try {
+        const response = await getPrecisaTrocarSenha();
+        if (response?.success === true) {
+          setPrecisaTrocarSenha(true)
+        }
+      } catch (error) { return }
+    })();
   }, []);
+
+  const closeModal = () => {
+    setPrecisaTrocarSenha(false);
+    navigate("/alterar-senha");
+  };
 
   return (
     <div className="ouvidoria-home">
@@ -188,6 +213,28 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      <Dialog open={precisaTrocarSenha} onOpenChange={closeModal}>
+        <DialogContent className="sm:max-w-[400px] rounded-xl [&>button]:hidden">
+          <DialogHeader>
+            <DialogTitle className="text-center text-[var(--color-primary)] text-3xl mb-4">
+              Senha insegura!
+            </DialogTitle>
+            <DialogDescription className="text-center">
+              Altere a sua senha para garantir a segurança da conta.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="sm:justify-center mt-4">
+            <Button
+              onClick={closeModal}
+              full_rounded
+              color="success"
+              className="w-full sm:max-w-[200px] px-5"
+              texto="alterar"
+            />
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
