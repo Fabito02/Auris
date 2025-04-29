@@ -148,7 +148,7 @@ export default function Recuperar() {
       <div className="max-w-md mx-auto py-10 px-4">
         <div className="bg-white rounded-lg p-6">
           <h1 className="text-3xl font-semibold text-center mb-10">
-            Alterar Senha
+            Recuperar Senha
           </h1>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-1">

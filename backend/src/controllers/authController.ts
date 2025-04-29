@@ -458,3 +458,59 @@ export const checkPrecisaTrocarSenha = (req: Request, res: Response): void => {
     }
   );
 };
+
+export const trocarSenha = async (req: Request, res: Response): Promise<void> => {
+  const userId = req.user?.User_ID;
+  const senhaAtual = req.body.senhaAtual;
+  const novaSenha = req.body.senha;
+
+  if (!userId) {
+    res.status(401).json({ success: false, error: "Usuário não autenticado" });
+    return;
+  }
+
+  if (!novaSenha) {
+    res.status(400).json({ success: false, error: "Nova senha é obrigatória" });
+    return;
+  }
+
+  if (!senhaAtual) {
+    res.status(400).json({ success: false, error: "Senha atual é obrigatória" });
+    return;
+  }
+
+  try {
+    const [results] = await connection.promise().query<RowDataPacket[]>(
+      "SELECT Senha FROM Users WHERE User_ID = ?",
+      [userId]
+    );
+
+    if (results.length === 0) {
+      res.status(404).json({ success: false, error: "Usuário não encontrado" });
+      return;
+    }
+
+    const senhaUsuario = results[0].Senha;
+
+    const senhaConfere = await bcrypt.compare(senhaAtual, senhaUsuario);
+
+    if (!senhaConfere) {
+      res.status(400).json({ success: false, error: "Senha atual incorreta" });
+      return;
+    }
+
+    const senhaHash = await bcrypt.hash(novaSenha, 10);
+
+    await connection.promise().query(
+      "UPDATE Users SET Senha = ?, Requer_Alteracao_Senha = 0 WHERE User_ID = ?",
+      [senhaHash, userId]
+    );
+
+    res.status(200).json({ success: true });
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      error: `Erro ao trocar senha: ${err.message || err}`,
+    });
+  }
+};

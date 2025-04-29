@@ -139,3 +139,8 @@ export const getPrecisaTrocarSenha = async () => {
   const response = await api.get(`/auth/senha`);
   return response.data;
 }
+
+export const trocarSenha = async (senha: { senhaAtual: string, senha: string} ): Promise<{ success: boolean, error?: string}> => {
+  const response = await api.post("/auth/nova-senha", senha);
+  return response.data;
+};
