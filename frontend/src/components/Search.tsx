@@ -12,6 +12,7 @@ import {
   CommandList,
   CommandSeparator,
 } from '@/components/ui/command';
+
 const SearchBar = () => {
   const {
     transcript,

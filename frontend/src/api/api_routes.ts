@@ -121,3 +121,16 @@ export const registrarUsuario = async (user: User): Promise<void> => {
   const response = await api.post("/users", user);
   return response.data
 };
+
+export const emailRecuperacao = async (email: { email: string }): Promise<{ success: boolean}> => {
+  const response = await api.post("/confirmar/recuperar", email);
+  return response.data;
+};
+
+export const recuperarSenha = async (dados: { token: string, senha: string }): Promise<{ success: boolean, data: string}> => {
+  const response = await api.post("/recuperar", dados);
+  return {
+    success: true,
+    data: response.data,
+  };
+};

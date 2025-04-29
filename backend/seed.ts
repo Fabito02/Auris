@@ -49,6 +49,7 @@ async function createTables(conn: mysql.Connection) {
             Role ENUM('user', 'admin', 'moderador') DEFAULT 'user',
             Token_Verificacao VARCHAR(255),
             Email_Verificado BOOLEAN DEFAULT FALSE
+            Requer_Alteracao_Senha BOOLEAN DEFAULT FALSE
         ) ENGINE=InnoDB;`,
 
     `CREATE TABLE IF NOT EXISTS Endereco (

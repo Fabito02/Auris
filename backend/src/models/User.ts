@@ -13,6 +13,7 @@ export interface User {
   Role?: string;
   Email_Verificado?: boolean;
   Token_Verificacao?: string;
+  Requer_Alteracao_Senha?: boolean;
 }
 
 export interface IUser extends RowDataPacket {

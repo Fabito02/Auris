@@ -124,7 +124,7 @@ const Login = () => {
                   />
                 </div>
 
-                <div className="relative mb-3">
+                <div className="relative">
                   <Icon
                     className="iconeForm"
                     icon="material-symbols:password-rounded"
@@ -140,7 +140,11 @@ const Login = () => {
                   />
                 </div>
 
-                <div className="w-full flex justify-center">
+                <Link to="/recuperar-senha" className="text-muted-foreground">
+                  Esqueceu sua senha?
+                </Link>
+
+                <div className="w-full flex justify-center mt-5">
                   <Button full_rounded style={{ width: "220px" }} type="submit">
                     ENTRAR
                   </Button>
