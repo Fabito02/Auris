@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, RequestHandler } from "express";
 import connection from "../db";
 import { RowDataPacket } from "mysql2";
 import { ResultSetHeader } from "mysql2";
@@ -246,4 +246,26 @@ export const updateAvatar = (req: Request, res: Response, next: NextFunction) =>
       }
     );
   });
+};
+
+export const getRoleUsuarioAtual: RequestHandler<{ id: string }> = (req, res, next) => {
+  const userId = req.user?.User_ID;
+
+  connection.query(
+    "SELECT Role FROM Users WHERE User_ID = ?",
+    [userId],
+    (err, results: RowDataPacket[]) => {
+      if (err) {
+        next(err);
+        return;
+      }
+
+      if (results.length === 0) {
+        res.status(404).json({ success: false, error: "Usuário não encontrado" });
+        return;
+      }
+
+      res.status(200).json({ success: true, data: results[0] });
+    }
+  );
 };

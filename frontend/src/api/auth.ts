@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom";
+import { getRoleUsuarioAtual } from "./api_routes";
 
-export const checkAuth = (navigate: ReturnType<typeof useNavigate>, roles: string[]) => {
+export const checkAuth = async (navigate: ReturnType<typeof useNavigate>, roles: string[]) => {
   const token = localStorage.getItem('auris_token');
-  const roleUser = localStorage.getItem('auris_role');
+  const response = await getRoleUsuarioAtual();
+  const roleUser = response.data.Role
 
   if (!token) {
     navigate("/errors/401");
@@ -15,8 +17,10 @@ export const checkAuth = (navigate: ReturnType<typeof useNavigate>, roles: strin
   }
 };
 
-export const checkRole = (role: string) => {
-  const roleUser = localStorage.getItem('auris_role');
+export const checkRole = async (role: string) => {
+  const response = await getRoleUsuarioAtual();
+  const roleUser = response.data.Role
+  
   if (!roleUser || roleUser !== role) {
     return false;
   } else {

@@ -61,7 +61,6 @@ const Login = () => {
 
       if (response.success && response.token && response.user) {
         localStorage.setItem("auris_token", response.token);
-        localStorage.setItem("auris_role", response.user.role);
         setLoginSucesso(true);
         setError(null);
         setFormData({ email: "", password: "" });

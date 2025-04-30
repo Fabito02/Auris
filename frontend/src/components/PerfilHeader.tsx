@@ -61,7 +61,6 @@ const PerfilHeader = () => {
     try {
       await postLogout();
       localStorage.removeItem("auris_token");
-      localStorage.removeItem("auris_role");
       setLogoutSucesso(true);
     } catch (error) {
       console.error("Erro ao fazer logout:", error);

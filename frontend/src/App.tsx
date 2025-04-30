@@ -14,7 +14,7 @@ const App = () => {
       <Navbar />
       <RouterComponent />
       <Footer />
-      <Toaster className='rounded-lg' />
+      <Toaster />
     </Router>
   );
 };

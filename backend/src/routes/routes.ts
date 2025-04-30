@@ -30,6 +30,7 @@ router.put('/me', verifyToken, meController.updateUsuarioAtual);
 router.get('/me/endereco', verifyToken, meController.getEnderecoUsuarioAtual);
 router.put('/me/endereco', verifyToken, meController.updateEnderecoUsuarioAtual);
 router.put('/me/avatar', verifyToken, meController.updateAvatar);
+router.get('/me/role', verifyToken, meController.getRoleUsuarioAtual);
 
 // rotas para usuários
 router.get('/users', verifyToken, verifyRole((['admin', 'moderador'])), userController.listUsers);

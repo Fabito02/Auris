@@ -144,3 +144,8 @@ export const trocarSenha = async (senha: { senhaAtual: string, senha: string} ):
   const response = await api.post("/auth/nova-senha", senha);
   return response.data;
 };
+
+export const getRoleUsuarioAtual = async (): Promise<{ data: {Role: string} }> => {
+  const response = await api.get(`/me/role`);
+  return response.data;
+}
