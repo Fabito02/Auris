@@ -136,7 +136,7 @@ export default function Faq() {
         <Accordion type="single" collapsible className="mb-12 max-w-4xl mx-auto">
           {Informacoes.map((faq, index) => (
               <AccordionItem value={`item-${index}`} key={index}>
-                <AccordionTrigger className="text-1xl font-semibold px-2">{faq.title}</AccordionTrigger>
+                <AccordionTrigger className="text-1xl px-2">{faq.title}</AccordionTrigger>
                 <AccordionContent className="bg-gray-50 text-[15px] p-3">
                   {faq.content}
                 </AccordionContent>
