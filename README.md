@@ -1,8 +1,6 @@
-# Ouvidoria Digital IFNMG - Almenara
-
+# Auris - Ouvidoria Digital IFNMG - Almenara
 
 ## Etapas de configuração do dispositivo para o uso da aplicação local
-- - -
 
 ### Requisitos:
 
