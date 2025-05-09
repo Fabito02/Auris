@@ -232,8 +232,10 @@ export const getAvatar = (req: Request, res: Response): void => {
   const userId = req.params.id;
 
   if (!userId) {
-    res.status(400).json({ success: false, error: "ID do usuário não fornecido" });
-    return 
+    res
+      .status(400)
+      .json({ success: false, error: "ID do usuário não fornecido" });
+    return;
   }
 
   connection.query(
@@ -253,14 +255,16 @@ export const getAvatar = (req: Request, res: Response): void => {
       }
 
       const avatarFilename = results[0].Avatar;
-      
+
       if (!avatarFilename) {
         return res
           .status(404)
           .json({ success: false, error: "Usuário não possui avatar" });
       }
 
-      const avatarUrl = `${req.protocol}://${req.get('host')}/uploads/avatars/${avatarFilename}`;
+      const avatarUrl = `${req.protocol}://${req.get(
+        "host"
+      )}/uploads/avatars/${avatarFilename}`;
 
       return res.status(200).json({
         success: true,
@@ -278,17 +282,18 @@ export const registrarUsuario = async (req: Request, res: Response) => {
     return;
   }
 
-  const isEmailValido = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const isEmailValido = (email: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const isEmailInstitucionalIFNMG = (email: string) => {
     if (!isEmailValido(email)) return false;
-    const dominio = email.split('@')[1]?.toLowerCase();
-    return dominio?.endsWith('ifnmg.edu.br') ?? false;
+    const dominio = email.split("@")[1]?.toLowerCase();
+    return dominio?.endsWith("ifnmg.edu.br") ?? false;
   };
 
   const isAluno = (email: string) => {
     if (!isEmailValido(email)) return false;
-    const dominio = email.split('@')[1]?.toLowerCase();
-    return dominio?.endsWith('aluno.ifnmg.edu.br') ?? false;
+    const dominio = email.split("@")[1]?.toLowerCase();
+    return dominio?.endsWith("aluno.ifnmg.edu.br") ?? false;
   };
 
   if (!isEmailValido(user.Email)) {
@@ -297,18 +302,26 @@ export const registrarUsuario = async (req: Request, res: Response) => {
   }
 
   if (!isEmailInstitucionalIFNMG(user.Email)) {
-    res.status(400).json({ success: false, error: "Este email não é de domínio institucional IFNMG." });
+    res
+      .status(400)
+      .json({
+        success: false,
+        error: "Este email não é de domínio institucional IFNMG.",
+      });
     return;
   }
 
   try {
-    const [existing] = await connection.promise().query<RowDataPacket[]>(
-      "SELECT Email FROM Users WHERE Email = ?",
-      [user.Email]
-    );
+    const [existing] = await connection
+      .promise()
+      .query<RowDataPacket[]>("SELECT Email FROM Users WHERE Email = ?", [
+        user.Email,
+      ]);
 
     if (existing.length > 0) {
-      res.status(400).json({ success: false, error: "Este email já está em uso." });
+      res
+        .status(400)
+        .json({ success: false, error: "Este email já está em uso." });
       return;
     }
 
@@ -317,21 +330,25 @@ export const registrarUsuario = async (req: Request, res: Response) => {
     user.Email_Verificado = true;
     user.Requer_Alteracao_Senha = true;
 
-    const [result] = await connection.promise().query<ResultSetHeader>(
-      "INSERT INTO Users SET ?",
-      user
-    );
+    const [result] = await connection
+      .promise()
+      .query<ResultSetHeader>("INSERT INTO Users SET ?", user);
 
     if (result.affectedRows === 0) {
-      res.status(500).json({ success: false, error: "Erro ao registrar usuário." });
+      res
+        .status(500)
+        .json({ success: false, error: "Erro ao registrar usuário." });
       return;
     }
 
     registrarLog(`Novo usuário registrado: ${user.Email}`, result.insertId);
-    res.status(200).json({ success: true, message: "Usuário registrado com sucesso." });
-
+    res
+      .status(200)
+      .json({ success: true, message: "Usuário registrado com sucesso." });
   } catch (error) {
-    console.error('Erro ao registrar usuário:', error);
-    res.status(500).json({ success: false, error: "Erro interno do servidor." });
+    console.error("Erro ao registrar usuário:", error);
+    res
+      .status(500)
+      .json({ success: false, error: "Erro interno do servidor." });
   }
 };

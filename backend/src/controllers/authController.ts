@@ -9,64 +9,83 @@ import { registrarLog } from "../utils/logger";
 import nodemailer from "nodemailer";
 import { randomUUID } from "crypto";
 import dotenv from "dotenv";
-dotenv.config(); 
+dotenv.config();
 
 export const login = (req: Request, res: Response) => {
-  passport.authenticate("local", { session: false }, async (
-    err: Error | null,
-    user: User | false,
-    info: { message?: string }
-  ) => {
-    try {
-      if (err) {
-        return res.status(500).json({ success: false, error: "Erro interno no servidor" });
-      }
+  passport.authenticate(
+    "local",
+    { session: false },
+    async (
+      err: Error | null,
+      user: User | false,
+      info: { message?: string }
+    ) => {
+      try {
+        if (err) {
+          return res
+            .status(500)
+            .json({ success: false, error: "Erro interno no servidor" });
+        }
 
-      if (!user) {
-        return res.status(401).json({ success: false, error: info.message || "Credenciais inválidas" });
-      }
+        if (!user) {
+          return res
+            .status(401)
+            .json({
+              success: false,
+              error: info.message || "Credenciais inválidas",
+            });
+        }
 
-      if (!user.User_ID) {
-        return res.status(500).json({ success: false, error: "Dados do usuário incompletos" });
-      }
+        if (!user.User_ID) {
+          return res
+            .status(500)
+            .json({ success: false, error: "Dados do usuário incompletos" });
+        }
 
-      const [rows] = await connection.promise().query<RowDataPacket[]>(
-        "SELECT Email_Verificado FROM Users WHERE User_ID = ?",
-        [user.User_ID]
-      );
+        const [rows] = await connection
+          .promise()
+          .query<RowDataPacket[]>(
+            "SELECT Email_Verificado FROM Users WHERE User_ID = ?",
+            [user.User_ID]
+          );
 
-      if (rows.length === 0) {
-        return res.status(404).json({ success: false, error: "Usuário não encontrado" });
-      }
+        if (rows.length === 0) {
+          return res
+            .status(404)
+            .json({ success: false, error: "Usuário não encontrado" });
+        }
 
-      const emailVerified = rows[0].Email_Verificado as boolean;
+        const emailVerified = rows[0].Email_Verificado as boolean;
 
-      if (!emailVerified) {
-        return res.status(401).json({
-          success: false,
-          error: "Email não verificado. Por favor, verifique seu email para ativar a conta.",
+        if (!emailVerified) {
+          return res.status(401).json({
+            success: false,
+            error:
+              "Email não verificado. Por favor, verifique seu email para ativar a conta.",
+          });
+        }
+
+        const token = generateToken(user as IUser);
+        registrarLog(`Novo login de ${user.Email}`, user.User_ID);
+
+        return res.json({
+          success: true,
+          token,
+          user: {
+            User_ID: user.User_ID,
+            Email: user.Email,
+            role: user.Role,
+          },
+          expiresIn: "1d",
         });
+      } catch (error) {
+        console.error("Erro no login:", error);
+        return res
+          .status(500)
+          .json({ success: false, error: "Erro interno no servidor" });
       }
-
-      const token = generateToken(user as IUser);
-      registrarLog(`Novo login de ${user.Email}`, user.User_ID);
-
-      return res.json({
-        success: true,
-        token,
-        user: {
-          User_ID: user.User_ID,
-          Email: user.Email,
-          role: user.Role,
-        },
-        expiresIn: '1d',
-      });
-
-    } catch (error) {
-      console.error("Erro no login:", error);
-      return res.status(500).json({ success: false, error: "Erro interno no servidor" });
     }
-  })(req, res);
+  )(req, res);
 };
 
 export const registrar = async (req: Request, res: Response): Promise<void> => {
@@ -77,17 +96,18 @@ export const registrar = async (req: Request, res: Response): Promise<void> => {
     return;
   }
 
-  const isEmailValido = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const isEmailValido = (email: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const isEmailInstitucionalIFNMG = (email: string) => {
     if (!isEmailValido(email)) return false;
-    const dominio = email.split('@')[1]?.toLowerCase();
-    return dominio?.endsWith('ifnmg.edu.br') ?? false;
+    const dominio = email.split("@")[1]?.toLowerCase();
+    return dominio?.endsWith("ifnmg.edu.br") ?? false;
   };
 
   const isAluno = (email: string) => {
     if (!isEmailValido(email)) return false;
-    const dominio = email.split('@')[1]?.toLowerCase();
-    return dominio?.endsWith('aluno.ifnmg.edu.br') ?? false;
+    const dominio = email.split("@")[1]?.toLowerCase();
+    return dominio?.endsWith("aluno.ifnmg.edu.br") ?? false;
   };
 
   if (!isEmailValido(user.Email)) {
@@ -96,18 +116,26 @@ export const registrar = async (req: Request, res: Response): Promise<void> => {
   }
 
   if (!isEmailInstitucionalIFNMG(user.Email)) {
-    res.status(400).json({ success: false, error: "Este email não é de domínio institucional IFNMG." });
+    res
+      .status(400)
+      .json({
+        success: false,
+        error: "Este email não é de domínio institucional IFNMG.",
+      });
     return;
   }
 
   try {
-    const [existing] = await connection.promise().query<RowDataPacket[]>(
-      "SELECT Email FROM Users WHERE Email = ?",
-      [user.Email]
-    );
+    const [existing] = await connection
+      .promise()
+      .query<RowDataPacket[]>("SELECT Email FROM Users WHERE Email = ?", [
+        user.Email,
+      ]);
 
     if (existing.length > 0) {
-      res.status(400).json({ success: false, error: "Este email já está em uso." });
+      res
+        .status(400)
+        .json({ success: false, error: "Este email já está em uso." });
       return;
     }
 
@@ -119,10 +147,9 @@ export const registrar = async (req: Request, res: Response): Promise<void> => {
     user.Token_Verificacao = token;
     user.Email_Verificado = false;
 
-    const [result] = await connection.promise().query<ResultSetHeader>(
-      "INSERT INTO Users SET ?",
-      user
-    );
+    const [result] = await connection
+      .promise()
+      .query<ResultSetHeader>("INSERT INTO Users SET ?", user);
 
     registrarLog(`Novo usuário registrado: ${user.Email}`, result.insertId);
 
@@ -130,17 +157,17 @@ export const registrar = async (req: Request, res: Response): Promise<void> => {
       service: "gmail",
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS 
-      }
+        pass: process.env.EMAIL_PASS,
+      },
     });
 
     //temporário apenas para desenvolvimento
     const link = `http://localhost:5173/confirmar?token=${token}`;
 
     await transporter.sendMail({
-      from: 'Auris IFNMG <noreply@ifnmg.edu.br>',
+      from: "Auris IFNMG <noreply@ifnmg.edu.br>",
       to: user.Email,
-      subject: 'Confirme seu e-mail',
+      subject: "Confirme seu e-mail",
       html: `
           <div style="max-width: 600px; margin: auto; font-family: Arial, sans-serif; border: 1px solid #e0e0e0; border-radius: 18px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
           <div style="background-color: #2c2c2c; padding: 20px; text-align: center;">
@@ -163,20 +190,18 @@ export const registrar = async (req: Request, res: Response): Promise<void> => {
       `,
       attachments: [
         {
-          filename: 'Logo.png',
-          path: 'src/public/Logo.png',
-          cid: 'logo_auris'
-        }
-      ]
+          filename: "Logo.png",
+          path: "src/public/Logo.png",
+          cid: "logo_auris",
+        },
+      ],
     });
-    
 
     res.status(201).json({
       success: true,
       message: "Usuário criado com sucesso!",
       User_ID: result.insertId,
     });
-
   } catch (err: any) {
     res.status(500).json({
       success: false,
@@ -198,7 +223,9 @@ export const getRoleById: RequestHandler<{ id: string }> = (req, res, next) => {
       }
 
       if (results.length === 0) {
-        res.status(404).json({ success: false, error: "Usuário não encontrado" });
+        res
+          .status(404)
+          .json({ success: false, error: "Usuário não encontrado" });
         return;
       }
 
@@ -226,7 +253,9 @@ export const updateRole: RequestHandler<{ id: string }> = (req, res, next) => {
       }
 
       if (results.affectedRows === 0) {
-        res.status(404).json({ success: false, error: "Usuário não encontrado" });
+        res
+          .status(404)
+          .json({ success: false, error: "Usuário não encontrado" });
         return;
       }
 
@@ -240,13 +269,23 @@ export const updateRole: RequestHandler<{ id: string }> = (req, res, next) => {
           }
 
           if (results.length === 0) {
-            res.status(404).json({ success: false, error: "Usuário não encontrado" });
+            res
+              .status(404)
+              .json({ success: false, error: "Usuário não encontrado" });
             return;
           }
 
           const email = results[0].Email;
-          res.status(200).json({ success: true, message: "Permissão atualizada com sucesso." });
-          registrarLog(`Permissão de ${email} atualizada para ${newRole}`, userId);
+          res
+            .status(200)
+            .json({
+              success: true,
+              message: "Permissão atualizada com sucesso.",
+            });
+          registrarLog(
+            `Permissão de ${email} atualizada para ${newRole}`,
+            userId
+          );
         }
       );
     }
@@ -256,38 +295,47 @@ export const updateRole: RequestHandler<{ id: string }> = (req, res, next) => {
 export async function confirmarEmail(req: Request, res: Response) {
   const { token } = req.query;
 
-  if (!token || typeof token !== 'string') {
-    res.status(400).json({ success: false, error: 'Token não fornecido ou inválido' });
+  if (!token || typeof token !== "string") {
+    res
+      .status(400)
+      .json({ success: false, error: "Token não fornecido ou inválido" });
     return;
   }
 
   try {
-    const [rows]: any = await connection.promise().query(
-      'SELECT * FROM Users WHERE Token_Verificacao = ?',
-      [token]
-    );
+    const [rows]: any = await connection
+      .promise()
+      .query("SELECT * FROM Users WHERE Token_Verificacao = ?", [token]);
 
     if (rows.length === 0) {
-      res.status(404).json({ success: false, error: 'Token inválido ou expirado' });
+      res
+        .status(404)
+        .json({ success: false, error: "Token inválido ou expirado" });
       return;
     }
 
-    await connection.promise().query(
-      'UPDATE Users SET Email_Verificado = ?, Token_Verificacao = NULL WHERE Token_Verificacao = ?',
-      [true, token]
-    );
+    await connection
+      .promise()
+      .query(
+        "UPDATE Users SET Email_Verificado = ?, Token_Verificacao = NULL WHERE Token_Verificacao = ?",
+        [true, token]
+      );
 
-    registrarLog('Email verificado', rows[0].User_ID);
+    registrarLog("Email verificado", rows[0].User_ID);
 
-    res.json({ success: true, message: 'Email verificado com sucesso!' });
-    
+    res.json({ success: true, message: "Email verificado com sucesso!" });
   } catch (error) {
-    console.error('Erro ao verificar email:', error);
-    res.status(500).json({ success: false, error: 'Erro ao processar a verificação' });
+    console.error("Erro ao verificar email:", error);
+    res
+      .status(500)
+      .json({ success: false, error: "Erro ao processar a verificação" });
   }
 }
 
-export const confirmarRecuperacao = async (req: Request, res: Response): Promise<void> => {
+export const confirmarRecuperacao = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const { email } = req.body;
 
   if (!email) {
@@ -296,13 +344,14 @@ export const confirmarRecuperacao = async (req: Request, res: Response): Promise
   }
 
   try {
-    const [existing] = await connection.promise().query<RowDataPacket[]>(
-      "SELECT * FROM Users WHERE Email = ?",
-      [email]
-    );
+    const [existing] = await connection
+      .promise()
+      .query<RowDataPacket[]>("SELECT * FROM Users WHERE Email = ?", [email]);
 
     if (existing.length === 0) {
-      res.status(400).json({ success: false, error: "Este email não está cadastrado." });
+      res
+        .status(400)
+        .json({ success: false, error: "Este email não está cadastrado." });
       return;
     }
 
@@ -311,28 +360,33 @@ export const confirmarRecuperacao = async (req: Request, res: Response): Promise
     const token = randomUUID();
     user.Token_Verificacao = token;
 
-    const [result] = await connection.promise().query<ResultSetHeader>(
-      "UPDATE Users SET Token_Verificacao = ? WHERE User_ID = ?",
-      [token, user.User_ID]
-    );
+    const [result] = await connection
+      .promise()
+      .query<ResultSetHeader>(
+        "UPDATE Users SET Token_Verificacao = ? WHERE User_ID = ?",
+        [token, user.User_ID]
+      );
 
-    registrarLog(`Um usuário tentou recuperar sua senha: ${user.Email}`, user.User_ID);
+    registrarLog(
+      `Um usuário tentou recuperar sua senha: ${user.Email}`,
+      user.User_ID
+    );
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS 
-      }
+        pass: process.env.EMAIL_PASS,
+      },
     });
 
     //temporário apenas para desenvolvimento
     const link = `http://localhost:5173/recuperar?token=${token}`;
 
     await transporter.sendMail({
-      from: 'Auris IFNMG <noreply@ifnmg.edu.br>',
+      from: "Auris IFNMG <noreply@ifnmg.edu.br>",
       to: user.Email,
-      subject: 'Recuperar Senha',
+      subject: "Recuperar Senha",
       html: `
           <div style="max-width: 600px; margin: auto; font-family: Arial, sans-serif; border: 1px solid #e0e0e0; border-radius: 18px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
           <div style="background-color: #2c2c2c; padding: 20px; text-align: center;">
@@ -356,20 +410,18 @@ export const confirmarRecuperacao = async (req: Request, res: Response): Promise
       `,
       attachments: [
         {
-          filename: 'Logo.png',
-          path: 'src/public/Logo.png',
-          cid: 'logo_auris'
-        }
-      ]
+          filename: "Logo.png",
+          path: "src/public/Logo.png",
+          cid: "logo_auris",
+        },
+      ],
     });
-    
 
     res.status(201).json({
       success: true,
       message: "Link de recuperação enviado!",
       User_ID: result.insertId,
     });
-
   } catch (err: any) {
     res.status(500).json({
       success: false,
@@ -382,10 +434,12 @@ export const recuperarSenha: RequestHandler<void> = async (req, res, next) => {
   const body = req.body;
 
   try {
-    const [existing] = await connection.promise().query<RowDataPacket[]>(
-      "SELECT * FROM Users WHERE Token_Verificacao = ?",
-      [body.token]
-    );
+    const [existing] = await connection
+      .promise()
+      .query<RowDataPacket[]>(
+        "SELECT * FROM Users WHERE Token_Verificacao = ?",
+        [body.token]
+      );
 
     if (existing.length === 0) {
       res.status(404).json({
@@ -398,10 +452,12 @@ export const recuperarSenha: RequestHandler<void> = async (req, res, next) => {
 
     const senha = await bcrypt.hash(body.senha, 10);
 
-    await connection.promise().query<RowDataPacket[]>(
-      "UPDATE Users SET Senha = ?, Token_Verificacao = NULL WHERE Token_Verificacao = ?",
-      [senha, body.token]
-    );
+    await connection
+      .promise()
+      .query<RowDataPacket[]>(
+        "UPDATE Users SET Senha = ?, Token_Verificacao = NULL WHERE Token_Verificacao = ?",
+        [senha, body.token]
+      );
 
     registrarLog(`Um usuário recuperou sua senha: ${user.Email}`, user.User_ID);
 
@@ -437,29 +493,32 @@ export const checkPrecisaTrocarSenha = (req: Request, res: Response): void => {
         return;
       }
 
-    if (results.length === 0) {
-      res.status(200).json({ success: false });
-      return;
-    } else if (results[0].Requer_Alteracao_Senha === 1) {
-      bcrypt.compare(results[0].SIAPE, results[0].Senha, (err, result) => {
-        if (err) {
-          res.status(500).json({
-            success: false,
-            error: `Erro ao comparar senhas: ${err.message}`,
-          });
-          return;
-        }
-        if (result) {
-          res.status(200).json({ success: true });
-          return;
-        }
-      });
-    } 
+      if (results.length === 0) {
+        res.status(200).json({ success: false });
+        return;
+      } else if (results[0].Requer_Alteracao_Senha === 1) {
+        bcrypt.compare(results[0].SIAPE, results[0].Senha, (err, result) => {
+          if (err) {
+            res.status(500).json({
+              success: false,
+              error: `Erro ao comparar senhas: ${err.message}`,
+            });
+            return;
+          }
+          if (result) {
+            res.status(200).json({ success: true });
+            return;
+          }
+        });
+      }
     }
   );
 };
 
-export const trocarSenha = async (req: Request, res: Response): Promise<void> => {
+export const trocarSenha = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const userId = req.user?.User_ID;
   const senhaAtual = req.body.senhaAtual;
   const novaSenha = req.body.senha;
@@ -475,15 +534,18 @@ export const trocarSenha = async (req: Request, res: Response): Promise<void> =>
   }
 
   if (!senhaAtual) {
-    res.status(400).json({ success: false, error: "Senha atual é obrigatória" });
+    res
+      .status(400)
+      .json({ success: false, error: "Senha atual é obrigatória" });
     return;
   }
 
   try {
-    const [results] = await connection.promise().query<RowDataPacket[]>(
-      "SELECT Senha FROM Users WHERE User_ID = ?",
-      [userId]
-    );
+    const [results] = await connection
+      .promise()
+      .query<RowDataPacket[]>("SELECT Senha FROM Users WHERE User_ID = ?", [
+        userId,
+      ]);
 
     if (results.length === 0) {
       res.status(404).json({ success: false, error: "Usuário não encontrado" });
@@ -501,10 +563,12 @@ export const trocarSenha = async (req: Request, res: Response): Promise<void> =>
 
     const senhaHash = await bcrypt.hash(novaSenha, 10);
 
-    await connection.promise().query(
-      "UPDATE Users SET Senha = ?, Requer_Alteracao_Senha = 0 WHERE User_ID = ?",
-      [senhaHash, userId]
-    );
+    await connection
+      .promise()
+      .query(
+        "UPDATE Users SET Senha = ?, Requer_Alteracao_Senha = 0 WHERE User_ID = ?",
+        [senhaHash, userId]
+      );
 
     res.status(200).json({ success: true });
   } catch (err: any) {

@@ -6,7 +6,7 @@ import { registrarLog } from "../utils/logger";
 import multer from "multer";
 import path from "path";
 import mime from "mime-types";
-import fs from 'fs';
+import fs from "fs";
 
 export const getUsuarioAtual = async (
   req: Request,
@@ -179,18 +179,22 @@ export const updateUsuarioAtual = async (
 
 const storage = multer.diskStorage({
   destination: function (_req, _file, cb) {
-    cb(null, path.resolve(__dirname, '..', 'uploads', 'avatars'));
+    cb(null, path.resolve(__dirname, "..", "uploads", "avatars"));
   },
   filename: function (_req, file, cb) {
     const uniqueSuffix = Date.now();
-    const extension = mime.extension(file.mimetype) || 'png';
+    const extension = mime.extension(file.mimetype) || "png";
     cb(null, `${uniqueSuffix}.${extension}`);
-  }
+  },
 });
 
-const upload = multer({ storage }).single('avatar');
+const upload = multer({ storage }).single("avatar");
 
-export const updateAvatar = (req: Request, res: Response, next: NextFunction) => {
+export const updateAvatar = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const userId = req.user?.User_ID;
 
   upload(req, res, (err: any) => {
@@ -199,7 +203,7 @@ export const updateAvatar = (req: Request, res: Response, next: NextFunction) =>
     }
 
     if (!req.file) {
-      return next(new Error('Nenhum arquivo enviado.'));
+      return next(new Error("Nenhum arquivo enviado."));
     }
 
     const avatarFilename = req.file.filename;
@@ -214,11 +218,17 @@ export const updateAvatar = (req: Request, res: Response, next: NextFunction) =>
 
         const oldAvatar = avatar[0].Avatar;
         if (oldAvatar) {
-          const filePath = path.resolve(__dirname, '..', 'uploads', 'avatars', oldAvatar);
+          const filePath = path.resolve(
+            __dirname,
+            "..",
+            "uploads",
+            "avatars",
+            oldAvatar
+          );
           try {
             await fs.promises.unlink(filePath);
           } catch (unlinkErr: any & { code: string }) {
-            if (unlinkErr.code !== 'ENOENT') {
+            if (unlinkErr.code !== "ENOENT") {
               return next(unlinkErr);
             }
           }
@@ -233,12 +243,12 @@ export const updateAvatar = (req: Request, res: Response, next: NextFunction) =>
             }
 
             if (results.affectedRows === 0) {
-              return next(new Error('Usuário não encontrado.'));
+              return next(new Error("Usuário não encontrado."));
             }
 
             return res.status(200).json({
               success: true,
-              message: 'Avatar atualizado com sucesso.',
+              message: "Avatar atualizado com sucesso.",
               avatarUrl: `http://localhost:4000/uploads/avatars/${avatarFilename}`,
             });
           }
@@ -248,7 +258,11 @@ export const updateAvatar = (req: Request, res: Response, next: NextFunction) =>
   });
 };
 
-export const getRoleUsuarioAtual: RequestHandler<{ id: string }> = (req, res, next) => {
+export const getRoleUsuarioAtual: RequestHandler<{ id: string }> = (
+  req,
+  res,
+  next
+) => {
   const userId = req.user?.User_ID;
 
   connection.query(
@@ -261,7 +275,9 @@ export const getRoleUsuarioAtual: RequestHandler<{ id: string }> = (req, res, ne
       }
 
       if (results.length === 0) {
-        res.status(404).json({ success: false, error: "Usuário não encontrado" });
+        res
+          .status(404)
+          .json({ success: false, error: "Usuário não encontrado" });
         return;
       }
 
