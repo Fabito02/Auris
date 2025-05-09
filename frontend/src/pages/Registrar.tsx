@@ -14,7 +14,7 @@ import {
   DialogFooter,
   DialogDescription,
 } from "@/components/ui/dialog";
-import {toast} from "sonner";
+import { toast } from "sonner";
 
 const Registrar = () => {
   const [formData, setFormData] = useState({

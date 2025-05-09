@@ -10,10 +10,9 @@ import { Icon } from "@iconify-icon/react";
 import { useEffect } from "react";
 
 function RecuperarSenha() {
-
-    useEffect(() => {
-        document.title = "Recuperar Senha";
-    }, []);
+  useEffect(() => {
+    document.title = "Recuperar Senha";
+  }, []);
 
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
@@ -26,7 +25,7 @@ function RecuperarSenha() {
 
     const loadingToast = toast.loading("Enviando email de recuperação...");
 
-    const data = { "email": emailBackup };
+    const data = { email: emailBackup };
 
     try {
       const response = await emailRecuperacao(data);
@@ -39,7 +38,7 @@ function RecuperarSenha() {
               icon="mdi:check-circle"
               className="text-[var(--color-success)]"
             />
-          )
+          ),
         });
         navigate("/login");
       } else {
@@ -50,7 +49,7 @@ function RecuperarSenha() {
               icon="mdi:alert-circle"
               className="text-[var(--color-danger)]"
             />
-          )
+          ),
         });
       }
     } catch (error) {
@@ -61,7 +60,7 @@ function RecuperarSenha() {
             icon="mdi:alert-circle"
             className="text-[var(--color-danger)]"
           />
-        )
+        ),
       });
     }
   };
@@ -80,7 +79,9 @@ function RecuperarSenha() {
                 id="email"
                 type="email"
                 value={email}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setEmail(e.target.value)
+                }
                 placeholder="exemplo@ifnmg.edu.br"
                 required
               />

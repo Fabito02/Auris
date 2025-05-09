@@ -16,7 +16,6 @@ import {
 import { trocarSenha } from "@/api/api_routes";
 
 const AlterarSenha = () => {
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -62,8 +61,8 @@ const AlterarSenha = () => {
 
   const alterarSenha = async () => {
     const body = {
-      "senhaAtual": senhaAtual,
-      "senha": novaSenha,
+      senhaAtual: senhaAtual,
+      senha: novaSenha,
     };
 
     try {
@@ -95,7 +94,9 @@ const AlterarSenha = () => {
                 id="senhaAtual"
                 type="password"
                 value={senhaAtual}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSenhaAtual(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setSenhaAtual(e.target.value)
+                }
                 placeholder="••••••••"
                 required
               />
@@ -107,7 +108,9 @@ const AlterarSenha = () => {
                 id="novaSenha"
                 type="password"
                 value={novaSenha}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNovaSenha(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setNovaSenha(e.target.value)
+                }
                 placeholder="••••••••"
                 required
               />
@@ -119,7 +122,9 @@ const AlterarSenha = () => {
                 id="confirmacao"
                 type="password"
                 value={confirmacao}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setConfirmacao(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setConfirmacao(e.target.value)
+                }
                 placeholder="••••••••"
                 required
               />

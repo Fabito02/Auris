@@ -4,10 +4,16 @@ import Button from "@/components/buttons/Button";
 import { BlankLayout } from "@/components/BlankLayout/BlankLayout";
 import { Input } from "@/components/ui/input";
 import { checkAuth } from "@/api/auth";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
-import Papa from 'papaparse';
+import Papa from "papaparse";
 import { toast } from "sonner";
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
 import { registrarUsuario } from "@/api/api_routes";
@@ -19,12 +25,11 @@ const tabVariants = {
 };
 
 const Gerenciar = () => {
-
   const [file, setFile] = useState<File | null>(null);
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [siape, setSiape] = useState("");
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,17 +55,17 @@ const Gerenciar = () => {
       });
       return;
     }
-  
+
     let registrosComSucesso = 0;
-  
+
     try {
       const csvString = await file.text();
-  
+
       const parser = Papa.parse(csvString, {
         header: true,
         skipEmptyLines: true,
       });
-  
+
       const promises = parser.data.map(async (record: any) => {
         const user = {
           Nome: record.Nome,
@@ -68,23 +73,26 @@ const Gerenciar = () => {
           SIAPE: record.SIAPE,
           Senha: record.SIAPE,
         };
-  
+
         try {
           await registrarUsuario(user);
           registrosComSucesso++;
         } catch (error: any) {
-          toast.error(`Erro ao registrar usuário ${user.Email}: ${error.message}`, {
-            icon: (
-              <Icon
-                icon="mdi:alert-circle"
-                height={20}
-                className="text-[var(--color-danger)]"
-              />
-            ),
-          });
+          toast.error(
+            `Erro ao registrar usuário ${user.Email}: ${error.message}`,
+            {
+              icon: (
+                <Icon
+                  icon="mdi:alert-circle"
+                  height={20}
+                  className="text-[var(--color-danger)]"
+                />
+              ),
+            }
+          );
         }
       });
-  
+
       await Promise.all(promises);
       toast.success(`${registrosComSucesso} usuários cadastrados.`, {
         icon: (
@@ -97,7 +105,6 @@ const Gerenciar = () => {
       });
 
       setFile(null);
-  
     } catch (e) {
       console.error("Erro ao ler o arquivo:", e);
       toast.error("Não foi possível processar o arquivo", {
@@ -119,7 +126,7 @@ const Gerenciar = () => {
       SIAPE: siape,
       Senha: siape,
     };
-  
+
     if (!user.Nome || !user.Email || !user.SIAPE) {
       toast.error("Preencha todos os campos!", {
         icon: (
@@ -132,10 +139,10 @@ const Gerenciar = () => {
       });
       return;
     }
-  
+
     try {
       await registrarUsuario(user);
-  
+
       toast.success("Usuário cadastrado com sucesso.", {
         icon: (
           <Icon
@@ -149,14 +156,13 @@ const Gerenciar = () => {
       setNome("");
       setEmail("");
       setSiape("");
-  
     } catch (err: any) {
       const backendMsg =
         err.response?.data?.message ||
         err.response?.data?.error ||
         err.message ||
         "Erro desconhecido ao cadastrar.";
-  
+
       toast.error(`Falha ao registrar: ${backendMsg}`, {
         icon: (
           <Icon
@@ -168,7 +174,6 @@ const Gerenciar = () => {
       });
     }
   };
-  
 
   return (
     <BlankLayout
@@ -203,12 +208,24 @@ const Gerenciar = () => {
                   <CardTitle className="text-2xl">Selecionar arquivo</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Input type="file" name="arquivo" id="arquivo" accept=".csv" onChange={e => setFile(e.target.files?.item(0) ?? null)} />
-                <Button icon="mdi:users" texto="Adicionar" className="mt-4" onClick={handleSubmitArquivo} />
+                  <Input
+                    type="file"
+                    name="arquivo"
+                    id="arquivo"
+                    accept=".csv"
+                    onChange={(e) => setFile(e.target.files?.item(0) ?? null)}
+                  />
+                  <Button
+                    icon="mdi:users"
+                    texto="Adicionar"
+                    className="mt-4"
+                    onClick={handleSubmitArquivo}
+                  />
                 </CardContent>
                 <CardFooter className="border-t">
                   <p className="text-sm text-red-700">
-                    *OBS: O número de SIAPE/matrícula será utilizado como senha para acesso ao sistema.
+                    *OBS: O número de SIAPE/matrícula será utilizado como senha
+                    para acesso ao sistema.
                   </p>
                 </CardFooter>
               </Card>
@@ -225,28 +242,51 @@ const Gerenciar = () => {
             >
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-2xl">Informações do usuário</CardTitle>
+                  <CardTitle className="text-2xl">
+                    Informações do usuário
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="col-span-2">
                       <h3 className="mb-1">Nome</h3>
-                      <Input name="nome" value={nome} placeholder="Nome completo" onChange={e => setNome(e.target.value)} />
+                      <Input
+                        name="nome"
+                        value={nome}
+                        placeholder="Nome completo"
+                        onChange={(e) => setNome(e.target.value)}
+                      />
                     </div>
                     <div className="col-span-1">
                       <h3 className="mb-1 mt-4">Email</h3>
-                      <Input name="email" value={email} placeholder="Email do usuário" onChange={e => setEmail(e.target.value)} />
+                      <Input
+                        name="email"
+                        value={email}
+                        placeholder="Email do usuário"
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
                     </div>
                     <div className="col-span-1">
                       <h3 className="mb-1 mt-4">SIAPE/Matrícula</h3>
-                      <Input name="matricula" value={siape} placeholder="xxxxxxx" onChange={e => setSiape(e.target.value)} />
+                      <Input
+                        name="matricula"
+                        value={siape}
+                        placeholder="xxxxxxx"
+                        onChange={(e) => setSiape(e.target.value)}
+                      />
                     </div>
                   </div>
-                  <Button icon="mdi:user" texto="Adicionar" className="mt-4" onClick={handleSubmitManual} />
+                  <Button
+                    icon="mdi:user"
+                    texto="Adicionar"
+                    className="mt-4"
+                    onClick={handleSubmitManual}
+                  />
                 </CardContent>
                 <CardFooter className="border-t">
                   <p className="text-sm text-red-700">
-                    *OBS: O número de SIAPE/matrícula será utilizado como senha para acesso ao sistema.
+                    *OBS: O número de SIAPE/matrícula será utilizado como senha
+                    para acesso ao sistema.
                   </p>
                 </CardFooter>
               </Card>

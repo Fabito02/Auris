@@ -13,14 +13,27 @@ interface ButtonProps {
   outline?: boolean;
   iconPosition?: "left" | "right" | "center";
   onClick?: () => void;
-  color?: "primary" | "secondary" | "success" | "danger" | "warning" | "info" | "white" | "muted";
+  color?:
+    | "primary"
+    | "secondary"
+    | "success"
+    | "danger"
+    | "warning"
+    | "info"
+    | "white"
+    | "muted";
   style?: CSSProperties;
   full_rounded?: boolean;
 }
 
-const iconSeExistir = (icon: string | undefined, iconPosition?: "left" | "right" | "center") => {
+const iconSeExistir = (
+  icon: string | undefined,
+  iconPosition?: "left" | "right" | "center"
+) => {
   if (icon) {
-    return <Icon icon={icon} className={`icon-button ${iconPosition ?? "left"}`} />;
+    return (
+      <Icon icon={icon} className={`icon-button ${iconPosition ?? "left"}`} />
+    );
   }
   return null;
 };
@@ -37,9 +50,11 @@ export default function Button({
   onClick,
   color = "primary",
   style,
-  full_rounded
+  full_rounded,
 }: ButtonProps) {
-  const estilo = `${outline ? "button-outline" : "button"} ${color} ${className} ${full_rounded ? "full-rounded" : ""}`.trim();
+  const estilo = `${
+    outline ? "button-outline" : "button"
+  } ${color} ${className} ${full_rounded ? "full-rounded" : ""}`.trim();
 
   const conteudo = (
     <>

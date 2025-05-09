@@ -7,7 +7,7 @@
   --color-primary: #16aa51;
   --color-primary-hover: #15b354;
 
-  --color-secondary: #FFCF50;
+  --color-secondary: #ffcf50;
   --color-secondary-hover: #ffd86b;
 
   --color-info: #22bcdb;
@@ -119,7 +119,7 @@ html body[data-scroll-locked] {
   overflow: visible !important;
   margin-right: 0 !important;
   padding-top: 110px;
-} 
+}
 
 body {
   margin: 0;

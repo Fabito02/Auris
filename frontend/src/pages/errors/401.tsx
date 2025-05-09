@@ -12,10 +12,19 @@ export default function Erro404() {
       removeBodyPadding
     >
       <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4 text-[var(--color-primary)]">401 - Autenticação necessária</h1>
-        <p className="text-lg mb-6 text-muted-foreground">Para acessar esta página, você precisa fazer login.</p>
+        <h1 className="text-4xl font-bold mb-4 text-[var(--color-primary)]">
+          401 - Autenticação necessária
+        </h1>
+        <p className="text-lg mb-6 text-muted-foreground">
+          Para acessar esta página, você precisa fazer login.
+        </p>
         <Link to="/login" className="flex items-center justify-center">
-          <Button texto="fazer login" color="primary" outline className="mt-2" />
+          <Button
+            texto="fazer login"
+            color="primary"
+            outline
+            className="mt-2"
+          />
         </Link>
       </div>
     </BlankLayout>

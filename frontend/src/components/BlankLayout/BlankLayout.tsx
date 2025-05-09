@@ -28,7 +28,7 @@ export const BlankLayout = ({
       header: { display: header?.style.display },
       navbar: { display: navbar?.style.display },
       footer: { display: footer?.style.display },
-      body: { paddingTop: body.style.paddingTop }
+      body: { paddingTop: body.style.paddingTop },
     };
 
     if (!showHeader && header) header.style.display = "none";
@@ -44,13 +44,9 @@ export const BlankLayout = ({
     };
   }, [showHeader, showNavbar, showFooter, removeBodyPadding]);
 
-  const layoutClass = centerContent 
+  const layoutClass = centerContent
     ? `${styles.container} ${styles.centered}`
     : `${styles.container} ${styles.defaultLayout}`;
 
-  return (
-    <div className={layoutClass}>
-      {children}
-    </div>
-  );
+  return <div className={layoutClass}>{children}</div>;
 };

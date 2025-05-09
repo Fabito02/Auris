@@ -4,12 +4,12 @@ import {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
-} from "../components/ui/carousel"
-import Autoplay from "embla-carousel-autoplay"
+} from "../components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 type SliderProps = {
-  imagens: string[]
-}
+  imagens: string[];
+};
 
 export function Slider({ imagens }: SliderProps) {
   return (
@@ -20,13 +20,13 @@ export function Slider({ imagens }: SliderProps) {
       >
         <CarouselContent>
           {imagens.map((src, index) => (
-        <CarouselItem key={index}>
-          <img
-            src={src}
-            alt={`Slide ${index + 1}`}
-            className="w-full h-full object-cover aspect-[21/10]"
-          />
-        </CarouselItem>
+            <CarouselItem key={index}>
+              <img
+                src={src}
+                alt={`Slide ${index + 1}`}
+                className="w-full h-full object-cover aspect-[21/10]"
+              />
+            </CarouselItem>
           ))}
         </CarouselContent>
 
@@ -34,7 +34,7 @@ export function Slider({ imagens }: SliderProps) {
         <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white/30 hover:bg-white/50 text-white hover:text-white transition border-0 mr-2" />
       </Carousel>
     </div>
-  )
+  );
 }
 
-export default Slider
+export default Slider;

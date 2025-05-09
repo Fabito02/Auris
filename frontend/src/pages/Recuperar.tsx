@@ -43,9 +43,9 @@ export default function Recuperar() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     const loadingToast = toast.loading("Salvando nova senha...");
-  
+
     const erroValidacao = validarSenha(novaSenha, confirmacao);
     if (erroValidacao) {
       setError(erroValidacao);
@@ -60,10 +60,13 @@ export default function Recuperar() {
       });
       return;
     }
-  
+
     try {
-      const res = await recuperarSenha({ token: token ?? "", senha: novaSenha ?? "" });
-  
+      const res = await recuperarSenha({
+        token: token ?? "",
+        senha: novaSenha ?? "",
+      });
+
       if (res.success) {
         toast.success("Senha alterada com sucesso!", {
           id: loadingToast,
@@ -91,15 +94,18 @@ export default function Recuperar() {
     } catch (err: any) {
       console.error(err);
       setError("Token inválido ou expirado.");
-      toast.error("Erro ao alterar senha. Por favor, solicite uma nova recuperação.", {
-        id: loadingToast,
-        icon: (
-          <Icon
-            icon="mdi:alert-circle"
-            className="text-[var(--color-danger)]"
-          />
-        ),
-      });
+      toast.error(
+        "Erro ao alterar senha. Por favor, solicite uma nova recuperação.",
+        {
+          id: loadingToast,
+          icon: (
+            <Icon
+              icon="mdi:alert-circle"
+              className="text-[var(--color-danger)]"
+            />
+          ),
+        }
+      );
     }
   };
 
@@ -113,7 +119,11 @@ export default function Recuperar() {
         removeBodyPadding
       >
         <div className="text-center">
-          <Icon icon="svg-spinners:90-ring" width="4.3em" className="text-[var(--color-primary)]" />
+          <Icon
+            icon="svg-spinners:90-ring"
+            width="4.3em"
+            className="text-[var(--color-primary)]"
+          />
         </div>
       </BlankLayout>
     );
@@ -136,7 +146,12 @@ export default function Recuperar() {
             Solicite uma nova recuperação de senha.
           </p>
           <Link to="/login" className="flex items-center justify-center">
-            <Button texto="Fazer Login" color="primary" outline className="mt-2" />
+            <Button
+              texto="Fazer Login"
+              color="primary"
+              outline
+              className="mt-2"
+            />
           </Link>
         </div>
       </BlankLayout>

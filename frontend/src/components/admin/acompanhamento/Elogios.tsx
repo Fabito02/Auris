@@ -1,17 +1,29 @@
-import { CartesianGrid, XAxis, Line, LineChart, Pie, PieChart, Cell, Label, Bar, BarChart, YAxis } from "recharts"
+import {
+  CartesianGrid,
+  XAxis,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  Cell,
+  Label,
+  Bar,
+  BarChart,
+  YAxis,
+} from "recharts";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
+} from "@/components/ui/chart";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 
 const visãoGeral = [
   { tipo: "Estrutura e Espaços", Total: 196, fill: "var(--color-success)" },
@@ -27,7 +39,7 @@ const visãoGeral = [
   { tipo: "Eventos", Total: 15, fill: "var(--color-success)" },
   { tipo: "Burocracia", Total: 10, fill: "var(--color-secondary)" },
   { tipo: "Outros", Total: 5, fill: "var(--color-success)" },
-]
+];
 
 const dadosPorPerfil = [
   { nome: "Docentes", valor: 48, cor: "var(--color-info)" },
@@ -44,11 +56,10 @@ const totalManifestacoes = [
   { dia: "Quinta", Total: 140 },
   { dia: "Sexta", Total: 160 },
   { dia: "Sábado", Total: 90 },
-  { dia: "Domingo", Total: 60 }
-]
+  { dia: "Domingo", Total: 60 },
+];
 
-const chartConfig = {
-} satisfies ChartConfig
+const chartConfig = {} satisfies ChartConfig;
 
 export default function Component() {
   return (
@@ -57,7 +68,9 @@ export default function Component() {
         <Card className="flex flex-col col-span-3">
           <CardHeader className="items-center pb-0">
             <CardTitle>Elogios por categoria</CardTitle>
-            <CardDescription>Com base em dados dos últimos 30 dias</CardDescription>
+            <CardDescription>
+              Com base em dados dos últimos 30 dias
+            </CardDescription>
           </CardHeader>
           <CardContent className="flex-1 pb-0">
             <ChartContainer
@@ -169,7 +182,10 @@ export default function Component() {
                 >
                   <Label
                     content={({ viewBox }) => {
-                      const total = dadosPorPerfil.reduce((acc, curr) => acc + curr.valor, 0);
+                      const total = dadosPorPerfil.reduce(
+                        (acc, curr) => acc + curr.valor,
+                        0
+                      );
                       if (viewBox && "cx" in viewBox && "cy" in viewBox) {
                         return (
                           <text
@@ -185,7 +201,7 @@ export default function Component() {
                             >
                               {total}
                             </tspan>
-                            <tspan  
+                            <tspan
                               x={viewBox.cx}
                               y={(viewBox.cy || 0) + 24}
                               className="fill-muted-foreground"
@@ -206,9 +222,9 @@ export default function Component() {
             <div className="flex flex-wrap justify-center gap-2 mt-4">
               {dadosPorPerfil.map((item) => (
                 <div key={item.nome} className="flex items-center gap-1">
-                  <div 
-                    className="w-3 h-3 rounded-full" 
-                    style={{ backgroundColor: item.cor }} 
+                  <div
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: item.cor }}
                   />
                   <span className="text-sm">{item.nome}</span>
                 </div>
@@ -218,5 +234,5 @@ export default function Component() {
         </Card>
       </div>
     </div>
-  )
+  );
 }

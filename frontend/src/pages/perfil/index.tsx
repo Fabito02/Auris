@@ -22,7 +22,7 @@ import {
   updateEnderecoUsuarioAtual,
   updateUsuarioAtual,
   updateAvatarUsuarioAtual,
-  getAvatar
+  getAvatar,
 } from "@/api/api_routes";
 import { toast } from "sonner";
 import "./Perfil.css";
@@ -62,8 +62,8 @@ const Perfil: React.FC = () => {
         const avatar = await getAvatar(user.User_ID);
         setProfilePic(avatar.avatarUrl);
       };
-  
-      fetchAvatar()
+
+      fetchAvatar();
     }
   }, [user]);
 
@@ -121,17 +121,35 @@ const Perfil: React.FC = () => {
       await updateUsuarioAtual(usuarioData);
       await updateEnderecoUsuarioAtual(enderecoData);
       toast.success("Usuário atualizado com sucesso!", {
-        icon: <Icon icon="mdi:check-circle" height={20} className="text-[var(--color-success)]" />,      
+        icon: (
+          <Icon
+            icon="mdi:check-circle"
+            height={20}
+            className="text-[var(--color-success)]"
+          />
+        ),
       });
     } catch (err: any) {
       if (err.response?.data?.error) {
         toast.error(err.response.data.error, {
-          icon: <Icon icon="mdi:alert-circle" height={20} className="text-[var(--color-danger)]" />,      
+          icon: (
+            <Icon
+              icon="mdi:alert-circle"
+              height={20}
+              className="text-[var(--color-danger)]"
+            />
+          ),
         });
       } else {
         console.error(err);
         toast.error("Erro ao atualizar usuário!", {
-          icon: <Icon icon="mdi:alert-circle" height={20} className="text-[var(--color-danger)]" />,      
+          icon: (
+            <Icon
+              icon="mdi:alert-circle"
+              height={20}
+              className="text-[var(--color-danger)]"
+            />
+          ),
         });
       }
     }
@@ -145,24 +163,48 @@ const Perfil: React.FC = () => {
             <form onSubmit={handleSubmit} className="grid grid-cols-3 gap-4">
               <div className="col-span-3 md:col-span-1 flex justify-center">
                 <div className="relative w-[220px] h-[220px] rounded-full overflow-hidden">
-                  <img src={profilePic || "/user_placeholder.png"} alt="Foto de perfil" className="w-full h-full object-cover" />
-                  <label htmlFor="imageInput" className="absolute inset-0 bg-black/40 flex items-center justify-center cursor-pointer">
-                    <Icon icon="material-symbols:edit-outline-rounded" width={42} className="text-white" />
+                  <img
+                    src={profilePic || "/user_placeholder.png"}
+                    alt="Foto de perfil"
+                    className="w-full h-full object-cover"
+                  />
+                  <label
+                    htmlFor="imageInput"
+                    className="absolute inset-0 bg-black/40 flex items-center justify-center cursor-pointer"
+                  >
+                    <Icon
+                      icon="material-symbols:edit-outline-rounded"
+                      width={42}
+                      className="text-white"
+                    />
                   </label>
-                  <input id="imageInput" type="file" accept="image/*" onChange={handlePicChange} ref={fileInputRef} className="hidden" />
+                  <input
+                    id="imageInput"
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePicChange}
+                    ref={fileInputRef}
+                    className="hidden"
+                  />
                 </div>
               </div>
               <div className="col-span-3 md:col-span-2 grid grid-cols-2 gap-4">
                 <div className="col-span-2">
                   <h3 className="mb-1">Nome</h3>
-                  <Input name="nome" defaultValue={user?.Nome || ""} placeholder="Seu nome completo" />
+                  <Input
+                    name="nome"
+                    defaultValue={user?.Nome || ""}
+                    placeholder="Seu nome completo"
+                  />
                 </div>
                 <div className="col-span-1">
                   <h3 className="mb-1 mt-4">Permissão</h3>
                   <Input value={user?.Role} disabled />
                 </div>
                 <div className="col-span-1">
-                  <h3 className="mb-1 mt-4">{user?.Tipo === "servidor" ? "SIAPE" : "Matrícula"}</h3>
+                  <h3 className="mb-1 mt-4">
+                    {user?.Tipo === "servidor" ? "SIAPE" : "Matrícula"}
+                  </h3>
                   <Input value={user?.SIAPE || "Indefinido"} disabled />
                 </div>
                 <div className="col-span-1">
@@ -172,18 +214,31 @@ const Perfil: React.FC = () => {
               </div>
               <div className="col-span-3 lg:col-span-2">
                 <h3 className="mb-1">Email</h3>
-                <Input name="email" defaultValue={user?.Email || ""} disabled placeholder="email@exemplo.com" />
+                <Input
+                  name="email"
+                  defaultValue={user?.Email || ""}
+                  disabled
+                  placeholder="email@exemplo.com"
+                />
               </div>
               <div className="col-span-3 sm:col-span-2 md:col-span-1">
                 <h3 className="mb-1">Telefone</h3>
-                <Input name="telefone" defaultValue={user?.Telefone || ""} placeholder="(00) 00000-0000" />
+                <Input
+                  name="telefone"
+                  defaultValue={user?.Telefone || ""}
+                  placeholder="(00) 00000-0000"
+                />
               </div>
               <div className="col-span-1">
                 <h3 className="mb-1">Estado</h3>
                 <Select
                   name="estado"
                   value={endereco?.Estado || ""}
-                  onValueChange={(value) => setEndereco((prev) => ({ ...prev, Estado: value } as Endereco))}
+                  onValueChange={(value) =>
+                    setEndereco(
+                      (prev) => ({ ...prev, Estado: value } as Endereco)
+                    )
+                  }
                 >
                   <SelectTrigger className="w-full custom-select">
                     <SelectValue placeholder="Selecione seu estado" />
@@ -221,27 +276,51 @@ const Perfil: React.FC = () => {
               </div>
               <div className="col-span-2 sm:col-span-2 md:col-span-1">
                 <h3 className="mb-1">Cidade</h3>
-                <Input name="cidade" defaultValue={endereco?.Cidade || ""} placeholder="Sua cidade" />
+                <Input
+                  name="cidade"
+                  defaultValue={endereco?.Cidade || ""}
+                  placeholder="Sua cidade"
+                />
               </div>
               <div className="col-span-1">
                 <h3 className="mb-1">Número</h3>
-                <Input name="numero" defaultValue={endereco?.Numero || ""} placeholder="Número da residência" />
+                <Input
+                  name="numero"
+                  defaultValue={endereco?.Numero || ""}
+                  placeholder="Número da residência"
+                />
               </div>
               <div className="col-span-2 sm:col-span-1">
                 <h3 className="mb-1">CEP</h3>
-                <Input name="cep" defaultValue={endereco?.CEP || ""} placeholder="Seu CEP" />
+                <Input
+                  name="cep"
+                  defaultValue={endereco?.CEP || ""}
+                  placeholder="Seu CEP"
+                />
               </div>
               <div className="col-span-3 sm:col-span-2 md:col-span-1">
                 <h3 className="mb-1">Bairro</h3>
-                <Input name="bairro" defaultValue={endereco?.Bairro || ""} placeholder="Seu bairro" />
+                <Input
+                  name="bairro"
+                  defaultValue={endereco?.Bairro || ""}
+                  placeholder="Seu bairro"
+                />
               </div>
               <div className="col-span-3 md:col-span-1">
                 <h3 className="mb-1">Logradouro</h3>
-                <Input name="logradouro" defaultValue={endereco?.Logradouro || ""} placeholder="Rua/Avenida" />
+                <Input
+                  name="logradouro"
+                  defaultValue={endereco?.Logradouro || ""}
+                  placeholder="Rua/Avenida"
+                />
               </div>
               <div className="col-span-3">
                 <h3 className="mb-1">Complemento</h3>
-                <Input name="complemento" defaultValue={endereco?.Complemento || ""} placeholder="Complemento" />
+                <Input
+                  name="complemento"
+                  defaultValue={endereco?.Complemento || ""}
+                  placeholder="Complemento"
+                />
               </div>
               <div className="grid md:grid-cols-2 md:flex-row gap-3 col-span-3">
                 <Button
@@ -280,9 +359,27 @@ const Perfil: React.FC = () => {
             />
           </div>
           <div className="grid grid-cols-2 gap-4 max-w-lg w-full bg-black/40 rounded-b-[1rem] p-4">
-            <input type="range" min={1} max={5} step={0.1} defaultValue={zoom} onChange={e => setZoom(Number(e.target.value))} className="col-span-2" />
-            <Button onClick={() => setShowCropper(false)} texto="Cancelar" color="danger" className="col-span-1" />
-            <Button onClick={handleCropSave} texto="Salvar Recorte" color="success" className="col-span-1" />
+            <input
+              type="range"
+              min={1}
+              max={5}
+              step={0.1}
+              defaultValue={zoom}
+              onChange={(e) => setZoom(Number(e.target.value))}
+              className="col-span-2"
+            />
+            <Button
+              onClick={() => setShowCropper(false)}
+              texto="Cancelar"
+              color="danger"
+              className="col-span-1"
+            />
+            <Button
+              onClick={handleCropSave}
+              texto="Salvar Recorte"
+              color="success"
+              className="col-span-1"
+            />
           </div>
         </div>
       )}

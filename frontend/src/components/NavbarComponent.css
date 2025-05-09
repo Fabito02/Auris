@@ -22,7 +22,8 @@
   cursor: pointer;
 }
 
-.link-navbar:hover, .link-navbar-menu:hover {
+.link-navbar:hover,
+.link-navbar-menu:hover {
   background-color: #00ff1529;
 }
 

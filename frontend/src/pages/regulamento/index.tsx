@@ -3,11 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { checkAuth } from "@/api/auth";
 
 const Regulamento = () => {
-
   const navigate = useNavigate();
 
   useEffect(() => {
-    document.title = "Regulamento"
+    document.title = "Regulamento";
     const token = localStorage.getItem("auris_token");
     if (!token) {
       navigate("/errors/401");
@@ -23,6 +22,5 @@ const Regulamento = () => {
     </div>
   );
 };
-  
+
 export default Regulamento;
-  

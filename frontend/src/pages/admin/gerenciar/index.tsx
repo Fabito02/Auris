@@ -31,8 +31,8 @@ const Gerenciar = () => {
     } else {
       checkAuth(navigate, ["admin", "moderador"]);
     }
-    
-    setIsAdminResult(isAdmin());
+
+    isAdmin().then((result) => setIsAdminResult(result));
 
     const handleExibirTab = () => {
       const tabs = document.querySelectorAll(".tabContainer");
@@ -61,8 +61,14 @@ const Gerenciar = () => {
   ];
 
   if (isAdminResult) {
-    opcoes.push({ icon: "material-symbols:security-rounded", label: "Permissoes" });
-    opcoes.push({ icon: "material-symbols:work-history-rounded", label: "Histórico" });
+    opcoes.push({
+      icon: "material-symbols:security-rounded",
+      label: "Permissoes",
+    });
+    opcoes.push({
+      icon: "material-symbols:work-history-rounded",
+      label: "Histórico",
+    });
   }
 
   return (
@@ -128,4 +134,3 @@ const Gerenciar = () => {
 };
 
 export default Gerenciar;
-

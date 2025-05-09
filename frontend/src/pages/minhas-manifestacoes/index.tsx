@@ -1,5 +1,4 @@
 const MinhasManifestacoes = () => {
-
   return (
     <div>
       <h1>Minhas Manifestações</h1>
@@ -8,4 +7,4 @@ const MinhasManifestacoes = () => {
   );
 };
 
-export default MinhasManifestacoes
+export default MinhasManifestacoes;

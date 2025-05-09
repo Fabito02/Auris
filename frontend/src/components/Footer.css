@@ -1,13 +1,13 @@
 .footer-container {
-    background-color: #151515;
-    padding-left: 10vw !important;
-    padding-right: 10vw !important;
-    margin: 0 !important;
-    max-width: 100% !important;
-    max-width: 100%;
+  background-color: #151515;
+  padding-left: 10vw !important;
+  padding-right: 10vw !important;
+  margin: 0 !important;
+  max-width: 100% !important;
+  max-width: 100%;
 }
 
 .logo-footer {
-    width: 100%;
-    max-width: 200px;
+  width: 100%;
+  max-width: 200px;
 }

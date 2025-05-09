@@ -12,10 +12,19 @@ export default function Erro404() {
       removeBodyPadding
     >
       <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4 text-[var(--color-primary)]">500 - Erro inesperado</h1>
-        <p className="text-lg mb-6 text-muted-foreground">Tente novamente ou contate o suporte para mais informações.</p>
+        <h1 className="text-4xl font-bold mb-4 text-[var(--color-primary)]">
+          500 - Erro inesperado
+        </h1>
+        <p className="text-lg mb-6 text-muted-foreground">
+          Tente novamente ou contate o suporte para mais informações.
+        </p>
         <Link to="/" className="flex items-center justify-center">
-          <Button texto="página inicial" color="primary" outline className="mt-2" />
+          <Button
+            texto="página inicial"
+            color="primary"
+            outline
+            className="mt-2"
+          />
         </Link>
       </div>
     </BlankLayout>

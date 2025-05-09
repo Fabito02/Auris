@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Card } from "@/components/ui/card";
 import "./Informacoes.css";
 import AnimarAoVer from "@/components/AnimarAoVer";
 import { checkAuth } from "@/api/auth";
@@ -9,7 +8,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion"
+} from "@/components/ui/accordion";
 
 const Informacoes = [
   {
@@ -133,14 +132,20 @@ export default function Faq() {
         </div>
       </div>
       <AnimarAoVer>
-        <Accordion type="single" collapsible className="mb-12 max-w-4xl mx-auto">
+        <Accordion
+          type="single"
+          collapsible
+          className="mb-12 max-w-4xl mx-auto"
+        >
           {Informacoes.map((faq, index) => (
-              <AccordionItem value={`item-${index}`} key={index}>
-                <AccordionTrigger className="text-1xl px-2">{faq.title}</AccordionTrigger>
-                <AccordionContent className="bg-gray-50 text-[15px] p-3">
-                  {faq.content}
-                </AccordionContent>
-              </AccordionItem>
+            <AccordionItem value={`item-${index}`} key={index}>
+              <AccordionTrigger className="text-1xl px-2">
+                {faq.title}
+              </AccordionTrigger>
+              <AccordionContent className="bg-gray-50 text-[15px] p-3">
+                {faq.content}
+              </AccordionContent>
+            </AccordionItem>
           ))}
         </Accordion>
       </AnimarAoVer>

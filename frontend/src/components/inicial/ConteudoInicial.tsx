@@ -18,14 +18,19 @@ const ConteudoHome = () => {
           <div className="textos text-right coluna-tela">
             <h1 className="title">Auris – Ouvidoria Digital</h1>
             <p className="complemento flex flex-col items-center lg:items-end">
-              Envie sua manifestação na plataforma para construir um IFNMG - Campus Almenara melhor para todos(as).
+              Envie sua manifestação na plataforma para construir um IFNMG -
+              Campus Almenara melhor para todos(as).
               <Link to="/home" className="mt-4">
                 <Button texto="acessar plataforma" className="plataforma-btn" />
               </Link>
             </p>
           </div>
           <div className="imagem coluna-tela">
-            <img src="/home/img1.svg" alt="Homem utilizando o computador" className="imagemCol" />
+            <img
+              src="/home/img1.svg"
+              alt="Homem utilizando o computador"
+              className="imagemCol"
+            />
           </div>
         </div>
       </AnimarAoVer>
@@ -49,12 +54,17 @@ const ConteudoHome = () => {
       <AnimarAoVer>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 tela px-[7vw]">
           <div className="imagem col-inverso coluna-tela">
-            <img src="/home/img2.svg" alt="Homem utilizando o computador" className="imagemCol" />
+            <img
+              src="/home/img2.svg"
+              alt="Homem utilizando o computador"
+              className="imagemCol"
+            />
           </div>
           <div className="textos coluna-tela">
             <h1 className="title">O elogio é combustível para a excelência!</h1>
             <p className="complemento">
-              Conte-nos sobre aquela experiência positiva que merece ser celebrada.
+              Conte-nos sobre aquela experiência positiva que merece ser
+              celebrada.
             </p>
           </div>
         </div>
@@ -65,11 +75,16 @@ const ConteudoHome = () => {
           <div className="textos text-right coluna-tela">
             <h1 className="title">Escutamos agora para melhorar sempre!</h1>
             <p className="complemento">
-              Seja para valorizar o que dá certo ou ajustar o que pode ser melhorado.
+              Seja para valorizar o que dá certo ou ajustar o que pode ser
+              melhorado.
             </p>
           </div>
           <div className="imagem coluna-tela">
-            <img src="/home/img3.svg" alt="Homem utilizando o computador" className="imagemCol" />
+            <img
+              src="/home/img3.svg"
+              alt="Homem utilizando o computador"
+              className="imagemCol"
+            />
           </div>
         </div>
       </AnimarAoVer>
@@ -80,7 +95,8 @@ const ConteudoHome = () => {
             <div className="column textos coluna-tela">
               <div className="title">Venha fazer parte da mudança!</div>
               <p className="complemento">
-                Acesse a plataforma, compartilhe sua opinião e ajude a construir um ambiente ainda melhor.
+                Acesse a plataforma, compartilhe sua opinião e ajude a construir
+                um ambiente ainda melhor.
               </p>
               <Link to="/home">
                 <Button texto="acessar plataforma" className="plataforma-btn" />

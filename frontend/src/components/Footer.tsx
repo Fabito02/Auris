@@ -14,17 +14,26 @@ const Footer = () => {
         { name: "Informações e FAQs", link: "/informacoes" },
         { name: "Políticas e Regulamentos", link: "/regulamento" },
       ],
-      target: ""
+      target: "",
     },
     {
       title: "Desenvolvedores",
       items: [
-        { name: "Fabiano Júnior - Design, Frontend, Backend", link: "https://github.com/Fabito02/" },
-        { name: "Francisco Rodrigues - Design", link: "https://github.com/FranSRodrigues/" },
-        { name: "Pablo Messias - Design", link: "https://github.com/PabloMessias007/" },
+        {
+          name: "Fabiano Júnior - Design, Frontend, Backend",
+          link: "https://github.com/Fabito02/",
+        },
+        {
+          name: "Francisco Rodrigues - Design",
+          link: "https://github.com/FranSRodrigues/",
+        },
+        {
+          name: "Pablo Messias - Design",
+          link: "https://github.com/PabloMessias007/",
+        },
         { name: "Bruno Araújo - Design", link: "https://github.com/EoBrunin/" },
       ],
-      target: "blank"
+      target: "blank",
     },
   ];
 
@@ -42,9 +51,7 @@ const Footer = () => {
 
           {sections.map((section, idx) => (
             <div key={idx} className="md:col-span-3">
-              <h5 className="text-white font-semibold mb-4">
-                {section.title}
-              </h5>
+              <h5 className="text-white font-semibold mb-4">{section.title}</h5>
               <ul className="space-y-2">
                 {section.items.map((item, i) => (
                   <li key={i}>

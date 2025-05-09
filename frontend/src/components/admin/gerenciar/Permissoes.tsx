@@ -18,7 +18,6 @@ import { getAvatar } from "@/api/api_routes";
 import AnimarAoVer from "@/components/AnimarAoVer";
 
 export default function Component() {
-
   const [Users, setUsuarios] = useState([]);
   const [search, setSearch] = useState("");
   const [avatars, setAvatars] = useState<Record<number, string>>({});
@@ -34,21 +33,24 @@ export default function Component() {
       const avatarPromises = Users.map(async (user: User) => {
         try {
           const res = await getAvatar(user.User_ID || 0);
-          return { id: user.User_ID, url: res?.avatarUrl || "/user_placeholder.png" };
+          return {
+            id: user.User_ID,
+            url: res?.avatarUrl || "/user_placeholder.png",
+          };
         } catch (error) {
           return { id: user.User_ID, url: "/user_placeholder.png" };
         }
       });
-  
+
       const avatarResults = await Promise.all(avatarPromises);
       const avatarMap: Record<number, string> = {};
       avatarResults.forEach(({ id, url }) => {
         avatarMap[id as number] = url;
       });
-  
+
       setAvatars(avatarMap);
     }
-  
+
     if (Users.length > 0) {
       fetchAvatars();
     }
@@ -118,7 +120,11 @@ export default function Component() {
                 >
                   <div className="flex items-center">
                     <Avatar className="h-[65px] w-[65px]">
-                      <AvatarImage src={avatars[User.User_ID || 0] ?? "/user_placeholder.png"} />
+                      <AvatarImage
+                        src={
+                          avatars[User.User_ID || 0] ?? "/user_placeholder.png"
+                        }
+                      />
                     </Avatar>
                     <div className="grid grid-rows-2 pl-2">
                       <p className="text-base pt-2">{User.Nome}</p>
@@ -130,7 +136,9 @@ export default function Component() {
                   <div className="col-span-2 sm:col-span-1">
                     <Select
                       defaultValue={User.Role}
-                      onValueChange={(valor: "user" | "admin" | "moderador") => {
+                      onValueChange={(
+                        valor: "user" | "admin" | "moderador"
+                      ) => {
                         handleRoleChange(Number(User.User_ID), valor);
                       }}
                     >

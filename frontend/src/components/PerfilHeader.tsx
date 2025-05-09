@@ -33,8 +33,10 @@ const PerfilHeader = () => {
   const navigate = useNavigate();
 
   const [user, setUser] = useState<User | null>(null);
-  const [logoutSucesso, setLogoutSucesso] = useState<boolean | undefined>(undefined);
-  const [avatar , setAvatar] = useState<string | null>(null);
+  const [logoutSucesso, setLogoutSucesso] = useState<boolean | undefined>(
+    undefined
+  );
+  const [avatar, setAvatar] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -52,8 +54,8 @@ const PerfilHeader = () => {
         const avatar = await getAvatar(user.User_ID);
         setAvatar(avatar.avatarUrl);
       };
-  
-      fetchAvatar()
+
+      fetchAvatar();
     }
   }, [user]);
 

@@ -1,4 +1,4 @@
-import ConteudoInicial from "../components/inicial/ConteudoInicial"
+import ConteudoInicial from "../components/inicial/ConteudoInicial";
 
 const Home = () => {
   return (

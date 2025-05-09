@@ -1,41 +1,41 @@
 .card-info {
-    display: flex !important;
-    justify-content: center !important;
-    border-color: #e1e1e1;
-    border-radius: 16px;
-  }
-  
-  .card-info.danger {
-    border-left: var(--color-danger) 10px solid;
-  }
-  
-  .card-info.warning {
-    border-left: var(--color-warning) 10px solid;
-  }
-  
-  .card-info.info {
-    border-left: var(--color-info) 10px solid;
-  }
-  
-  .card-info.success {
-    border-left: var(--color-success) 10px solid;
-  }
-  
-  .card-info.primary {
-    border-left: var(--color-primary) 10px solid;
-  }
-  
-  .card-info.secondary {
-    border-left: var(--color-secondary) 10px solid;
-  }
-  
-  .total {
-    font-size: 2.8rem;
-    font-family: "Poppins", sans-serif;
-    font-weight: 500;
-  }
-  
-  .titulo-card-info {
-    font-size: 1.4rem;
-    font-weight: 500;
-  }  
+  display: flex !important;
+  justify-content: center !important;
+  border-color: #e1e1e1;
+  border-radius: 16px;
+}
+
+.card-info.danger {
+  border-left: var(--color-danger) 10px solid;
+}
+
+.card-info.warning {
+  border-left: var(--color-warning) 10px solid;
+}
+
+.card-info.info {
+  border-left: var(--color-info) 10px solid;
+}
+
+.card-info.success {
+  border-left: var(--color-success) 10px solid;
+}
+
+.card-info.primary {
+  border-left: var(--color-primary) 10px solid;
+}
+
+.card-info.secondary {
+  border-left: var(--color-secondary) 10px solid;
+}
+
+.total {
+  font-size: 2.8rem;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+}
+
+.titulo-card-info {
+  font-size: 1.4rem;
+  font-weight: 500;
+}

@@ -67,7 +67,7 @@ export const getEnderecoByUserId = async (id: number) => {
 export const getUsuarioByUserId = async (id: number) => {
   const response = await api.get(`/users/${id}`);
   return response.data;
-}
+};
 
 export const postRegistrar = async (usuario: User) => {
   const response = await api.post("/auth/registrar", usuario);
@@ -84,7 +84,10 @@ export const postLogout = async () => {
   return response.data;
 };
 
-export const updateRole = async ({User_ID, Role,}: Pick<User, "User_ID" | "Role">) => {
+export const updateRole = async ({
+  User_ID,
+  Role,
+}: Pick<User, "User_ID" | "Role">) => {
   const response = await api.put(`/auth/role/${User_ID}`, { Role });
   return response.data;
 };
@@ -119,15 +122,20 @@ export const getAvatar = async (id: number) => {
 
 export const registrarUsuario = async (user: User): Promise<void> => {
   const response = await api.post("/users", user);
-  return response.data
+  return response.data;
 };
 
-export const emailRecuperacao = async (email: { email: string }): Promise<{ success: boolean}> => {
+export const emailRecuperacao = async (email: {
+  email: string;
+}): Promise<{ success: boolean }> => {
   const response = await api.post("/confirmar/recuperar", email);
   return response.data;
 };
 
-export const recuperarSenha = async (dados: { token: string, senha: string }): Promise<{ success: boolean, data: string}> => {
+export const recuperarSenha = async (dados: {
+  token: string;
+  senha: string;
+}): Promise<{ success: boolean; data: string }> => {
   const response = await api.post("/recuperar", dados);
   return {
     success: true,
@@ -138,14 +146,19 @@ export const recuperarSenha = async (dados: { token: string, senha: string }): P
 export const getPrecisaTrocarSenha = async () => {
   const response = await api.get(`/auth/senha`);
   return response.data;
-}
+};
 
-export const trocarSenha = async (senha: { senhaAtual: string, senha: string} ): Promise<{ success: boolean, error?: string}> => {
+export const trocarSenha = async (senha: {
+  senhaAtual: string;
+  senha: string;
+}): Promise<{ success: boolean; error?: string }> => {
   const response = await api.post("/auth/nova-senha", senha);
   return response.data;
 };
 
-export const getRoleUsuarioAtual = async (): Promise<{ data: {Role: string} }> => {
+export const getRoleUsuarioAtual = async (): Promise<{
+  data: { Role: string };
+}> => {
   const response = await api.get(`/me/role`);
   return response.data;
-}
+};

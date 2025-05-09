@@ -7,7 +7,7 @@ import Button from "../components/buttons/Button";
 import AnimarAoVer from "@/components/AnimarAoVer";
 import { motion } from "framer-motion";
 import "./Home.css";
-import { checkAuth} from "../api/auth";
+import { checkAuth } from "../api/auth";
 import { getPrecisaTrocarSenha } from "../api/api_routes";
 import {
   Dialog,
@@ -56,9 +56,11 @@ const Home = () => {
       try {
         const response = await getPrecisaTrocarSenha();
         if (response?.success === true) {
-          setPrecisaTrocarSenha(true)
+          setPrecisaTrocarSenha(true);
         }
-      } catch (error) { return }
+      } catch (error) {
+        return;
+      }
     })();
   }, []);
 

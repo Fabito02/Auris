@@ -1,110 +1,110 @@
 .tela {
-    height: 100%;
-    min-height: 100vh;
-    max-height: 1200px;
-    padding-bottom: 50px;
-    padding-top: 50px;
-    max-width: 1800px;
-    margin-left: auto;
-    margin-right: auto;
+  height: 100%;
+  min-height: 100vh;
+  max-height: 1200px;
+  padding-bottom: 50px;
+  padding-top: 50px;
+  max-width: 1800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .primeira-tela {
-    margin-top: 55px;
+  margin-top: 55px;
 }
 
 .coluna-tela {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .bg-cinza {
-    background-color: #f3f3f3;
+  background-color: #f3f3f3;
 }
 
 .imagemCol {
-    width: calc(150px + 30vw);
-    max-width: 650px;
-    max-height: 650px;
+  width: calc(150px + 30vw);
+  max-width: 650px;
+  max-height: 650px;
 }
 
 .login-btn {
-    position: absolute;
-    right: 15px;
-    top: 15px;
-    border-radius: 200px !important;
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  border-radius: 200px !important;
 }
 
 .logo-auris {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    height: 70px;
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  height: 70px;
 }
 
 .textos {
-    padding-right: 20px;
-    flex-direction: column;
-    padding-left: 0 !important;
+  padding-right: 20px;
+  flex-direction: column;
+  padding-left: 0 !important;
 }
 
 .title {
-    font-family: 'Poppins', sans-serif;
-    font-size: 3.7em;
-    color: #1c582e;
-    font-weight: 300;
+  font-family: "Poppins", sans-serif;
+  font-size: 3.7em;
+  color: #1c582e;
+  font-weight: 300;
 }
 
 .complemento {
-    margin-top: 30px;
-    font-size: 1.5em;
-    font-weight: 300;
+  margin-top: 30px;
+  font-size: 1.5em;
+  font-weight: 300;
 }
 
 .text-left {
-    text-align: left;
+  text-align: left;
 }
 
 .text-right {
-    text-align: right;
+  text-align: right;
 }
 
 .column {
-    flex-direction: column;
+  flex-direction: column;
 }
 
 .column .button {
-    margin-top: 40px;
+  margin-top: 40px;
 }
 
 .animar {
-    opacity: 0;
-    transform: translateY(50px);
+  opacity: 0;
+  transform: translateY(50px);
 }
 .animar.visible {
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
 }
 
-@media (max-width: 992px){
-    .primeira-tela {
-        margin-top: 50px;
-    }
-    .textos {
-        text-align: center !important;
-    }
-    .title {
-        font-size: 2.5em;
-    }
-    .complemento {
-        font-size: 1.4em;
-    }
-    .col-inverso {
-        order: 2;
-    }
-    .textos {
-        padding-right: 0;
-    }
+@media (max-width: 992px) {
+  .primeira-tela {
+    margin-top: 50px;
+  }
+  .textos {
+    text-align: center !important;
+  }
+  .title {
+    font-size: 2.5em;
+  }
+  .complemento {
+    font-size: 1.4em;
+  }
+  .col-inverso {
+    order: 2;
+  }
+  .textos {
+    padding-right: 0;
+  }
 }

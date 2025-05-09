@@ -1,36 +1,36 @@
 .linha {
-    max-height: fit-content;
+  max-height: fit-content;
 }
 
 .container-card {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .coluna {
-    position: relative;
-    height: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  position: relative;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .tipoManifestacao {
-    background-color: white;
-    border-color: white;
-    width: calc(100% - 30px);
-    transition: transform 0.2s ease-out;
-    max-width: 330px;
-    margin: 20px;
+  background-color: white;
+  border-color: white;
+  width: calc(100% - 30px);
+  transition: transform 0.2s ease-out;
+  max-width: 330px;
+  margin: 20px;
 }
 
 .tipoManifestacao:hover {
-    transform: scale(1.02);
+  transform: scale(1.02);
 }
 
 @media (max-width: 576px) {
-    .tipoManifestacao {
-        max-width: 250px;
-    }
+  .tipoManifestacao {
+    max-width: 250px;
+  }
 }

@@ -11,7 +11,6 @@ import Button from "@/components/buttons/Button";
 import AnimarAoVer from "@/components/AnimarAoVer";
 
 export default function Component() {
-
   const navigate = useNavigate();
 
   const [Users, setUsuarios] = useState([]);
@@ -29,21 +28,24 @@ export default function Component() {
       const avatarPromises = Users.map(async (user: User) => {
         try {
           const res = await getAvatar(user.User_ID || 0);
-          return { id: user.User_ID, url: res?.avatarUrl || "/user_placeholder.png" };
+          return {
+            id: user.User_ID,
+            url: res?.avatarUrl || "/user_placeholder.png",
+          };
         } catch (error) {
           return { id: user.User_ID, url: "/user_placeholder.png" };
         }
       });
-  
+
       const avatarResults = await Promise.all(avatarPromises);
       const avatarMap: Record<number, string> = {};
       avatarResults.forEach(({ id, url }) => {
         avatarMap[id as number] = url;
       });
-  
+
       setAvatars(avatarMap);
     }
-  
+
     if (Users.length > 0) {
       fetchAvatars();
     }
@@ -80,8 +82,8 @@ export default function Component() {
               iconPosition="center"
               icon="ic:round-plus"
               color="secondary"
-              className="p-0 w-9 h-9 absolute right-0 top-1/2 transform -translate-y-1/2">
-            </Button>
+              className="p-0 w-9 h-9 absolute right-0 top-1/2 transform -translate-y-1/2"
+            ></Button>
           </Link>
         </div>
         <div className="flex flex-col gap-4">
@@ -94,11 +96,17 @@ export default function Component() {
                   key={User.User_ID}
                   className="grid grid-cols-6 items-center gap-2 p-3 cursor-pointer hover:bg-[var(--color-cinza-semitransparente-claro)]"
                   style={{ transition: "background-color 0.3s ease-in-out" }}
-                  onClick={() => navigate(`/admin/gerenciar/${User.User_ID}/perfil`)}
+                  onClick={() =>
+                    navigate(`/admin/gerenciar/${User.User_ID}/perfil`)
+                  }
                 >
                   <div className="flex items-center col-span-5">
                     <Avatar className="h-[65px] w-[65px]">
-                      <AvatarImage src={avatars[User.User_ID || 0] ?? "/user_placeholder.png"} />
+                      <AvatarImage
+                        src={
+                          avatars[User.User_ID || 0] ?? "/user_placeholder.png"
+                        }
+                      />
                     </Avatar>
                     <div className="grid grid-rows-2 pl-2">
                       <p className="text-base pt-2">{User.Nome}</p>

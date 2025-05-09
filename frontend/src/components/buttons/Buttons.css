@@ -82,7 +82,7 @@
 
 .button-outline.muted:hover {
   background-color: var(--color-muted) !important;
-  border-color: var(--color-muted)!important;
+  border-color: var(--color-muted) !important;
   color: white !important;
 }
 
@@ -207,11 +207,13 @@
   transition: all 0.3s ease;
 }
 
-.button:hover, .button-outline:hover {
-  transform: scale(1.010);
+.button:hover,
+.button-outline:hover {
+  transform: scale(1.01);
 }
 
-.button:active, .button-outline:active {
+.button:active,
+.button-outline:active {
   transform: scale(0.98);
 }
 

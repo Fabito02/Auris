@@ -23,23 +23,37 @@ export default function ConfirmarEmail() {
       }
 
       const timeoutId = setTimeout(() => {
-        setStatus((prevStatus) => prevStatus !== "success" ? "error" : prevStatus);
+        setStatus((prevStatus) =>
+          prevStatus !== "success" ? "error" : prevStatus
+        );
       }, 2500);
 
       try {
         const res = await axios.get(`${API_BASE}/confirmar?token=${token}`);
-        
+
         clearTimeout(timeoutId);
 
         if (res.data.success || res.data.verified) {
           setStatus("success");
         } else {
-          setTimeout(() => setStatus((prevStatus) => prevStatus !== "success" ? "error" : prevStatus), 2500);
+          setTimeout(
+            () =>
+              setStatus((prevStatus) =>
+                prevStatus !== "success" ? "error" : prevStatus
+              ),
+            2500
+          );
         }
       } catch (err) {
         clearTimeout(timeoutId);
         console.error("Erro na requisição:", err);
-        setTimeout(() => setStatus((prevStatus) => prevStatus !== "success" ? "error" : prevStatus), 2500);
+        setTimeout(
+          () =>
+            setStatus((prevStatus) =>
+              prevStatus !== "success" ? "error" : prevStatus
+            ),
+          2500
+        );
       }
     };
 
@@ -56,7 +70,11 @@ export default function ConfirmarEmail() {
         removeBodyPadding
       >
         <div className="text-center">
-          <Icon icon="svg-spinners:90-ring" width="4.3em" className="text-[var(--color-primary)]" />
+          <Icon
+            icon="svg-spinners:90-ring"
+            width="4.3em"
+            className="text-[var(--color-primary)]"
+          />
         </div>
       </BlankLayout>
     );
@@ -79,7 +97,12 @@ export default function ConfirmarEmail() {
             O link de verificação expirou ou é inválido.
           </p>
           <Link to="/login" className="flex items-center justify-center">
-            <Button texto="fazer login" color="primary" outline className="mt-2" />
+            <Button
+              texto="fazer login"
+              color="primary"
+              outline
+              className="mt-2"
+            />
           </Link>
         </div>
       </BlankLayout>

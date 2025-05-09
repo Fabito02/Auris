@@ -53,7 +53,9 @@ export default function Component() {
         </div>
         <AnimarAoVer>
           <Table>
-            <TableCaption>Registros de ações rastreadas no sistema</TableCaption>
+            <TableCaption>
+              Registros de ações rastreadas no sistema
+            </TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead>Ação</TableHead>
