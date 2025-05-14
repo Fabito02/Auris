@@ -37,37 +37,38 @@
   position: absolute;
   top: 10px;
   right: 10px;
-  background-color: #1b9841;
+  background-color: #17a450;
   border: 0;
   font-size: 25px;
   border-radius: 12px;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .toggle-expandir:hover {
-  background-color: #2bb655;
+  background-color: var(--color-primary-hover);
 }
 
 .toggle-expandir:active {
-  background-color: #2bb655 !important;
+  background-color: var(--color-primary-hover) !important;
 }
 
 .opcao {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #1b9841;
+  background-color: #17a450;
   margin: 5px 0;
   width: calc(100% - 20px);
   max-width: 70px;
   aspect-ratio: 1 / 1;
   border-radius: 12px;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   cursor: pointer;
 }
 
 .opcao:hover {
-  background-color: #2bb655;
+  background-color: var(--color-primary-hover);
 }
 
 .opcao.expandido {

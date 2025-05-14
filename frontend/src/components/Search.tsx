@@ -182,7 +182,7 @@ const SearchBar = () => {
           onClick={toggleListening}
           style={{
             fontSize: "22px",
-            color: listening ? "var(--color-secondary)" : "#00000066",
+            color: listening ? "var(--color-secondary)" : "#00000075",
             cursor: "pointer",
           }}
           aria-label={listening ? "Parar gravação" : "Iniciar gravação"}

@@ -114,7 +114,7 @@ export default function Faq() {
   }, []);
 
   return (
-    <section className="max-w-5xl mx-auto px-4 py-8">
+    <section className="max-w-5xl mx-auto px-4 py-8 min-h-[calc(100vh-100px)]">
       <div className="grid md:grid-cols-2 gap-6 items-center mb-24">
         <div className="w-full flex justify-center mt-5">
           <img

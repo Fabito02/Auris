@@ -32,10 +32,10 @@ import { User } from "@/types/api";
 const PerfilHeader = () => {
   const navigate = useNavigate();
 
-  const [user, setUser] = useState<User | null>(null);
   const [logoutSucesso, setLogoutSucesso] = useState<boolean | undefined>(
     undefined
   );
+  const [user, setUser] = useState<User | null>(null);
   const [avatar, setAvatar] = useState<string | null>(null);
 
   useEffect(() => {
@@ -76,12 +76,12 @@ const PerfilHeader = () => {
           <div className="botao-notificacao active">
             <Icon
               icon="material-symbols:notifications-rounded"
-              className="mr-[15px] text-[26px] text-[#00000066]"
+              className="mr-[15px] text-[26px] text-[#00000075]"
             />
           </div>
         </PopoverTrigger>
 
-        <PopoverContent className="shadow-lg w-[220px] mr-2 mt-5 rounded-lg dropdown border-0 rounded-[16px] menu-opcoes w-[100vw] max-w-[420px] max-h-[600px] mx-2 p-3 gap-2">
+        <PopoverContent className="shadow-lg mr-2 mt-5 dropdown border-0 rounded-[16px] menu-opcoes w-[100vw] max-w-[420px] max-h-[600px] mx-2 p-3 gap-2">
           <div className="pb-2">
             <h1 className="text-center font-semibold">NOTIFICAÇÕES</h1>
           </div>
@@ -216,7 +216,7 @@ const PerfilHeader = () => {
           </Avatar>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent className="shadow-md w-[220px] mr-2 mt-4 rounded-lg dropdown border-0 rounded-[16px] menu-opcoes">
+        <DropdownMenuContent className="shadow-md w-[220px] mr-2 mt-4 dropdown border-0 rounded-[16px] menu-opcoes">
           <div className="flex gap-3 pl-2 py-2">
             <Avatar className="w-[45px] h-[45px]">
               <AvatarImage

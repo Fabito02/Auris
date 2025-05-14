@@ -35,3 +35,17 @@ export interface Log {
   Data_Acao: string;
   User_ID: number;
 }
+
+export interface Manifestacao {
+  Manifestacao_ID: number;
+  Data_Envio: string;
+  Titulo: string;
+  Descricao: string;
+  Tipo: string;
+  Tipo_manifestacao: string;
+  Anonimo?: boolean;
+  Local?: string;
+  Status: 'pendente' | 'em_andamento' | 'concluido';
+  Prioridade: 'baixa' | 'media' | 'alta' | 'urgente';
+  User_ID: number;
+}

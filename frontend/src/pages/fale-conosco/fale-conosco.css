@@ -21,7 +21,7 @@
   border-color: white;
   width: calc(100% - 30px);
   transition: transform 0.2s ease-out;
-  max-width: 330px;
+  max-width: 400px;
   margin: 20px;
 }
 

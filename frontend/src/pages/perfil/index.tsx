@@ -157,7 +157,7 @@ const Perfil: React.FC = () => {
 
   return (
     <BlankLayout showFooter={false} showHeader showNavbar>
-      <div className="py-10 max-w-5xl mx-auto">
+      <div className="pb-10 max-w-5xl mt-[6vh] mx-auto">
         <Card className="p-2 border-0 shadow-none">
           <CardContent>
             <form onSubmit={handleSubmit} className="grid grid-cols-3 gap-4">
@@ -347,7 +347,7 @@ const Perfil: React.FC = () => {
       </div>
       {showCropper && originalImage && (
         <div className="fixed inset-0 bg-black/65 z-50 flex flex-col justify-center items-center p-4 backdrop-blur">
-          <div className="relative w-full max-w-lg w-full h-[400px] overflow-hidden bg-white rounded-t-[1rem] rounded-b-none">
+          <div className="relative w-full max-w-lg h-[400px] overflow-hidden bg-white rounded-t-[1rem] rounded-b-none">
             <Cropper
               image={originalImage}
               crop={crop}

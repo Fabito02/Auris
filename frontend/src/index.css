@@ -4,8 +4,8 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --color-primary: #16aa51;
-  --color-primary-hover: #15b354;
+  --color-primary: #1cb158;
+  --color-primary-hover: #26bc62;
 
   --color-secondary: #ffcf50;
   --color-secondary-hover: #ffd86b;
@@ -26,7 +26,12 @@
   --color-muted: #6c757d;
   --color-muted-hover: #7a868f;
 
-  --color-cinza-semitransparente-claro: #00000013;
+  --color-reclamacao: #E9DC4C;
+  --color-denuncia: #FF5652;
+  --color-elogio: #FC489C;
+  --color-sugestao: #12D05E;
+
+  --color-cinza-semitransparente-claro: #00000012;
 
   --sonner-toast-icon-color: var(--color-primary);
   --sonner-toast-icon-color-danger: var(--color-danger);
@@ -66,7 +71,8 @@
 
   --destructive: oklch(0.577 0.245 27.325);
 
-  --border: oklch(0.922 0 0);
+  /* --border: oklch(0.922 0 0); */
+  --border: var(--color-cinza-semitransparente-claro);
 
   --input: oklch(0.922 0 0);
 
@@ -125,6 +131,7 @@ body {
   margin: 0;
   padding: 0;
   padding-top: 110px;
+  background-color: #fcfcfc;
 }
 
 ::selection {
