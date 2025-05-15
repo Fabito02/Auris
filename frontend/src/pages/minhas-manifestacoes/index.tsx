@@ -72,7 +72,7 @@ const MinhasManifestacoes = () => {
         Anonimo: false,
       },
     ]);
-  }, []);
+  }, [setManifestacoes]);
 
   const manifestacoesFiltradas = useMemo(() => {
     return manifestacoes.filter(
@@ -132,7 +132,6 @@ const MinhasManifestacoes = () => {
                 <Button
                   iconPosition="center"
                   icon="ic:round-plus"
-                  color="secondary"
                   className="p-0 w-9 h-9 absolute right-3 top-2 transform -translate-y-1/2"
                   onClick={() => navigate("/fale-conosco")}
                 ></Button>
@@ -171,7 +170,6 @@ const MinhasManifestacoes = () => {
                 <Button
                   iconPosition="center"
                   icon="ic:round-plus"
-                  color="secondary"
                   className="p-0 w-9 h-9 absolute right-3 top-2 transform -translate-y-1/2"
                   onClick={() => navigate("/fale-conosco/reclamacao")}
                 ></Button>
@@ -210,7 +208,6 @@ const MinhasManifestacoes = () => {
                 <Button
                   iconPosition="center"
                   icon="ic:round-plus"
-                  color="secondary"
                   className="p-0 w-9 h-9 absolute right-3 top-2 transform -translate-y-1/2"
                   onClick={() => navigate("/fale-conosco/elogio")}
                 ></Button>
@@ -249,7 +246,6 @@ const MinhasManifestacoes = () => {
                 <Button
                   iconPosition="center"
                   icon="ic:round-plus"
-                  color="secondary"
                   className="p-0 w-9 h-9 absolute right-3 top-2 transform -translate-y-1/2"
                   onClick={() => navigate("/fale-conosco/denuncia")}
                 ></Button>
@@ -288,7 +284,6 @@ const MinhasManifestacoes = () => {
                 <Button
                   iconPosition="center"
                   icon="ic:round-plus"
-                  color="secondary"
                   className="p-0 w-9 h-9 absolute right-3 top-2 transform -translate-y-1/2"
                   onClick={() => navigate("/fale-conosco/sugestao")}
                 ></Button>
