@@ -17,7 +17,13 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import CardManifestacao from "@/components/CardManifestacao";
 
 const slides = [
@@ -64,7 +70,8 @@ const Home = () => {
       {
         Manifestacao_ID: 2,
         Titulo: "Problema com a internet no laboratório de redes",
-        Descricao: "A internet do laboratório 1 não está funcionando corretamente. Eu tentei conectar meu notebook, mas não consegui. Além disso, a rede Wi-Fi do laboratório não está aparecendo na lista de redes disponíveis.",
+        Descricao:
+          "A internet do laboratório 1 não está funcionando corretamente. Eu tentei conectar meu notebook, mas não consegui. Além disso, a rede Wi-Fi do laboratório não está aparecendo na lista de redes disponíveis.",
         Tipo: "Equipamentos",
         Tipo_manifestacao: "reclamacao",
         Prioridade: "alta",
@@ -76,7 +83,8 @@ const Home = () => {
       {
         Manifestacao_ID: 3,
         Titulo: "Elogio pela limpeza do banheiro masculino",
-        Descricao: "O banheiro masculino do 2º prédio está sempre impecável e bem cuidado. Eu gostaria de parabenizar a equipe de limpeza pelo ótimo trabalho que eles fazem.",
+        Descricao:
+          "O banheiro masculino do 2º prédio está sempre impecável e bem cuidado. Eu gostaria de parabenizar a equipe de limpeza pelo ótimo trabalho que eles fazem.",
         Tipo: "Estrutura e espaços",
         Tipo_manifestacao: "elogio",
         Local: "Prédio Pedagógico II",
@@ -165,9 +173,7 @@ const Home = () => {
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="text-2xl">Manifestações recentes</CardTitle>
-            <CardDescription>
-              Suas manifestações mais recentes
-            </CardDescription>
+            <CardDescription>Suas manifestações mais recentes</CardDescription>
           </CardHeader>
           <CardContent className="px-4 space-y-4">
             <CardManifestacao manifestacoes={manifestacoes} />
@@ -319,4 +325,3 @@ const Home = () => {
 };
 
 export default Home;
-

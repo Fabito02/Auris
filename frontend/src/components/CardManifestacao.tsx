@@ -20,8 +20,7 @@ interface ManifestacaoComAvatar extends Manifestacao {
   avatarUrl: string;
 }
 
-const formatDate = (iso: string) =>
-  new Date(iso).toLocaleDateString("pt-BR");
+const formatDate = (iso: string) => new Date(iso).toLocaleDateString("pt-BR");
 
 const CardManifestacao = ({ manifestacoes }: CardManifestacaoProps) => {
   const [lista, setLista] = useState<ManifestacaoComAvatar[]>([]);
@@ -48,10 +47,7 @@ const CardManifestacao = ({ manifestacoes }: CardManifestacaoProps) => {
         >
           <CardHeader className="flex items-center font-semibold text-sm space-x-2">
             <Avatar className="w-7 h-7">
-              <AvatarImage
-                src={m.avatarUrl}
-                alt="Ícone do Usuário"
-              />
+              <AvatarImage src={m.avatarUrl} alt="Ícone do Usuário" />
             </Avatar>
 
             <div
@@ -64,14 +60,11 @@ const CardManifestacao = ({ manifestacoes }: CardManifestacaoProps) => {
                 }[m.Tipo_manifestacao]
               }`}
             >
-              {m.Tipo_manifestacao
-                === "elogio"
+              {m.Tipo_manifestacao === "elogio"
                 ? "ELOGIO"
-                : m.Tipo_manifestacao
-                === "reclamacao"
+                : m.Tipo_manifestacao === "reclamacao"
                 ? "RECLAMAÇÃO"
-                : m.Tipo_manifestacao
-                === "sugestao"
+                : m.Tipo_manifestacao === "sugestao"
                 ? "SUGESTÃO"
                 : "DENÚNCIA"}
             </div>
@@ -89,8 +82,7 @@ const CardManifestacao = ({ manifestacoes }: CardManifestacaoProps) => {
                   : "bg-[var(--color-success)]"
               }`}
               title={`Prioridade ${
-                m.Prioridade.charAt(0).toUpperCase() +
-                m.Prioridade.slice(1)
+                m.Prioridade.charAt(0).toUpperCase() + m.Prioridade.slice(1)
               }`}
             >
               <Icon
@@ -110,22 +102,26 @@ const CardManifestacao = ({ manifestacoes }: CardManifestacaoProps) => {
           <CardContent className="mx-3">
             <CardTitle className="truncate mb-2">{m.Titulo}</CardTitle>
             <CardDescription>
-              <p className="line-clamp-2">
-                {m.Descricao}
-              </p>
+              <p className="line-clamp-2">{m.Descricao}</p>
             </CardDescription>
           </CardContent>
 
           <CardFooter className="flex justify-between">
-            <p className="text-xs text-gray-600">
-              {formatDate(m.Data_Envio)}
-            </p>
-            <div className={`px-2 text-xs text-white h-6 bg-[var(${
-              m.Status === "pendente" ? "--color-warning" : m.Status === "em_andamento" ? "--color-info" : "--color-success"
-            })] rounded-full flex items-center justify-center`}>
-              {
-                m.Status === "pendente" ? "Pendente" : m.Status === "em_andamento" ? "Em andamento" : "Concluído"
-              }
+            <p className="text-xs text-gray-600">{formatDate(m.Data_Envio)}</p>
+            <div
+              className={`px-2 text-xs text-white h-6 bg-[var(${
+                m.Status === "pendente"
+                  ? "--color-warning"
+                  : m.Status === "em_andamento"
+                  ? "--color-info"
+                  : "--color-success"
+              })] rounded-full flex items-center justify-center`}
+            >
+              {m.Status === "pendente"
+                ? "Pendente"
+                : m.Status === "em_andamento"
+                ? "Em andamento"
+                : "Concluído"}
               <Icon
                 icon={
                   m.Status === "concluido"
