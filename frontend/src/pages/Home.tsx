@@ -173,7 +173,7 @@ const Home = () => {
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="text-2xl">Manifestações recentes</CardTitle>
-            <CardDescription>Suas manifestações mais recentes</CardDescription>
+            <CardDescription>Visualize suas últimas atividades</CardDescription>
           </CardHeader>
           <CardContent className="px-4 space-y-4">
             <CardManifestacao manifestacoes={manifestacoes} />
