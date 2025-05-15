@@ -43,9 +43,9 @@ const CardManifestacao = ({ manifestacoes }: CardManifestacaoProps) => {
       {lista.map((m) => (
         <Card
           key={m.Manifestacao_ID}
-          className="cursor-pointer transition duration-300 ease-in-out hover:bg-gray-100"
+          className="cursor-pointer transition duration-300 ease-in-out hover:bg-gray-100 py-4 px-0 gap-4"
         >
-          <CardHeader className="flex items-center font-semibold text-sm space-x-2">
+          <CardHeader className="flex items-center font-semibold text-sm space-x-2 px-4">
             <Avatar className="w-7 h-7">
               <AvatarImage src={m.avatarUrl} alt="Ícone do Usuário" />
             </Avatar>
@@ -99,23 +99,23 @@ const CardManifestacao = ({ manifestacoes }: CardManifestacaoProps) => {
             </div>
           </CardHeader>
 
-          <CardContent className="mx-3">
+          <CardContent className="mx-3 px-4">
             <CardTitle className="truncate mb-2">{m.Titulo}</CardTitle>
             <CardDescription>
               <p className="line-clamp-2">{m.Descricao}</p>
             </CardDescription>
           </CardContent>
 
-          <CardFooter className="flex justify-between">
+          <CardFooter className="flex justify-between pr-4">
             <p className="text-xs text-gray-600">{formatDate(m.Data_Envio)}</p>
             <div
-              className={`px-2 text-xs text-white h-6 bg-[var(${
+              className={`px-2 text-xs text-white h-6 ${
                 m.Status === "pendente"
-                  ? "--color-warning"
+                  ? "bg-[var(--color-warning)]"
                   : m.Status === "em_andamento"
-                  ? "--color-info"
-                  : "--color-success"
-              })] rounded-full flex items-center justify-center`}
+                  ? "bg-[var(--color-info)]"
+                  : "bg-[var(--color-success)]"
+              } rounded-full flex items-center justify-center`}
             >
               {m.Status === "pendente"
                 ? "Pendente"

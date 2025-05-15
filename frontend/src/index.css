@@ -10,15 +10,15 @@
   --color-secondary: #ffcf50;
   --color-secondary-hover: #ffd86b;
 
-  --color-info: #22bcdb;
-  --color-info-hover: #25c7e8;
-
   --color-danger: #dc3545;
   --color-danger-hover: #df4755;
   --color-danger-dark: #a71d2a;
 
   --color-warning: #ffc107;
   --color-warning-hover: #ffcd3a;
+
+  --color-info: #22bcdb;
+  --color-info-hover: #25c7e8;
 
   --color-success: #32cf5c;
   --color-success-hover: #36d560;
