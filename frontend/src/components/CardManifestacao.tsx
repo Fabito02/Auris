@@ -102,7 +102,7 @@ const CardManifestacao = ({ manifestacoes }: CardManifestacaoProps) => {
           <CardContent className="mx-3 px-4">
             <CardTitle className="truncate mb-2">{m.Titulo}</CardTitle>
             <CardDescription>
-              <p className="line-clamp-2">{m.Descricao}</p>
+              <p className="line-clamp-1">{m.Descricao}</p>
             </CardDescription>
           </CardContent>
 
