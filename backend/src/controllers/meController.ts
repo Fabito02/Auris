@@ -344,3 +344,29 @@ export const deleteNotificacao = (
       }
     );
   };
+
+  export const getManifestacoes = (
+    req: Request,
+    res: Response
+  ) => {
+    const userId = Number(req.params.id);
+  
+    connection.query(
+      "SELECT * FROM Manifestacoes WHERE User_ID = ?",
+      [userId],
+      (err, results: RowDataPacket[]) => {
+        if (err) {
+          return res.status(500).json({
+            success: false,
+            error: `Erro ao buscar manifestações: ${err.message}`,
+          });
+        }
+        if (results.length === 0) {
+          return res
+            .status(404)
+            .json({ success: false, error: "Nenhuma manifestação encontrada" });
+        }
+        return res.status(200).json({ success: true, data: results[0] });
+      }
+    );
+  };

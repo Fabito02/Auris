@@ -46,6 +46,7 @@ router.put(
 );
 router.put("/me/avatar", verifyToken, meController.updateAvatar);
 router.get("/me/role", verifyToken, meController.getRoleUsuarioAtual);
+router.get("/me/manifestacoes", verifyToken, meController.getManifestacoes);
 router.delete("/me/notificacao/:Notificacao_ID", verifyToken, meController.deleteNotificacao);
 
 // rotas para usuários
