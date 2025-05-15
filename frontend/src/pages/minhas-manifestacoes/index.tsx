@@ -123,7 +123,7 @@ const MinhasManifestacoes = () => {
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             <TabsTrigger value="manifestacoes">
-              Manifestações
+              Todas as manifestações
             </TabsTrigger>
             <TabsTrigger value="reclamacoes">Reclamações</TabsTrigger>
             <TabsTrigger value="elogios">Elogios</TabsTrigger>
@@ -151,7 +151,7 @@ const MinhasManifestacoes = () => {
                     className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
                   />
                   <Input
-                    placeholder="Pesquisar por data, tipo, status, prioridade..."
+                    placeholder="Pesquisar por título, status, tipo, prioridade..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     className="mb-4 w-[calc(100%-55px)] md:max-w-md pl-9"
@@ -185,7 +185,7 @@ const MinhasManifestacoes = () => {
                     className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
                   />
                   <Input
-                    placeholder="Pesquisar por data, tipo, status, prioridade..."
+                    placeholder="Pesquisar por título, status, tipo, prioridade..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     className="mb-4 w-[calc(100%-55px)] md:max-w-md pl-9"
@@ -219,7 +219,7 @@ const MinhasManifestacoes = () => {
                     className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
                   />
                   <Input
-                    placeholder="Pesquisar por data, tipo, status, prioridade..."
+                    placeholder="Pesquisar por título, status, tipo, prioridade..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     className="mb-4 w-[calc(100%-55px)] md:max-w-md pl-9"
@@ -253,7 +253,7 @@ const MinhasManifestacoes = () => {
                     className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
                   />
                   <Input
-                    placeholder="Pesquisar por data, tipo, status, prioridade..."
+                    placeholder="Pesquisar por título, status, tipo, prioridade..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     className="mb-4 w-[calc(100%-55px)] md:max-w-md pl-9"
@@ -287,7 +287,7 @@ const MinhasManifestacoes = () => {
                     className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
                   />
                   <Input
-                    placeholder="Pesquisar por data, tipo, status, prioridade..."
+                    placeholder="Pesquisar por título, status, tipo, prioridade..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     className="mb-4 w-[calc(100%-55px)] md:max-w-md pl-9"
