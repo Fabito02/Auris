@@ -54,7 +54,11 @@ export default function Component() {
         <AnimarAoVer>
           <Table>
             <TableCaption>
-              Registros de ações rastreadas no sistema
+              {logsFiltrados.length === 0 && (
+                <div className="text-muted-foreground w-full text-center ">
+                  Nenhuma atividade encontrada.
+                </div>
+              )}
             </TableCaption>
             <TableHeader>
               <TableRow>

@@ -25,6 +25,7 @@ const ConteudoHome = () => {
               Envie sua manifestação na plataforma para construir um IFNMG -
               Campus Almenara melhor para todos(as).
               <Button
+                full_rounded
                 texto="acessar plataforma"
                 className="plataforma-btn mt-4"
                 onClick={() => navigate("/home")}
@@ -105,6 +106,7 @@ const ConteudoHome = () => {
                 um ambiente ainda melhor.
               </p>
               <Button
+                full_rounded
                 texto="acessar plataforma"
                 className="plataforma-btn"
                 onClick={() => navigate("/home")}

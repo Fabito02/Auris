@@ -169,7 +169,7 @@ const Home = () => {
 
       <Slider imagens={slides} />
 
-      <div className="px-4 mt-12 max-w-6xl mx-auto">
+      <div className="px-4 mt-12 w-6xl mx-auto">
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="text-2xl">Manifestações recentes</CardTitle>
@@ -177,13 +177,18 @@ const Home = () => {
           </CardHeader>
           <CardContent className="px-4 space-y-4">
             <CardManifestacao manifestacoes={manifestacoes} />
+            {manifestacoes.length === 0 && (
+              <div className="text-muted-foreground w-full text-center ">
+                Nenhuma manifestação encontrada.
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
 
       <AnimarAoVer>
         <section className="action-cards py-6">
-          <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}

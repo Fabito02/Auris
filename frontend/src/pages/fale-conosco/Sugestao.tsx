@@ -115,7 +115,7 @@ const Sugestao = () => {
         className="flex justify-center p-4 mb-4 mt-6"
       >
         <div
-          className="w-[850px] overflow-auto"
+          className="w-5xl overflow-auto"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           <Progress

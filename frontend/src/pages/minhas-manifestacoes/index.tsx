@@ -2,12 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { checkAuth } from "@/api/auth";
 import CardManifestacao from "@/components/CardManifestacao";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Button from "@/components/buttons/Button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BlankLayout } from "@/components/BlankLayout/BlankLayout";
@@ -116,7 +111,7 @@ const MinhasManifestacoes = () => {
 
   return (
     <BlankLayout showFooter={false} showHeader showNavbar>
-      <div className="px-4 mt-12 max-w-6xl mx-auto">
+      <div className="px-4 mt-12 w-6xl mx-auto">
         <Tabs defaultValue="manifestacoes" className="mb-10">
           <TabsList
             className="flex w-full justify-start overflow-x-auto whitespace-nowrap h-[40px] px-1 gap-2"
@@ -161,6 +156,11 @@ const MinhasManifestacoes = () => {
 
               <CardContent className="px-4 space-y-4">
                 <CardManifestacao manifestacoes={manifestacoesFiltradas} />
+                {manifestacoesFiltradas.length === 0 && (
+                  <div className="text-muted-foreground w-full text-center ">
+                    Nenhuma manifestação encontrada.
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
@@ -195,6 +195,11 @@ const MinhasManifestacoes = () => {
 
               <CardContent className="px-4 space-y-4">
                 <CardManifestacao manifestacoes={manifestacoesFiltradas} />
+                {manifestacoesFiltradas.length === 0 && (
+                  <div className="text-muted-foreground w-full text-center ">
+                    Nenhuma reclamação encontrada.
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
@@ -229,6 +234,11 @@ const MinhasManifestacoes = () => {
 
               <CardContent className="px-4 space-y-4">
                 <CardManifestacao manifestacoes={manifestacoesFiltradas} />
+                {manifestacoesFiltradas.length === 0 && (
+                  <div className="text-muted-foreground w-full text-center ">
+                    Nenhum elogio encontrado.
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
@@ -263,6 +273,11 @@ const MinhasManifestacoes = () => {
 
               <CardContent className="px-4 space-y-4">
                 <CardManifestacao manifestacoes={manifestacoesFiltradas} />
+                {manifestacoesFiltradas.length === 0 && (
+                  <div className="text-muted-foreground w-full text-center ">
+                    Nenhuma denúncia encontrada.
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
@@ -297,6 +312,11 @@ const MinhasManifestacoes = () => {
 
               <CardContent className="px-4 space-y-4">
                 <CardManifestacao manifestacoes={manifestacoesFiltradas} />
+                {manifestacoesFiltradas.length === 0 && (
+                  <div className="text-muted-foreground w-full text-center ">
+                    Nenhuma sugestão encontrada.
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>

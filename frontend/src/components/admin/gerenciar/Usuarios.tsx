@@ -137,6 +137,12 @@ export default function Component() {
                 </Card>
               </AnimarAoVer>
             ))}
+
+          {usersFiltrados.length === 0 && (
+            <div className="text-muted-foreground mt-4 w-full text-center ">
+              Nenhum usuário encontrado.
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
