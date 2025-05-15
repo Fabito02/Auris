@@ -204,7 +204,7 @@ const Home = () => {
                 height={48}
               />
               <h3 className="text-xl font-semibold mb-2">Nova Manifestação</h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-gray-600 mb-4 text-sm">
                 Registre sua reclamação, sugestão ou elogio.
               </p>
               <Button
@@ -229,7 +229,7 @@ const Home = () => {
                 height={48}
               />
               <h3 className="text-xl font-semibold mb-2">Dúvidas Frequentes</h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-gray-600 mb-4 text-sm">
                 Encontre respostas rápidas no FAQ.
               </p>
               <Button
@@ -254,7 +254,7 @@ const Home = () => {
                 height={48}
               />
               <h3 className="text-xl font-semibold mb-2">Regulamento</h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-gray-600 mb-4 text-sm">
                 Consulte o regulamento do site.
               </p>
               <Button
@@ -277,7 +277,7 @@ const Home = () => {
               className="mb-2 iconeInfo"
             />
             <h3 className="font-semibold mb-1">Prazos de Resposta</h3>
-            <p className="text-gray-600">Atendemos em até 3 dias úteis.</p>
+            <p className="text-gray-600 text-xs">Atendemos em até 3 dias úteis.</p>
           </div>
           <div>
             <Icon
@@ -287,7 +287,7 @@ const Home = () => {
               className="mb-2 iconeInfo"
             />
             <h3 className="font-semibold mb-1">Sigilo Garantido</h3>
-            <p className="text-gray-600">
+            <p className="text-gray-600 text-xs">
               Seus dados são protegidos pela LGPD.
             </p>
           </div>
@@ -299,7 +299,7 @@ const Home = () => {
               className="mb-2 iconeInfo"
             />
             <h3 className="font-semibold mb-1">Contato Alternativo</h3>
-            <p className="text-gray-600">ouvidoria.almenara@ifnmg.edu.br</p>
+            <p className="text-gray-600 text-xs">ouvidoria.almenara@ifnmg.edu.br</p>
           </div>
         </div>
       </section>
