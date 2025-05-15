@@ -110,8 +110,14 @@ const Sugestao = () => {
 
   return (
     <BlankLayout showHeader showNavbar showFooter={false}>
-      <form onSubmit={handleSubmit} className="flex justify-center p-4 my-4">
-        <div className="w-[850px]">
+      <form
+        onSubmit={handleSubmit}
+        className="flex justify-center p-4 mb-4 mt-10"
+      >
+        <div
+          className="w-[850px] overflow-auto"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
           <Progress
             value={progresso}
             className="w-[100%] mb-2 h-3 [&>div]:bg-[var(--color-primary)] bg-gray-200"
@@ -123,7 +129,10 @@ const Sugestao = () => {
               setTab(value as "contato" | "tipo" | "descricao" | "finalizar")
             }
           >
-            <TabsList className="grid grid-cols-2 grid-rows-2 h-[80px] md:grid-cols-4 md:grid-rows-1 md:h-[40px] w-[100%]">
+            <TabsList
+              className="flex w-full justify-start overflow-x-auto whitespace-nowrap h-[40px] px-1 gap-2"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
               <TabsTrigger value="contato">Contato</TabsTrigger>
               <TabsTrigger value="tipo">Tipo de Sugestão</TabsTrigger>
               <TabsTrigger value="descricao">Descrição</TabsTrigger>
