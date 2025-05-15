@@ -188,7 +188,7 @@ const Gerenciar = () => {
         </h1>
       </div>
 
-      <div className="w-full max-w-[950px] mx-auto sm:px-6 lg:px-8">
+      <div className="w-full max-w-6xl mx-auto sm:px-6 lg:px-8">
         <Tabs defaultValue="manual" className="w-full px-4">
           <TabsList className="grid w-full grid-cols-2 mb-2">
             <TabsTrigger value="manual">Manual</TabsTrigger>

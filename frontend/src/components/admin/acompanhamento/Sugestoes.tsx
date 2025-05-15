@@ -63,7 +63,7 @@ const chartConfig = {} satisfies ChartConfig;
 
 export default function Component() {
   return (
-    <div className="p-6">
+    <div className="p-6 max-w-7xl mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card className="flex flex-col col-span-3">
           <CardHeader className="items-center pb-0">

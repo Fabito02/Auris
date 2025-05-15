@@ -93,7 +93,7 @@ export default function Component() {
 
   return (
     <Card className="border-0 shadow-none flex items-center">
-      <CardContent className="w-full max-w-[950px] mx-auto px-4 sm:px-6 lg:px-8">
+      <CardContent className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl my-6 font-[500]">Gerenciar Permissões</h1>
         <div className="relative">
           <Icon

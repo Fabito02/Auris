@@ -63,7 +63,7 @@ export default function Component() {
 
   return (
     <Card className="border-0 shadow-none flex items-center">
-      <CardContent className="w-full max-w-[950px] mx-auto px-4 sm:px-6 lg:px-8">
+      <CardContent className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl my-6 font-[500]">Usuários</h1>
         <div className="relative">
           <Icon
@@ -80,7 +80,6 @@ export default function Component() {
           <Button
             iconPosition="center"
             icon="ic:round-plus"
-            color="secondary"
             className="p-0 w-9 h-9 absolute right-0 top-1/2 transform -translate-y-1/2"
             onClick={() => navigate("/admin/adicionar-usuario")}
           ></Button>
