@@ -64,7 +64,16 @@ const CardManifestacao = ({ manifestacoes }: CardManifestacaoProps) => {
                 }[m.Tipo_manifestacao]
               }`}
             >
-              {m.Tipo_manifestacao.toUpperCase()}
+              {m.Tipo_manifestacao
+                === "elogio"
+                ? "ELOGIO"
+                : m.Tipo_manifestacao
+                === "reclamacao"
+                ? "RECLAMAÇÃO"
+                : m.Tipo_manifestacao
+                === "sugestao"
+                ? "SUGESTÃO"
+                : "DENÚNCIA"}
             </div>
 
             <p className="truncate">• {m.Tipo} •</p>
@@ -99,7 +108,7 @@ const CardManifestacao = ({ manifestacoes }: CardManifestacaoProps) => {
           </CardHeader>
 
           <CardContent className="mx-3">
-            <CardTitle className="truncate mb-2 mt-1">{m.Titulo}</CardTitle>
+            <CardTitle className="truncate mb-2">{m.Titulo}</CardTitle>
             <CardDescription>
               <p className="line-clamp-2">
                 {m.Descricao}
