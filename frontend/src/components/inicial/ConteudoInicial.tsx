@@ -2,15 +2,19 @@ import { BlankLayout } from "../BlankLayout/BlankLayout";
 import Button from "../buttons/Button";
 import MaisBemAvaliados from "../MaisBemAvaliados";
 import "./ConteudoInicial.css";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import AnimarAoVer from "../AnimarAoVer";
 
 const ConteudoHome = () => {
+  const navigate = useNavigate();
+
   return (
     <BlankLayout removeBodyPadding>
-      <Link to="/login" className="z-100">
-        <Button texto="login" className="login-btn" />
-      </Link>
+      <Button
+        texto="login"
+        className="login-btn z-100"
+        onClick={() => navigate("/login")}
+      />
       <img src="/home/auris.svg" alt="Logo Auris" className="logo-auris" />
 
       <AnimarAoVer>
@@ -20,9 +24,11 @@ const ConteudoHome = () => {
             <p className="complemento flex flex-col items-center lg:items-end">
               Envie sua manifestação na plataforma para construir um IFNMG -
               Campus Almenara melhor para todos(as).
-              <Link to="/home" className="mt-4">
-                <Button texto="acessar plataforma" className="plataforma-btn" />
-              </Link>
+              <Button
+                texto="acessar plataforma"
+                className="plataforma-btn mt-4"
+                onClick={() => navigate("/home")}
+              />
             </p>
           </div>
           <div className="imagem coluna-tela">
@@ -98,9 +104,11 @@ const ConteudoHome = () => {
                 Acesse a plataforma, compartilhe sua opinião e ajude a construir
                 um ambiente ainda melhor.
               </p>
-              <Link to="/home">
-                <Button texto="acessar plataforma" className="plataforma-btn" />
-              </Link>
+              <Button
+                texto="acessar plataforma"
+                className="plataforma-btn"
+                onClick={() => navigate("/home")}
+              />
             </div>
           </div>
         </AnimarAoVer>
@@ -110,3 +118,4 @@ const ConteudoHome = () => {
 };
 
 export default ConteudoHome;
+

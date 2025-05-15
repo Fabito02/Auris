@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Icon } from "@iconify-icon/react";
 import { BlankLayout } from "../components/BlankLayout/BlankLayout";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { postRegistrar } from "../api/api_routes";
 import "./LoginERegistrar.css";
 import {
@@ -101,11 +101,15 @@ const Registrar = () => {
               <br />
               entre com o botão abaixo
             </p>
-            <Link to="/login">
-              <Button outline full_rounded color="white" className="mt-4">
-                FAZER LOGIN
-              </Button>
-            </Link>
+            <Button
+              onClick={() => navigate("/login")}
+              outline
+              full_rounded
+              color="white"
+              className="mt-4"
+            >
+              FAZER LOGIN
+            </Button>
           </div>
 
           <div className="col-span-3 formulario h-screen">
@@ -180,7 +184,11 @@ const Registrar = () => {
                 </div>
 
                 <div className="w-full flex justify-center">
-                  <Button full_rounded style={{ width: "220px" }} type="submit">
+                  <Button
+                    full_rounded
+                    style={{ width: "220px" }}
+                    type="submit"
+                  >
                     REGISTRAR
                   </Button>
                 </div>
@@ -216,3 +224,4 @@ const Registrar = () => {
 };
 
 export default Registrar;
+

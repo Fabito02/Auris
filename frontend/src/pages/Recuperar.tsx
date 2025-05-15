@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Button from "@/components/buttons/Button";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { BlankLayout } from "@/components/BlankLayout/BlankLayout";
 import { Icon } from "@iconify-icon/react";
 import { toast } from "sonner";
@@ -145,14 +145,18 @@ export default function Recuperar() {
           <p className="text-lg mb-6 text-muted-foreground">
             Solicite uma nova recuperação de senha.
           </p>
-          <Link to="/login" className="flex items-center justify-center">
+          <button
+            type="button"
+            onClick={() => navigate("/login")}
+            className="flex items-center justify-center"
+          >
             <Button
               texto="Fazer Login"
               color="primary"
               outline
               className="mt-2"
             />
-          </Link>
+          </button>
         </div>
       </BlankLayout>
     );
@@ -206,3 +210,4 @@ export default function Recuperar() {
     </BlankLayout>
   );
 }
+

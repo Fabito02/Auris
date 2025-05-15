@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Icon } from "@iconify-icon/react";
 import { BlankLayout } from "../components/BlankLayout/BlankLayout";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { postLogin } from "../api/api_routes";
 import "./LoginERegistrar.css";
 import {
@@ -94,11 +94,14 @@ const Login = () => {
               <br />
               crie com o botão abaixo
             </p>
-            <Link to="/registrar" className="mt-2">
+            <button
+              onClick={() => navigate("/registrar")}
+              className="mt-2"
+            >
               <Button outline full_rounded color="white" className="mt-4">
                 REGISTRAR
               </Button>
-            </Link>
+            </button>
           </div>
 
           <div className="col-span-3 formulario h-screen">
@@ -139,9 +142,12 @@ const Login = () => {
                   />
                 </div>
 
-                <Link to="/recuperar-senha" className="text-muted-foreground">
+                <button
+                  onClick={() => navigate("/recuperar-senha")}
+                  className="text-muted-foreground"
+                >
                   Esqueceu sua senha?
-                </Link>
+                </button>
 
                 <div className="w-full flex justify-center mt-5">
                   <Button full_rounded style={{ width: "220px" }} type="submit">
@@ -166,7 +172,7 @@ const Login = () => {
           </DialogHeader>
           <DialogFooter className="sm:justify-center mt-4">
             <Button
-              onClick={closeModal}
+              onClick={() => navigate("/home")}
               full_rounded
               color="success"
               className="w-full sm:max-w-[200px] px-5"
@@ -180,3 +186,4 @@ const Login = () => {
 };
 
 export default Login;
+

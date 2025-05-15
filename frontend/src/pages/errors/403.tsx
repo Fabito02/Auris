@@ -1,8 +1,10 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Button from "../../components/buttons/Button";
 import { BlankLayout } from "../../components/BlankLayout/BlankLayout";
 
 export default function Erro404() {
+  const navigate = useNavigate();
+
   return (
     <BlankLayout
       showFooter={false}
@@ -18,15 +20,17 @@ export default function Erro404() {
         <p className="text-lg mb-6 text-muted-foreground">
           Você não tem permissão para acessar esta página.
         </p>
-        <Link to="/" className="flex items-center justify-center">
+        <div className="flex items-center justify-center">
           <Button
             texto="página inicial"
             color="primary"
             outline
             className="mt-2"
+            onClick={() => navigate("/")}
           />
-        </Link>
+        </div>
       </div>
     </BlankLayout>
   );
 }
+

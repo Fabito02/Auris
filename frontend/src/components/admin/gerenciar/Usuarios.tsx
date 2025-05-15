@@ -6,7 +6,7 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Icon } from "@iconify-icon/react";
 import { getAvatar } from "@/api/api_routes";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Button from "@/components/buttons/Button";
 import AnimarAoVer from "@/components/AnimarAoVer";
 
@@ -77,14 +77,13 @@ export default function Component() {
             onChange={(e) => setSearch(e.target.value)}
             className="mb-4 w-[calc(100%-55px)] md:max-w-md pl-9"
           />
-          <Link to="/admin/adicionar-usuario">
-            <Button
-              iconPosition="center"
-              icon="ic:round-plus"
-              color="secondary"
-              className="p-0 w-9 h-9 absolute right-0 top-1/2 transform -translate-y-1/2"
-            ></Button>
-          </Link>
+          <Button
+            iconPosition="center"
+            icon="ic:round-plus"
+            color="secondary"
+            className="p-0 w-9 h-9 absolute right-0 top-1/2 transform -translate-y-1/2"
+            onClick={() => navigate("/admin/adicionar-usuario")}
+          ></Button>
         </div>
         <div className="flex flex-col gap-4">
           {usersFiltrados

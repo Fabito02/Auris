@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Icon } from "@iconify-icon/react";
 import Slider from "../components/Slider";
 import CardInfo from "../components/card-info/CardInfo";
@@ -140,19 +140,17 @@ const Home = () => {
             necessidades.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Link to="/fale-conosco">
-              <Button
-                texto="Enviar Manifestação"
-                icon="material-symbols:add-box"
-              />
-            </Link>
-            <Link to="/minhas-manifestacoes">
-              <Button
-                color="secondary"
-                texto="minhas manifestações"
-                icon="material-symbols:feedback-rounded"
-              />
-            </Link>
+            <Button
+              onClick={() => navigate("/fale-conosco")}
+              texto="Enviar Manifestação"
+              icon="material-symbols:add-box"
+            />
+            <Button
+              onClick={() => navigate("/minhas-manifestacoes")}
+              color="secondary"
+              texto="minhas manifestações"
+              icon="material-symbols:feedback-rounded"
+            />
           </div>
         </div>
       </section>
@@ -170,7 +168,6 @@ const Home = () => {
             <CardDescription>
               Suas manifestações mais recentes
             </CardDescription>
-            
           </CardHeader>
           <CardContent className="px-4 space-y-4">
             <CardManifestacao manifestacoes={manifestacoes} />
@@ -199,9 +196,11 @@ const Home = () => {
               <p className="text-gray-600 mb-4">
                 Registre sua reclamação, sugestão ou elogio.
               </p>
-              <Link to="/fale-conosco">
-                <Button texto="Acessar" outline />
-              </Link>
+              <Button
+                onClick={() => navigate("/fale-conosco")}
+                texto="Acessar"
+                outline
+              />
             </motion.div>
 
             <motion.div
@@ -222,9 +221,11 @@ const Home = () => {
               <p className="text-gray-600 mb-4">
                 Encontre respostas rápidas no FAQ.
               </p>
-              <Link to="/informacoes">
-                <Button texto="Ver FAQ" outline />
-              </Link>
+              <Button
+                onClick={() => navigate("/informacoes")}
+                texto="Ver FAQ"
+                outline
+              />
             </motion.div>
 
             <motion.div
@@ -245,9 +246,11 @@ const Home = () => {
               <p className="text-gray-600 mb-4">
                 Consulte o regulamento do site.
               </p>
-              <Link to="/regulamento">
-                <Button texto="Consultar" outline />
-              </Link>
+              <Button
+                onClick={() => navigate("/regulamento")}
+                texto="Consultar"
+                outline
+              />
             </motion.div>
           </div>
         </section>
@@ -316,3 +319,4 @@ const Home = () => {
 };
 
 export default Home;
+

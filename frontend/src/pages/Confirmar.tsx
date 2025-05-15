@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { API_BASE } from "../config";
 import Button from "../components/buttons/Button";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { BlankLayout } from "../components/BlankLayout/BlankLayout";
 import { Icon } from "@iconify-icon/react";
 
 type Status = "loading" | "success" | "error";
 
 export default function ConfirmarEmail() {
+  const navigate = useNavigate();
   const [status, setStatus] = useState<Status>("loading");
 
   useEffect(() => {
@@ -96,14 +97,13 @@ export default function ConfirmarEmail() {
           <p className="text-lg mb-6 text-muted-foreground">
             O link de verificação expirou ou é inválido.
           </p>
-          <Link to="/login" className="flex items-center justify-center">
-            <Button
-              texto="fazer login"
-              color="primary"
-              outline
-              className="mt-2"
-            />
-          </Link>
+          <Button
+            texto="fazer login"
+            color="primary"
+            outline
+            className="mt-2"
+            onClick={() => navigate("/login")}
+          />
         </div>
       </BlankLayout>
     );
@@ -124,10 +124,15 @@ export default function ConfirmarEmail() {
         <p className="text-lg mb-6 text-muted-foreground">
           Agora você pode fazer login.
         </p>
-        <Link to="/login" className="flex items-center justify-center">
-          <Button texto="login" color="primary" outline className="mt-2" />
-        </Link>
+        <Button
+          texto="login"
+          color="primary"
+          outline
+          className="mt-2"
+          onClick={() => navigate("/login")}
+        />
       </div>
     </BlankLayout>
   );
 }
+
