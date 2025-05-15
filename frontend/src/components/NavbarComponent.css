@@ -9,6 +9,16 @@
   cursor: pointer;
 }
 
+.link-navbar.active {
+  color: white;
+  background-color: #0000004d;
+}
+
+.link-navbar.active:hover {
+  color: white;
+  background-color: #00000046;
+}
+
 .link-navbar-menu {
   background-color: var(--color-cinza-semitransparente-claro);
   color: rgb(0, 0, 0, 0.55);
