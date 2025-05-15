@@ -112,7 +112,7 @@ const Sugestao = () => {
     <BlankLayout showHeader showNavbar showFooter={false}>
       <form
         onSubmit={handleSubmit}
-        className="flex justify-center p-4 mb-4 mt-10"
+        className="flex justify-center p-4 mb-4 mt-6"
       >
         <div
           className="w-[850px] overflow-auto"
