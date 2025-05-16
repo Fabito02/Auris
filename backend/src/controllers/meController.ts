@@ -285,3 +285,88 @@ export const getRoleUsuarioAtual: RequestHandler<{ id: string }> = (
     }
   );
 };
+
+export const deleteNotificacao = (
+  req: Request<{ Notificacao_ID: string }>,
+  res: Response
+) => {
+  const notificationId = Number(req.params.Notificacao_ID);
+  const userId = req.user?.User_ID
+
+  connection.beginTransaction((transactionErr) => {
+    if (transactionErr) {
+      return res.status(500).json({
+        success: false,
+        error: `Erro ao iniciar transação: ${transactionErr.message}`,
+      });
+    }
+
+        connection.query(
+          "DELETE FROM Notificacoes WHERE Notificacao_ID = ? AND User_ID = ?",
+          [notificationId, userId],
+          (notificacaoDeleteErr, results: ResultSetHeader) => {
+            if (notificacaoDeleteErr) {
+              return connection.rollback(() => {
+                res.status(500).json({
+                  success: false,
+                  error: `Erro ao deletar notificação: ${notificacaoDeleteErr.message}`,
+                });
+              });
+            }
+
+            if (results.affectedRows === 0) {
+              return connection.rollback(() => {
+                res
+                  .status(404)
+                  .json({ success: false, error: "Notificação não encontrada" });
+              });
+            }
+
+            connection.commit((commitErr) => {
+              if (commitErr) {
+                return connection.rollback(() => {
+                  res.status(500).json({
+                    success: false,
+                    error: `Erro ao confirmar transação: ${commitErr.message}`,
+                  });
+                });
+              }
+
+              registrarLog(`Notificação deletada`, notificationId);
+
+              return res.status(200).json({
+                success: true,
+                message: "Notificação deletada com sucesso",
+              });
+            });
+          }
+        );
+      }
+    );
+  };
+
+  export const getManifestacoes = (
+    req: Request,
+    res: Response
+  ) => {
+    const userId = Number(req.params.id);
+  
+    connection.query(
+      "SELECT * FROM Manifestacoes WHERE User_ID = ?",
+      [userId],
+      (err, results: RowDataPacket[]) => {
+        if (err) {
+          return res.status(500).json({
+            success: false,
+            error: `Erro ao buscar manifestações: ${err.message}`,
+          });
+        }
+        if (results.length === 0) {
+          return res
+            .status(404)
+            .json({ success: false, error: "Nenhuma manifestação encontrada" });
+        }
+        return res.status(200).json({ success: true, data: results[0] });
+      }
+    );
+  };
