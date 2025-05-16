@@ -399,4 +399,33 @@ export const deleteNotificacao = (
       }
     );
   };
+
+  export const getNotificacoesDoUsuario: RequestHandler<{ id: string }> = (
+    req,
+    res,
+    next
+  ) => {
+    const userId = req.user?.User_ID;
+    const notificacaoid = Number(req.params.id);
+  
+    connection.query(
+      "SELECT * FROM Notificacoes WHERE  User_ID = ?",
+      [ userId],
+      (err, results: RowDataPacket[]) => {
+        if (err) {
+          next(err);
+          return;
+        }
+  
+        if (results.length === 0) {
+          res
+            .status(404)
+            .json({ success: false, error: "Nenhuma notificação encontrada" });
+          return;
+        }
+  
+        res.status(200).json({ success: true, data: results[0] });
+      }
+    );
+  };
   

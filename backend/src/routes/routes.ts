@@ -49,6 +49,7 @@ router.get("/me/role", verifyToken, meController.getRoleUsuarioAtual);
 router.get("/me/manifestacoes", verifyToken, meController.getManifestacoes);
 router.delete("/me/notificacao/:Notificacao_ID", verifyToken, meController.deleteNotificacao);
 router.get("/me/notificacao/:id", verifyToken, meController.getNotificacaoPorIDdeUsuario);
+router.get("/me/notificacao", verifyToken, meController.getNotificacoesDoUsuario);
 
 // rotas para usuários
 router.get(
