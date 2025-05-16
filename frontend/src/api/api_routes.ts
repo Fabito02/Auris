@@ -162,3 +162,8 @@ export const getRoleUsuarioAtual = async (): Promise<{
   const response = await api.get(`/me/role`);
   return response.data;
 };
+
+export const getManifestacoesDoUsuario = async () => {
+  const response = await api.get(`/me/manifestacoes`);
+  return response.data;
+};

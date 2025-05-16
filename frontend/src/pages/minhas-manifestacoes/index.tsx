@@ -9,6 +9,7 @@ import { BlankLayout } from "@/components/BlankLayout/BlankLayout";
 import { Manifestacao } from "@/types/api";
 import { Icon } from "@iconify-icon/react";
 import { Input } from "@/components/ui/input";
+import { getManifestacoesDoUsuario } from "@/api/api_routes";
 
 const MinhasManifestacoes = () => {
   const navigate = useNavigate();
@@ -17,62 +18,24 @@ const MinhasManifestacoes = () => {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    setManifestacoes([
-      {
-        Manifestacao_ID: 1,
-        Titulo: "Assédio no corredor principal",
-        Descricao:
-          "No dia 14/05/2025, por volta das 10h, eu (discente do curso de Zootecnia) estava caminhando pelo corredor principal do 2º prédio quando fui abordado pelo professor de matemática, que fez um comentário inapropriado sobre minha roupa. Eu me senti desconfortável e ofendido com o comportamento do professor.",
-        Tipo: "Assédio",
-        Tipo_manifestacao: "denuncia",
-        Prioridade: "urgente",
-        User_ID: 4,
-        Status: "pendente",
-        Data_Envio: new Date().toISOString(),
-        Anonimo: false,
-      },
-      {
-        Manifestacao_ID: 2,
-        Titulo: "Problema com a internet no laboratório de redes",
-        Descricao:
-          "A internet do laboratório 1 não está funcionando corretamente. Eu tentei conectar meu notebook, mas não consegui. Além disso, a rede Wi-Fi do laboratório não está aparecendo na lista de redes disponíveis.",
-        Tipo: "Equipamentos",
-        Tipo_manifestacao: "reclamacao",
-        Prioridade: "alta",
-        User_ID: 4,
-        Status: "em_andamento",
-        Data_Envio: new Date().toISOString(),
-        Anonimo: false,
-      },
-      {
-        Manifestacao_ID: 3,
-        Titulo: "Elogio pela limpeza do banheiro masculino",
-        Descricao:
-          "O banheiro masculino do 2º prédio está sempre impecável e bem cuidado. Eu gostaria de parabenizar a equipe de limpeza pelo ótimo trabalho que eles fazem.",
-        Tipo: "Estrutura e espaços",
-        Tipo_manifestacao: "elogio",
-        Local: "Prédio Pedagógico II",
-        Prioridade: "baixa",
-        User_ID: 4,
-        Status: "concluido",
-        Data_Envio: new Date().toISOString(),
-        Anonimo: false,
-      },
-      {
-        Manifestacao_ID: 4,
-        Titulo: "Sugestão de melhorias para o site da Campus",
-        Descricao:
-          "Sugestão de melhorias para o site da Campus, como a possibilidade de ter uma seção de notícias, uma seção de eventos e uma seção de links úteis. Além disso, sugestão de melhoria na navegação e responsividade do site.",
-        Tipo: "Serviço",
-        Tipo_manifestacao: "sugestao",
-        Prioridade: "media",
-        User_ID: 4,
-        Status: "pendente",
-        Data_Envio: new Date().toISOString(),
-        Anonimo: false,
-      },
-    ]);
+    const fetchManifestacoes = async () => {
+      try {
+        const response = await getManifestacoesDoUsuario();
+        if (response.success) {
+          setManifestacoes([response.data]);
+          console.log(response);
+        } else {
+          console.error("Erro ao buscar manifestações:", response.error);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar manifestações:", error);
+      }
+    }
+
+    fetchManifestacoes();
   }, [setManifestacoes]);
+
+  console.log(manifestacoes)
 
   const manifestacoesFiltradas = useMemo(() => {
     return manifestacoes.filter(
@@ -192,7 +155,7 @@ const MinhasManifestacoes = () => {
               </div>
 
               <CardContent className="px-4 space-y-4">
-                <CardManifestacao manifestacoes={manifestacoesFiltradas} />
+                <CardManifestacao filtrarTipo="reclamacao" manifestacoes={manifestacoesFiltradas} />
                 {manifestacoesFiltradas.length === 0 && (
                   <div className="text-muted-foreground w-full text-center ">
                     Nenhuma reclamação encontrada.
@@ -230,7 +193,7 @@ const MinhasManifestacoes = () => {
               </div>
 
               <CardContent className="px-4 space-y-4">
-                <CardManifestacao manifestacoes={manifestacoesFiltradas} />
+                <CardManifestacao filtrarTipo="elogio" manifestacoes={manifestacoesFiltradas} />
                 {manifestacoesFiltradas.length === 0 && (
                   <div className="text-muted-foreground w-full text-center ">
                     Nenhum elogio encontrado.
@@ -268,7 +231,7 @@ const MinhasManifestacoes = () => {
               </div>
 
               <CardContent className="px-4 space-y-4">
-                <CardManifestacao manifestacoes={manifestacoesFiltradas} />
+                <CardManifestacao filtrarTipo="denuncia" manifestacoes={manifestacoesFiltradas} />
                 {manifestacoesFiltradas.length === 0 && (
                   <div className="text-muted-foreground w-full text-center ">
                     Nenhuma denúncia encontrada.
@@ -306,7 +269,7 @@ const MinhasManifestacoes = () => {
               </div>
 
               <CardContent className="px-4 space-y-4">
-                <CardManifestacao manifestacoes={manifestacoesFiltradas} />
+                <CardManifestacao filtrarTipo="sugestao" manifestacoes={manifestacoesFiltradas} />
                 {manifestacoesFiltradas.length === 0 && (
                   <div className="text-muted-foreground w-full text-center ">
                     Nenhuma sugestão encontrada.

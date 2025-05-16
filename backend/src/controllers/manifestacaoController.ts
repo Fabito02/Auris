@@ -1,0 +1,29 @@
+  import { Request, Response } from "express";
+  import connection from "../db";
+  import { RowDataPacket } from "mysql2";
+
+  export const getManifestacoesDoUsuario = (
+    req: Request,
+    res: Response
+  ) => {
+    const userId = req.user?.User_ID;
+  
+    connection.query(
+      "SELECT * FROM Manifestacoes WHERE User_ID = ?",
+      [userId],
+      (err, results: RowDataPacket[]) => {
+        if (err) {
+          return res.status(500).json({
+            success: false,
+            error: `Erro ao buscar manifestações: ${err.message}`,
+          });
+        }
+        if (results.length === 0) {
+          return res
+            .status(404)
+            .json({ success: false, error: "Nenhuma manifestação encontrada" });
+        }
+        return res.status(200).json({ success: true, data: results[0] });
+      }
+    );
+  };

@@ -3,6 +3,7 @@ import * as userController from "../controllers/userController";
 import * as meController from "../controllers/meController";
 import * as authController from "../controllers/authController";
 import * as logController from "../controllers/logController";
+import * as manifestacaoController from "../controllers/manifestacaoController";
 import { verifyToken, verifyRole } from "../middlewares/auth";
 
 const router = Router();
@@ -46,8 +47,11 @@ router.put(
 );
 router.put("/me/avatar", verifyToken, meController.updateAvatar);
 router.get("/me/role", verifyToken, meController.getRoleUsuarioAtual);
-router.get("/me/manifestacoes", verifyToken, meController.getManifestacoes);
-router.delete("/me/notificacao/:Notificacao_ID", verifyToken, meController.deleteNotificacao);
+router.delete(
+  "/me/notificacao/:Notificacao_ID",
+  verifyToken,
+  meController.deleteNotificacao
+);
 router.get("/me/notificacao/:id", verifyToken, meController.getNotificacaoPorIDdeUsuario);
 router.get("/me/notificacao", verifyToken, meController.getNotificacoesDoUsuario);
 
@@ -95,6 +99,9 @@ router.delete(
   userController.deleteUser
 );
 router.get("/users/avatar/:id", verifyToken, userController.getAvatar);
+
+// rotas para manifestações
+router.get("/me/manifestacoes", verifyToken, manifestacaoController.getManifestacoesDoUsuario);
 
 // rotas de logs
 router.get("/logs", verifyToken, verifyRole(["admin"]), logController.getLogs);

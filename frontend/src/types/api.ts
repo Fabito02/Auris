@@ -39,10 +39,10 @@ export interface Log {
 export interface Manifestacao {
   Manifestacao_ID: number;
   Data_Envio: string;
-  Titulo: string;
+  Titulo?: string;
   Descricao: string;
   Tipo: string;
-  Tipo_manifestacao: string;
+  Tipo_manifestacao: 'elogio' | 'reclamacao' | 'sugestao' | 'denuncia';
   Anonimo?: boolean;
   Local?: string;
   Status: 'pendente' | 'em_andamento' | 'concluido';
