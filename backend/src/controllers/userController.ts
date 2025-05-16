@@ -352,3 +352,4 @@ export const registrarUsuario = async (req: Request, res: Response) => {
       .json({ success: false, error: "Erro interno do servidor." });
   }
 };
+
