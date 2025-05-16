@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Icon } from "@iconify-icon/react";
 import { Manifestacao } from "@/types/api";
 import {
@@ -14,6 +14,7 @@ import { getAvatar } from "@/api/api_routes";
 
 interface CardManifestacaoProps {
   manifestacoes: Manifestacao[];
+  filtrarTipo?: 'reclamacao' | 'elogio' | 'sugestao' | 'denuncia'
 }
 
 interface ManifestacaoComAvatar extends Manifestacao {
@@ -22,12 +23,17 @@ interface ManifestacaoComAvatar extends Manifestacao {
 
 const formatDate = (iso: string) => new Date(iso).toLocaleDateString("pt-BR");
 
-const CardManifestacao = ({ manifestacoes }: CardManifestacaoProps) => {
+const CardManifestacao = ({ manifestacoes, filtrarTipo }: CardManifestacaoProps) => {
   const [lista, setLista] = useState<ManifestacaoComAvatar[]>([]);
+
+  const manifestacoesFiltradas = useMemo(() => {
+    if (!filtrarTipo) return manifestacoes;
+    return manifestacoes.filter((m) => m.Tipo_manifestacao === filtrarTipo);
+  }, [manifestacoes, filtrarTipo]);
 
   useEffect(() => {
     Promise.all(
-      manifestacoes.map(async (m) => {
+      manifestacoesFiltradas.map(async (m) => {
         try {
           const { avatarUrl } = await getAvatar(m.User_ID);
           return { ...m, avatarUrl: avatarUrl || "/user_placeholder.png" };
