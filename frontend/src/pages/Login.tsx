@@ -141,13 +141,15 @@ const Login = () => {
                     required
                   />
                 </div>
-
-                <button
-                  onClick={() => navigate("/recuperar-senha")}
-                  className="text-muted-foreground"
-                >
-                  Esqueceu sua senha?
-                </button>
+                
+                <div className="mb-2">
+                  <span
+                    className="text-muted-foreground cursor-pointer"
+                    onClick={() => navigate("/recuperar-senha")}
+                  >
+                    Esqueceu sua senha?
+                  </span>
+                </div>
 
                 <div className="w-full flex justify-center mt-5">
                   <Button full_rounded style={{ width: "220px" }} type="submit">
