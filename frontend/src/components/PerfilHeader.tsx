@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/popover";
 import { getUsuarioAtual, getAvatar } from "@/api/api_routes";
 import { User } from "@/types/api";
+import CardNotificacao from "./CardNotificacao";
 
 const PerfilHeader = () => {
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ const PerfilHeader = () => {
     };
 
     fetchUser();
-  }, []);
+  }, [getUsuarioAtual]);
 
   useEffect(() => {
     if (user) {
@@ -85,124 +86,9 @@ const PerfilHeader = () => {
           <div className="pb-2">
             <h1 className="text-center font-semibold">NOTIFICAÇÕES</h1>
           </div>
-
           <div className="my-1 border-t border-gray-200" />
+          <CardNotificacao />
 
-          <div className="mt-1 rounded-[12px] p-4 notificacao shadow-md relative">
-            <div className="grid grid-cols-5 gap-2">
-              <Button
-                className="absolute top-[8px] right-[8px] p-1 w-[24px] h-[24px] flex items-center justify-center"
-                onClick={() => console.log("Deletar notificação")}
-                texto="×"
-                color="danger"
-                iconPosition="center"
-                outline
-                full_rounded
-              />
-              <h2 className="font-semibold text-[1rem] col-span-5">
-                Novo comentário
-              </h2>
-              <p className="text-sm text-gray-600 col-span-5">
-                Sua manifestação "Problemas na estrutura do refeitório." recebeu
-                um comentário.
-              </p>
-
-              <div className="text-xs text-gray-400 col-span-3 flex items-center justify-start">
-                {new Date().toLocaleDateString("pt-BR", {
-                  day: "2-digit",
-                  month: "2-digit",
-                })}{" "}
-                {new Date().toLocaleTimeString("pt-BR", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </div>
-
-              <div
-                className="text-xs font-semibold col-span-2 flex items-center justify-end"
-                style={{ color: "var(--color-warning)" }}
-              >
-                Pendente
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-1 rounded-[12px] p-4 notificacao shadow-md relative">
-            <div className="grid grid-cols-5 gap-2">
-              <Button
-                className="absolute top-[8px] right-[8px] p-1 w-[24px] h-[24px] flex items-center justify-center"
-                onClick={() => console.log("Deletar notificação")}
-                texto="×"
-                color="danger"
-                iconPosition="center"
-                outline
-                full_rounded
-              />
-              <h2 className="font-semibold text-[1rem] col-span-5">
-                Nova mensagem
-              </h2>
-              <p className="text-sm text-gray-600 col-span-5">
-                Você recebeu uma nova mensagem de um outro usuário.
-              </p>
-
-              <div className="text-xs text-gray-400 col-span-3 flex items-center justify-start">
-                {new Date().toLocaleDateString("pt-BR", {
-                  day: "2-digit",
-                  month: "2-digit",
-                })}{" "}
-                {new Date().toLocaleTimeString("pt-BR", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </div>
-
-              <div
-                className="text-xs font-semibold col-span-2 flex items-center justify-end"
-                style={{ color: "var(--color-success)" }}
-              >
-                Lido
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-1 rounded-[12px] p-4 notificacao shadow-md relative">
-            <div className="grid grid-cols-5 gap-2">
-              <Button
-                className="absolute top-[8px] right-[8px] p-1 w-[24px] h-[24px] flex items-center justify-center"
-                onClick={() => console.log("Deletar notificação")}
-                texto="×"
-                color="danger"
-                iconPosition="center"
-                outline
-                full_rounded
-              />
-              <h2 className="font-semibold text-[1rem] col-span-5">
-                Atualização de manifestação
-              </h2>
-              <p className="text-sm text-gray-600 col-span-5">
-                Sua manifestação "Problemas na estrutura do refeitório." foi
-                atualizada.
-              </p>
-
-              <div className="text-xs text-gray-400 col-span-3 flex items-center justify-start">
-                {new Date().toLocaleDateString("pt-BR", {
-                  day: "2-digit",
-                  month: "2-digit",
-                })}{" "}
-                {new Date().toLocaleTimeString("pt-BR", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </div>
-
-              <div
-                className="text-xs font-semibold col-span-2 flex items-center justify-end"
-                style={{ color: "var(--color-warning)" }}
-              >
-                Pendente
-              </div>
-            </div>
-          </div>
         </PopoverContent>
       </Popover>
 

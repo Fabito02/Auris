@@ -49,3 +49,12 @@ export interface Manifestacao {
   Prioridade: 'baixa' | 'media' | 'alta' | 'urgente';
   User_ID: number;
 }
+
+export interface Notificacao {
+  Notificacao_ID: number;
+  Titulo: string;
+  Mensagem: string;
+  Status: 'lida' | 'pendente';
+  Data_Criacao: string;
+  User_ID: number;
+}

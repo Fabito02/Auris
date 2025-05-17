@@ -167,3 +167,13 @@ export const getManifestacoesDoUsuario = async () => {
   const response = await api.get(`/me/manifestacoes`);
   return response.data;
 };
+
+export const getNotificacoesDoUsuario = async () => {
+  const response = await api.get(`/me/notificacao`);
+  return response.data;
+};
+
+export const deletarNotificacaoDoUsuario = async (id: number) => {
+  const response = await api.delete(`/me/notificacao/${id}`);
+  return response.data;
+};

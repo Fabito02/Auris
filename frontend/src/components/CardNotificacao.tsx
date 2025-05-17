@@ -1,0 +1,78 @@
+import { Notificacao } from "@/types/api";
+import Button from "@/components/buttons/Button";
+import { deletarNotificacaoDoUsuario } from "@/api/api_routes";
+import { useState, useEffect } from "react";
+import { getNotificacoesDoUsuario } from "@/api/api_routes";
+
+const CardNotificacao = () => {
+
+    const [notificacoes, setNotificacoes] = useState<Notificacao[]>([]);
+
+    const handleDelete = async (id: number) => {
+        await deletarNotificacaoDoUsuario(id);
+        setNotificacoes(notificacoes.filter((n) => n.Notificacao_ID !== id));
+    }
+
+    useEffect(() => {
+        const fetchNotificacoes = async () => {
+            const response = await getNotificacoesDoUsuario();
+            setNotificacoes([response.data]);
+        }
+
+        fetchNotificacoes();
+    }, [getNotificacoesDoUsuario])
+
+    if (notificacoes.length === 0) {
+        return (
+            <h2 className="text-muted-foreground p-4 text-center">
+                Nenhuma notificação.
+            </h2>
+        );
+    }
+
+  return (
+    <div className="grid grid-cols-1 gap-4 w-full">
+      {notificacoes.map((m) => (
+        <div key={m.Notificacao_ID} className="mt-1 rounded-[12px] p-4 notificacao shadow-md relative">
+            <div className="grid grid-cols-5 gap-2">
+                <Button
+                className="absolute top-[8px] right-[8px] p-1 w-[24px] h-[24px] flex items-center justify-center"
+                onClick={() => handleDelete(m.Notificacao_ID)}
+                texto="×"
+                color="danger"
+                iconPosition="center"
+                outline
+                full_rounded
+                />
+                <h2 className="font-semibold text-[1rem] col-span-5 line-clamp-1">
+                {m.Titulo}
+                </h2>
+                <p className="text-sm text-gray-600 col-span-5 line-clamp-1">
+                {m.Mensagem}
+                </p>
+
+                <div className="text-xs text-gray-400 col-span-3 flex items-center justify-start">
+                {new Date(m.Data_Criacao).toLocaleDateString("pt-BR", {
+                    day: "2-digit",
+                    month: "2-digit",
+                })}{" "}
+                {new Date(m.Data_Criacao).toLocaleTimeString("pt-BR", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                })}
+                </div>
+
+                <div
+                className={`text-xs font-semibold col-span-2 flex items-center justify-end text-[var(--color-${m.Status === "lida" ? "success" : "warning"})]`}
+                >
+                {m.Status.charAt(0).toUpperCase() + m.Status.slice(1)}
+                </div>
+            </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default CardNotificacao;
+

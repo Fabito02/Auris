@@ -380,7 +380,6 @@ export const deleteNotificacao = (
     next
   ) => {
     const userId = req.user?.User_ID;
-    const notificacaoid = Number(req.params.id);
   
     connection.query(
       "SELECT * FROM Notificacoes WHERE  User_ID = ?",
