@@ -54,6 +54,7 @@ router.delete(
 );
 router.get("/me/notificacao/:id", verifyToken, meController.getNotificacaoPorIDdeUsuario);
 router.get("/me/notificacao", verifyToken, meController.getNotificacoesDoUsuario);
+router.post("/users/notificacao", verifyToken, userController.postEnviarNotificacao);
 
 // rotas para usuários
 router.get(

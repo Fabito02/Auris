@@ -353,3 +353,39 @@ export const registrarUsuario = async (req: Request, res: Response) => {
   }
 };
 
+export const postEnviarNotificacao = (
+  req: Request<{ id: string }>,
+  res: Response
+) => {
+  const data = req.body;
+
+  connection.query(
+    "INSERT INTO Notificacoes SET ?",
+    [data],
+    (err, results: ResultSetHeader) => {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          error: 'Erro ao enviar notificação: ${err.message},'
+        });
+      }
+
+      connection.query(
+        "SELECT * FROM Notificacoes WHERE Notificacao_ID = ?",
+        [results.insertId],
+        (err2, results2: RowDataPacket[]) => {
+          if (err2) {
+            return res.status(500).json({
+              success: false,
+              error: 'Erro ao buscar notificação: ${err2.message},'
+            });
+          }
+
+          return res.status(200).json({ success: true, data: results2[0] });
+        }
+      );
+    }
+  );
+};
+
+
