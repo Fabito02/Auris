@@ -14,6 +14,9 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
+import { useNavigate } from "react-router-dom";
+import { getManifestacoesDoUsuario } from "@/api/api_routes";
+import { Manifestacao } from "@/types/api";
 
 const SearchBar = () => {
   const {
@@ -24,8 +27,20 @@ const SearchBar = () => {
     isMicrophoneAvailable,
   } = useSpeechRecognition();
 
+  const navigate = useNavigate();
+
   const [visibilidade, setVisibilidade] = useState(false);
   const [busca, setBusca] = useState("");
+  const [manifestacoes, setManifestacoes] = useState<Manifestacao[]>([]);
+
+  useEffect(() => {
+    if (visibilidade) {
+      (async () => {
+        const response = await getManifestacoesDoUsuario();
+        setManifestacoes([response.data]);
+      })();
+    }
+  }, [visibilidade]);
 
   useEffect(() => {
     if (transcript) {
@@ -90,75 +105,63 @@ const SearchBar = () => {
 
   const resultadosBase = [
     {
-      grupo: "Minhas Manifestações",
-      label: "Reclamações",
-      icon: "material-symbols:feedback-rounded",
-      color: "var(--color-secondary)",
-    },
-    {
-      grupo: "Minhas Manifestações",
-      label: "Elogios",
-      icon: "material-symbols:thumb-up-rounded",
-      color: "var(--color-secondary)",
-    },
-    {
-      grupo: "Minhas Manifestações",
-      label: "Denúncias",
-      icon: "material-symbols:report-rounded",
-      color: "var(--color-secondary)",
-    },
-    {
-      grupo: "Minhas Manifestações",
-      label: "Sugestões",
-      icon: "material-symbols:lightbulb-rounded",
-      color: "var(--color-secondary)",
-    },
-    {
       grupo: "Fale conosco",
       label: "Reclamação",
       icon: "material-symbols:feedback-rounded",
       color: "var(--color-danger)",
+      pagina: "/fale-conosco/reclamacao",
     },
     {
       grupo: "Fale conosco",
       label: "Elogio",
       icon: "material-symbols:thumb-up-rounded",
       color: "var(--color-danger)",
+      pagina: "/fale-conosco/elogio",
     },
     {
       grupo: "Fale conosco",
       label: "Denúncia",
       icon: "material-symbols:report-rounded",
       color: "var(--color-danger)",
+      pagina: "/fale-conosco/denuncia",
     },
     {
       grupo: "Fale conosco",
       label: "Sugestão",
       icon: "material-symbols:lightbulb-rounded",
       color: "var(--color-danger)",
-    },
-    {
-      grupo: "Configurações",
-      label: "Perfil",
-      icon: "material-symbols:person-rounded",
-      color: "var(--color-primary)",
+      pagina: "/fale-conosco/sugestao",
     },
     {
       grupo: "Configurações",
       label: "Minhas Manifestações",
       icon: "material-symbols:record-voice-over-rounded",
       color: "var(--color-primary)",
+      pagina: "/minhas-manifestacoes",
     },
     {
       grupo: "Configurações",
       label: "Configurações",
       icon: "material-symbols:settings-rounded",
       color: "var(--color-primary)",
+      pagina: "/perfil",
     },
   ];
 
-  const resultadosFiltrados = resultadosBase.filter((item) =>
-    item.label.toLowerCase().includes(busca.toLowerCase())
+  // junta base + as manifestações do usuário
+  const todosResultados = [
+    ...manifestacoes.map((m) => ({
+      grupo: "Suas manifestações",
+      label: m.Titulo,
+      icon: "material-symbols:article-rounded",
+      color: "var(--color-secondary)",
+      pagina: `/manifestacoes/${m.Manifestacao_ID}`,
+    })),
+    ...resultadosBase,
+  ];
+
+  const resultadosFiltrados = todosResultados.filter((item) =>
+    item.label?.toLowerCase().includes(busca.toLowerCase())
   );
 
   const grupos = Array.from(new Set(resultadosFiltrados.map((r) => r.grupo)));
@@ -190,7 +193,7 @@ const SearchBar = () => {
           tabIndex={0}
         />
         <CommandList
-          className={`left-1/2 transform -translate-x-1/2 w-full max-w-[500px] max-h-[470px] lista-comandos-searchbar rounded-lg fixed shadow-lg bg-white mt-15 mr-4 ${
+          className={`left-1/2 transform -translate-x-1/2 w-full max-w-[500px] max-h-[600px] lista-comandos-searchbar rounded-lg fixed shadow-lg bg-white mt-15 mr-4 ${
             visibilidade ? "visivel" : ""
           }`}
         >
@@ -198,14 +201,19 @@ const SearchBar = () => {
             <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
           ) : (
             grupos.map((grupo) => (
-              <>
-                <CommandGroup heading={grupo} key={grupo}>
+              <div key={grupo}>
+                <CommandGroup heading={grupo}>
                   {resultadosFiltrados
                     .filter((item) => item.grupo === grupo)
                     .map((item) => (
                       <CommandItem
                         key={item.label}
-                        onSelect={() => console.log(item.label)}
+                        onPointerDown={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                        }}
+                        onSelect={() => navigate(item.pagina)}
+                        onClick={() => navigate(item.pagina)}
                         className="search-item"
                       >
                         <Icon
@@ -218,7 +226,7 @@ const SearchBar = () => {
                     ))}
                 </CommandGroup>
                 <CommandSeparator />
-              </>
+              </div>
             ))
           )}
         </CommandList>
