@@ -8,7 +8,11 @@ import AnimarAoVer from "@/components/AnimarAoVer";
 import { motion } from "framer-motion";
 import "./Home.css";
 import { checkAuth } from "../api/auth";
-import { getPrecisaTrocarSenha, getManifestacoesDoUsuario, getUsuarioAtual } from "../api/api_routes";
+import {
+  getPrecisaTrocarSenha,
+  getManifestacoesDoUsuario,
+  verificarPrimeiroAcesso,
+} from "../api/api_routes";
 import {
   Dialog,
   DialogContent,
@@ -25,7 +29,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import CardManifestacao from "@/components/CardManifestacao";
-import { User } from "@/types/api";
+import { useUsuarioAtual } from "@/hooks/useUsuarioAtual";
 
 const slides = [
   "/home/slides/1.png",
@@ -49,11 +53,11 @@ const data_cards = [
 
 const Home = () => {
   const navigate = useNavigate();
+  const usuarioAtual = useUsuarioAtual();
 
   const [precisaTrocarSenha, setPrecisaTrocarSenha] = useState(false);
   const [manifestacoes, setManifestacoes] = useState<any[]>([]);
-  const [usuarioAtual, setUsuarioAtual] = useState<User>();
-
+  const [primeiroAcesso, setPrimeiroAcesso] = useState(false);
 
   useEffect(() => {
     const fetchManifestacoes = async () => {
@@ -67,27 +71,23 @@ const Home = () => {
       } catch (error) {
         console.error("Erro ao buscar manifestações:", error);
       }
-    }
+    };
 
     fetchManifestacoes();
   }, [setManifestacoes]);
 
-  useEffect(() => {
-    const fetchUsuarioAtual = async () => {
+    useEffect(() => {
+    (async () => {
       try {
-        const response = await getUsuarioAtual();
-        if (response.success) {
-          setUsuarioAtual(response.user);
-        } else {
-          console.error("Erro ao buscar usuário:", response.error);
+        const response = await verificarPrimeiroAcesso();
+        if (response.primeiroAcesso) {
+          setPrimeiroAcesso(true);
         }
       } catch (error) {
-        console.error("Erro ao buscar usuário:", error);
+        console.error("Erro ao verificar acesso:", error);
       }
-    }
-
-    fetchUsuarioAtual();
-  }, [setManifestacoes]);
+    })();
+  }, []);
 
   useEffect(() => {
     document.title = "Home";
@@ -115,6 +115,10 @@ const Home = () => {
     navigate("/alterar-senha");
   };
 
+  const closeModal2 = () => {
+    setPrimeiroAcesso(false);
+  };
+
   return (
     <div className="ouvidoria-home">
       <section className="hero-banner bg-gray-100 py-12">
@@ -130,7 +134,10 @@ const Home = () => {
               } else {
                 mensagem = "Boa noite";
               }
-              return `${mensagem} ${usuarioAtual?.Nome.split(" ").slice(0, 1)}!`;
+              return `${mensagem}, ${usuarioAtual?.Nome.split(" ").slice(
+                0,
+                1
+              )}!`;
             })()}
           </h1>
           <p className="mb-6 text-gray-600">
@@ -267,7 +274,9 @@ const Home = () => {
               className="mb-2 iconeInfo"
             />
             <h3 className="font-semibold mb-1">Prazos de Resposta</h3>
-            <p className="text-gray-600 text-xs">Atendemos em até 3 dias úteis.</p>
+            <p className="text-gray-600 text-xs">
+              Atendemos em até 3 dias úteis.
+            </p>
           </div>
           <div>
             <Icon
@@ -289,7 +298,9 @@ const Home = () => {
               className="mb-2 iconeInfo"
             />
             <h3 className="font-semibold mb-1">Contato Alternativo</h3>
-            <p className="text-gray-600 text-xs">ouvidoria.almenara@ifnmg.edu.br</p>
+            <p className="text-gray-600 text-xs">
+              ouvidoria.almenara@ifnmg.edu.br
+            </p>
           </div>
         </div>
       </section>
@@ -311,6 +322,28 @@ const Home = () => {
               color="success"
               className="w-full sm:max-w-[200px] px-5"
               texto="alterar"
+            />
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={primeiroAcesso} onOpenChange={closeModal2}>
+        <DialogContent className="sm:max-w-[400px] rounded-xl [&>button]:hidden">
+          <DialogHeader>
+            <DialogTitle className="text-center text-[var(--color-primary)] text-3xl mb-4">
+              Seja bem-vindo(a)!
+            </DialogTitle>
+            <DialogDescription className="text-center">
+              Estamos felizes em tê-lo(a) conosco!
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="sm:justify-center mt-4">
+            <Button
+              onClick={closeModal2}
+              full_rounded
+              color="success"
+              className="w-full sm:max-w-[200px] px-5"
+              texto="ok"
             />
           </DialogFooter>
         </DialogContent>

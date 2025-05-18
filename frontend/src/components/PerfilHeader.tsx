@@ -26,27 +26,18 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
-import { getUsuarioAtual, getAvatar } from "@/api/api_routes";
-import { User } from "@/types/api";
+import { getAvatar } from "@/api/api_routes";
 import CardNotificacao from "./CardNotificacao";
+import { useUsuarioAtual } from "@/hooks/useUsuarioAtual";
 
 const PerfilHeader = () => {
   const navigate = useNavigate();
+  const user = useUsuarioAtual();
 
   const [logoutSucesso, setLogoutSucesso] = useState<boolean | undefined>(
     undefined
   );
-  const [user, setUser] = useState<User | null>(null);
   const [avatar, setAvatar] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const usuario = await getUsuarioAtual();
-      setUser(usuario.user);
-    };
-
-    fetchUser();
-  }, [getUsuarioAtual]);
 
   useEffect(() => {
     if (user) {

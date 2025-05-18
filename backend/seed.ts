@@ -49,7 +49,8 @@ async function createTables(conn: mysql.Connection) {
             Role ENUM('user', 'admin', 'moderador') DEFAULT 'user',
             Token_Verificacao VARCHAR(255),
             Email_Verificado BOOLEAN DEFAULT FALSE,
-            Requer_Alteracao_Senha BOOLEAN DEFAULT FALSE
+            Requer_Alteracao_Senha BOOLEAN DEFAULT FALSE,
+            Primeiro_Acesso BOOLEAN DEFAULT TRUE
         ) ENGINE=InnoDB;`,
 
     `CREATE TABLE IF NOT EXISTS Endereco (
@@ -134,6 +135,7 @@ async function insertSeeds(conn: mysql.Connection) {
         Senha: hashedSenha,
         Token_Verificacao: "123456789",
         Email_Verificado: true,
+        Primeiro_Acesso: false,
       },
       {
         Nome: "moderador",
@@ -145,6 +147,7 @@ async function insertSeeds(conn: mysql.Connection) {
         Senha: hashedSenha,
         Token_Verificacao: "123456789",
         Email_Verificado: true,
+        Primeiro_Acesso: false,
       },
       {
         Nome: "user",
@@ -154,6 +157,7 @@ async function insertSeeds(conn: mysql.Connection) {
         Senha: hashedSenha,
         Token_Verificacao: "123456789",
         Email_Verificado: true,
+        Primeiro_Acesso: false,
       },
     ];
 

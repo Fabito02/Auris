@@ -8,7 +8,6 @@ import path from "path";
 import mime from "mime-types";
 import fs from "fs";
 import { URL_BASE_BACKEND } from "../config";
-import { url } from "inspector";
 
 export const getUsuarioAtual = async (
   req: Request,

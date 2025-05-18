@@ -17,7 +17,6 @@ import { getCroppedImg } from "../../utils/cropImage";
 import { checkAuth } from "@/api/auth";
 import { User, Endereco } from "@/types/api";
 import {
-  getUsuarioAtual,
   getEnderecoUsuarioAtual,
   updateEnderecoUsuarioAtual,
   updateUsuarioAtual,
@@ -26,10 +25,12 @@ import {
 } from "@/api/api_routes";
 import { toast } from "sonner";
 import "./Perfil.css";
+import { useUsuarioAtual } from "@/hooks/useUsuarioAtual";
 
 const Perfil: React.FC = () => {
+  const user = useUsuarioAtual();
+
   const navigate = useNavigate();
-  const [user, setUser] = useState<User | null>(null);
   const [endereco, setEndereco] = useState<Endereco | null>(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -48,8 +49,6 @@ const Perfil: React.FC = () => {
     }
     checkAuth(navigate, ["admin", "moderador", "user"]);
     (async () => {
-      const respUser = await getUsuarioAtual();
-      setUser(respUser.user);
       const respEnd = await getEnderecoUsuarioAtual();
       setEndereco(respEnd.endereco);
     })();

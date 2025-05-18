@@ -4,7 +4,7 @@ import { Icon } from "@iconify-icon/react";
 import { BlankLayout } from "../components/BlankLayout/BlankLayout";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { postRegistrar, enviarNotificacao } from "../api/api_routes";
+import { postRegistrar } from "../api/api_routes";
 import "./LoginERegistrar.css";
 import {
   Dialog,
@@ -71,11 +71,6 @@ const Registrar = () => {
       if (response.success) {
         setRegistrarSucesso(true);
         setError(null);
-        await enviarNotificacao({
-          Titulo: "Seja bem-vindo(a)!",
-          Mensagem: `Na Auris, sua manifestação é valorizada. Fale com a gente e ajude a construir um ambiente melhor.`,
-          User_ID: response.User_ID,
-        })
         toast.dismiss("carregando");
       }
     } catch (err: any) {
