@@ -135,7 +135,7 @@ async function insertSeeds(conn: mysql.Connection) {
         Senha: hashedSenha,
         Token_Verificacao: "123456789",
         Email_Verificado: true,
-        Primeiro_Acesso: false,
+        Primeiro_Acesso: true,
       },
       {
         Nome: "moderador",
