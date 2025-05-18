@@ -1,8 +1,9 @@
 import axios from "axios";
 import { User, Endereco, Notificacao } from "../types/api";
+import { API_BASE } from "@/config";
 
 const api = axios.create({
-  baseURL: "http://localhost:4000/api",
+  baseURL: API_BASE,
 });
 
 api.interceptors.request.use((config) => {

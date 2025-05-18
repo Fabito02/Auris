@@ -9,6 +9,8 @@ import { registrarLog } from "../utils/logger";
 import nodemailer from "nodemailer";
 import { randomUUID } from "crypto";
 import dotenv from "dotenv";
+import { URL_BASE_FRONTEND } from "../config";
+
 dotenv.config();
 
 export const login = (req: Request, res: Response) => {
@@ -162,7 +164,7 @@ export const registrar = async (req: Request, res: Response): Promise<void> => {
     });
 
     //temporário apenas para desenvolvimento
-    const link = `http://localhost:5173/confirmar?token=${token}`;
+    const link = `${URL_BASE_FRONTEND}/confirmar?token=${token}`;
 
     await transporter.sendMail({
       from: "Auris IFNMG <noreply@ifnmg.edu.br>",
@@ -381,7 +383,7 @@ export const confirmarRecuperacao = async (
     });
 
     //temporário apenas para desenvolvimento
-    const link = `http://localhost:5173/recuperar?token=${token}`;
+    const link = `${URL_BASE_FRONTEND}/recuperar?token=${token}`;
 
     await transporter.sendMail({
       from: "Auris IFNMG <noreply@ifnmg.edu.br>",

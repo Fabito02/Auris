@@ -192,7 +192,7 @@ export default function Component() {
                             x={viewBox.cx}
                             y={viewBox.cy}
                             textAnchor="middle"
-                            dominantBaseline="middle"
+                            dominantline="middle"
                           >
                             <tspan
                               x={viewBox.cx}

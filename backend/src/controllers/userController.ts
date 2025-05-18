@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import { ResultSetHeader } from "mysql2";
 import { registrarLog } from "../utils/logger";
 import nodemailer from "nodemailer";
+import { URL_BASE_FRONTEND } from "../config";
 
 export const listUsers = (req: Request, res: Response): void => {
   connection.query(
@@ -317,7 +318,7 @@ export const postEnviarNotificacao = async (
         [req.body.User_ID]
       );
 
-    const link = `http://localhost:5173/home`;
+    const link = `${URL_BASE_FRONTEND}/home`;
 
     await transporter.sendMail({
       from: "Auris IFNMG <noreply@ifnmg.edu.br>",

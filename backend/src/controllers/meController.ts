@@ -7,6 +7,8 @@ import multer from "multer";
 import path from "path";
 import mime from "mime-types";
 import fs from "fs";
+import { URL_BASE_BACKEND } from "../config";
+import { url } from "inspector";
 
 export const getUsuarioAtual = async (
   req: Request,
@@ -249,7 +251,7 @@ export const updateAvatar = (
             return res.status(200).json({
               success: true,
               message: "Avatar atualizado com sucesso.",
-              avatarUrl: `http://localhost:4000/uploads/avatars/${avatarFilename}`,
+              avatarUrl: `${URL_BASE_BACKEND}/uploads/avatars/${avatarFilename}`,
             });
           }
         );
