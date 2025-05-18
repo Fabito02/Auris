@@ -24,14 +24,14 @@ const Footer = () => {
           link: "https://github.com/Fabito02/",
         },
         {
-          name: "Francisco Rodrigues - Design",
+          name: "Francisco Rodrigues - Design, Backend",
           link: "https://github.com/FranSRodrigues/",
         },
         {
-          name: "Pablo Messias - Design",
+          name: "Pablo Messias - Design, Backend",
           link: "https://github.com/PabloMessias007/",
         },
-        { name: "Bruno Araújo - Design", link: "https://github.com/EoBrunin/" },
+        { name: "Bruno Araújo - Design, Backend", link: "https://github.com/EoBrunin/" },
       ],
       target: "blank",
     },
@@ -98,7 +98,7 @@ const Footer = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Icon icon="mingcute:youtube-fill" width="24" height="24" />
+              <Icon icon="mdi:youtube" width="24" height="24" />
             </a>
             <a
               href="https://www.instagram.com/almenara_ifnmg/"
@@ -116,7 +116,7 @@ const Footer = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Icon icon="ic:baseline-facebook" width="24" height="24" />
+              <Icon icon="mdi:facebook" width="24" height="24" />
             </a>
           </div>
         </div>
