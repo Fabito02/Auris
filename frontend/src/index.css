@@ -150,7 +150,7 @@ body {
 ::-webkit-scrollbar-thumb {
   background-color: #aeaeae;
   border-radius: 11px;
-  border: 3px solid #f0f0f0;
+  border: 3px solid #ffffff;
 }
 
 ::-webkit-scrollbar-thumb:hover {

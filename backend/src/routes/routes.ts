@@ -52,9 +52,16 @@ router.delete(
   verifyToken,
   meController.deleteNotificacao
 );
-router.get("/me/notificacao/:id", verifyToken, meController.getNotificacaoPorIDdeUsuario);
-router.get("/me/notificacao", verifyToken, meController.getNotificacoesDoUsuario);
-router.post("/users/notificacao", verifyToken, userController.postEnviarNotificacao);
+router.get(
+  "/me/notificacao/:id",
+  verifyToken,
+  meController.getNotificacaoPorIDdeUsuario
+);
+router.get(
+  "/me/notificacao",
+  verifyToken,
+  meController.getNotificacoesDoUsuario
+);
 
 // rotas para usuários
 router.get(
@@ -100,9 +107,18 @@ router.delete(
   userController.deleteUser
 );
 router.get("/users/avatar/:id", verifyToken, userController.getAvatar);
+router.post(
+  "/users/notificacao",
+  verifyToken,
+  userController.postEnviarNotificacao
+);
 
 // rotas para manifestações
-router.get("/me/manifestacoes", verifyToken, manifestacaoController.getManifestacoesDoUsuario);
+router.get(
+  "/me/manifestacoes",
+  verifyToken,
+  manifestacaoController.getManifestacoesDoUsuario
+);
 
 // rotas de logs
 router.get("/logs", verifyToken, verifyRole(["admin"]), logController.getLogs);

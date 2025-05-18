@@ -101,7 +101,7 @@ export default function ConfirmarEmail() {
             texto="fazer login"
             color="primary"
             outline
-            className="mt-2"
+            className="mt-2 mx-auto"
             onClick={() => navigate("/login")}
           />
         </div>
@@ -128,7 +128,7 @@ export default function ConfirmarEmail() {
           texto="login"
           color="primary"
           outline
-          className="mt-2"
+          className="mt-2 mx-auto"
           onClick={() => navigate("/login")}
         />
       </div>

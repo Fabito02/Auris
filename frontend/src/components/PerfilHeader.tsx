@@ -82,7 +82,12 @@ const PerfilHeader = () => {
           </div>
         </PopoverTrigger>
 
-        <PopoverContent className="shadow-lg mr-2 mt-5 dropdown border-0 rounded-[16px] menu-opcoes w-[100vw] max-w-[420px] max-h-[600px] mx-2 p-3 gap-2">
+        <PopoverContent
+          className="shadow-lg mr-2 mt-5 dropdown border-0 rounded-[16px] menu-opcoes w-[100vw] max-w-[420px] max-h-[600px] mx-2 p-3 gap-2 overflow-auto"
+          style={{
+            scrollbarWidth: "none"
+          }}
+        >
           <div className="pb-2">
             <h1 className="text-center font-semibold">NOTIFICAÇÕES</h1>
           </div>

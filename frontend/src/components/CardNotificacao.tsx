@@ -9,18 +9,20 @@ const CardNotificacao = () => {
     const [notificacoes, setNotificacoes] = useState<Notificacao[]>([]);
 
     const handleDelete = async (id: number) => {
-        await deletarNotificacaoDoUsuario(id);
-        setNotificacoes(notificacoes.filter((n) => n.Notificacao_ID !== id));
+    await deletarNotificacaoDoUsuario(id);
+    setNotificacoes(prev => prev.filter(n => n.Notificacao_ID !== id));
     }
 
     useEffect(() => {
         const fetchNotificacoes = async () => {
             const response = await getNotificacoesDoUsuario();
-            setNotificacoes([response.data]);
+            const data = response.data;
+            console.log(data);
+            setNotificacoes(Array.isArray(data) ? data : [data]);
         }
 
         fetchNotificacoes();
-    }, [getNotificacoesDoUsuario])
+    }, [])
 
     if (notificacoes.length === 0) {
         return (
@@ -31,9 +33,9 @@ const CardNotificacao = () => {
     }
 
   return (
-    <div className="grid grid-cols-1 gap-4 w-full">
+    <div className="grid grid-cols-1 gap-3.5 w-full mt-3">
       {notificacoes.map((m) => (
-        <div key={m.Notificacao_ID} className="mt-1 rounded-[12px] p-4 notificacao shadow-md relative">
+        <div key={m.Notificacao_ID} className="rounded-[12px] p-4 notificacao shadow-md relative">
             <div className="grid grid-cols-5 gap-2">
                 <Button
                 className="absolute top-[8px] right-[8px] p-1 w-[24px] h-[24px] flex items-center justify-center"

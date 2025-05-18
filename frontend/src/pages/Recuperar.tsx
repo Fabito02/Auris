@@ -154,7 +154,7 @@ export default function Recuperar() {
               texto="Fazer Login"
               color="primary"
               outline
-              className="mt-2"
+              className="mt-2 mx-auto"
             />
           </button>
         </div>

@@ -288,62 +288,40 @@ export const getRoleUsuarioAtual: RequestHandler<{ id: string }> = (
 
 export const deleteNotificacao = (
   req: Request<{ Notificacao_ID: string }>,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
   const notificationId = Number(req.params.Notificacao_ID);
-  const userId = req.user?.User_ID
+  const userId = req.user?.User_ID;
 
-  connection.beginTransaction((transactionErr) => {
-    if (transactionErr) {
-      return res.status(500).json({
-        success: false,
-        error: `Erro ao iniciar transação: ${transactionErr.message}`,
-      });
-    }
+  if (!userId) {
+    res.status(401).json({ success: false, error: "Não autenticado" });
+    return
+  }
 
-        connection.query(
-          "DELETE FROM Notificacoes WHERE Notificacao_ID = ? AND User_ID = ?",
-          [notificationId, userId],
-          (notificacaoDeleteErr, results: ResultSetHeader) => {
-            if (notificacaoDeleteErr) {
-              return connection.rollback(() => {
-                res.status(500).json({
-                  success: false,
-                  error: `Erro ao deletar notificação: ${notificacaoDeleteErr.message}`,
-                });
-              });
-            }
+    connection.query(
+      "DELETE FROM Notificacoes WHERE Notificacao_ID = ? AND User_ID = ?",
+      [notificationId, userId],
+      (deleteErr, deleteResults: ResultSetHeader) => {
+        if (deleteErr) {
+          return next(deleteErr);
+        }
 
-            if (results.affectedRows === 0) {
-              return connection.rollback(() => {
-                res
-                  .status(404)
-                  .json({ success: false, error: "Notificação não encontrada" });
-              });
-            }
-
-            connection.commit((commitErr) => {
-              if (commitErr) {
-                return connection.rollback(() => {
-                  res.status(500).json({
-                    success: false,
-                    error: `Erro ao confirmar transação: ${commitErr.message}`,
-                  });
-                });
-              }
-
-              registrarLog(`Notificação deletada`, notificationId);
-
-              return res.status(200).json({
-                success: true,
-                message: "Notificação deletada com sucesso",
-              });
-            });
-          }
-        );
+        if (deleteResults.affectedRows === 0) {
+          res
+            .status(404)
+            .json({ success: false, error: "Notificação não encontrada" });
+          return
+        }
+        
+        res.status(200).json({
+          success: true,
+          message: "Notificação deletada com sucesso",
+        });
+        return 
       }
     );
-  };
+  }
 
   export const getNotificacaoPorIDdeUsuario: RequestHandler<{ id: string }> = (
     req,
@@ -397,7 +375,7 @@ export const deleteNotificacao = (
           return;
         }
   
-        res.status(200).json({ success: true, data: results[0] });
+        res.status(200).json({ success: true, data: results });
       }
     );
   };

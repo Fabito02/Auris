@@ -5,6 +5,7 @@ import { User } from "../models/User";
 import bcrypt from "bcryptjs";
 import { ResultSetHeader } from "mysql2";
 import { registrarLog } from "../utils/logger";
+import nodemailer from "nodemailer";
 
 export const listUsers = (req: Request, res: Response): void => {
   connection.query(
@@ -353,39 +354,90 @@ export const registrarUsuario = async (req: Request, res: Response) => {
   }
 };
 
-export const postEnviarNotificacao = (
-  req: Request<{ id: string }>,
+export const postEnviarNotificacao = async (
+  req: Request,
   res: Response
-) => {
+): Promise<void> => {
   const data = req.body;
 
-  connection.query(
-    "INSERT INTO Notificacoes SET ?",
-    [data],
-    (err, results: ResultSetHeader) => {
-      if (err) {
-        return res.status(500).json({
-          success: false,
-          error: 'Erro ao enviar notificação: ${err.message},'
-        });
-      }
+  try {
+    const [result] = await connection
+      .promise()
+      .query<ResultSetHeader>("INSERT INTO Notificacoes SET ?", [data]);
 
-      connection.query(
-        "SELECT * FROM Notificacoes WHERE Notificacao_ID = ?",
-        [results.insertId],
-        (err2, results2: RowDataPacket[]) => {
-          if (err2) {
-            return res.status(500).json({
-              success: false,
-              error: 'Erro ao buscar notificação: ${err2.message},'
-            });
-          }
-
-          return res.status(200).json({ success: true, data: results2[0] });
-        }
-      );
+    if (result.affectedRows === 0) {
+      res.status(500).json({
+        success: false,
+        error: "Erro ao enviar notificação.",
+      });
+      return;
     }
-  );
+
+    const [results2] = await connection
+      .promise()
+      .query<RowDataPacket[]>(
+        "SELECT * FROM Notificacoes WHERE Notificacao_ID = ?",
+        [result.insertId]
+      );
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+
+    const [user] = await connection
+      .promise()
+      .query<RowDataPacket[]>(
+        "SELECT * FROM Users WHERE User_ID = ?",
+        [req.body.User_ID]
+      );
+
+    const link = `http://localhost:5173/home`;
+
+    await transporter.sendMail({
+      from: "Auris IFNMG <noreply@ifnmg.edu.br>",
+      to: user[0].Email,
+      subject: "Nova notificação",
+      html: `
+                <div style="max-width: 600px; margin: auto; font-family: Arial, sans-serif; border: 1px solid #e0e0e0; border-radius: 18px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+                <div style="background-color: #2c2c2c; padding: 20px; text-align: center;">
+                  <img src="cid:logo_auris" alt="Logo Auris" style="width: 300px; height: auto;" />
+                </div>
+                <div style="padding: 30px; background-color: #ffffff; color: #2c2c2c;">
+                  <h2 style="color: #2c2c2c; margin: 0; text-align: center; margin-bottom: 30px;">NOVA NOTIFICAÇÃO</h2>
+                  <p style="font-size: 16px;">Olá ${user[0].Nome || ""},</p>
+                  <span style="font-size: 16px; margin-top: 10px; font-weight: bold">${results2[0].Titulo || ""}</span>
+                  <p style="font-size: 16px;">${results2[0].Mensagem || ""}</p>
+                  <div style="text-align: center; margin: 30px 0;">
+                    <a href="${link}" style="background-color: #16aa51; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 12px; font-size: 16px;">ACESSAR PLATAFORMA</a>
+                  </div>
+                </div>
+                <div style="background-color: #f1f5f9; padding: 15px; text-align: center; font-size: 12px; color: #666; margin-bottom: 10px;">
+                  © 2025 Auris IFNMG. Todos os direitos reservados.
+                </div>
+              </div>
+            `,
+      attachments: [
+        {
+          filename: "Logo.png",
+          path: "src/public/Logo.png",
+          cid: "logo_auris",
+        },
+      ],
+    });
+
+    res.status(200).json({ success: true, data: results2[0] });
+    return;
+  } catch (error) {
+    console.error("Erro ao enviar notificação:", error);
+    res.status(500).json({
+      success: false,
+      error: "Erro interno do servidor.",
+    });
+    return;
+  }
 };
-
-
