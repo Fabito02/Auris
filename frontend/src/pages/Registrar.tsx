@@ -4,7 +4,7 @@ import { Icon } from "@iconify-icon/react";
 import { BlankLayout } from "../components/BlankLayout/BlankLayout";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { postRegistrar } from "../api/api_routes";
+import { postRegistrar, enviarNotificacao } from "../api/api_routes";
 import "./LoginERegistrar.css";
 import {
   Dialog,
@@ -63,7 +63,6 @@ const Registrar = () => {
 
     try {
       const response = await postRegistrar({
-        User_ID: 0,
         Nome: formData.nome,
         Email: formData.email,
         Senha: formData.password,
@@ -72,6 +71,11 @@ const Registrar = () => {
       if (response.success) {
         setRegistrarSucesso(true);
         setError(null);
+        await enviarNotificacao({
+          Titulo: "Seja bem-vindo(a)!",
+          Mensagem: `Na Auris, sua manifestação é valorizada. Fale com a gente e ajude a construir um ambiente melhor.`,
+          User_ID: response.User_ID,
+        })
         toast.dismiss("carregando");
       }
     } catch (err: any) {
@@ -214,7 +218,7 @@ const Registrar = () => {
               full_rounded
               color="success"
               className="w-full sm:max-w-[200px] px-5"
-              texto="fazer login"
+              texto="login"
             />
           </DialogFooter>
         </DialogContent>

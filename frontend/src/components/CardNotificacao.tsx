@@ -17,8 +17,7 @@ const CardNotificacao = () => {
         const fetchNotificacoes = async () => {
             const response = await getNotificacoesDoUsuario();
             const data = response.data;
-            console.log(data);
-            setNotificacoes(Array.isArray(data) ? data : [data]);
+            setNotificacoes(Array.isArray(data) ? data.reverse() : [data]);
         }
 
         fetchNotificacoes();
@@ -49,7 +48,7 @@ const CardNotificacao = () => {
                 <h2 className="font-semibold text-[1rem] col-span-5 line-clamp-1">
                 {m.Titulo}
                 </h2>
-                <p className="text-sm text-gray-600 col-span-5 line-clamp-1">
+                <p className="text-sm text-gray-600 col-span-5 line-clamp-2">
                 {m.Mensagem}
                 </p>
 

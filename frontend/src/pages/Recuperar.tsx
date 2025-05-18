@@ -151,7 +151,7 @@ export default function Recuperar() {
             className="flex items-center justify-center"
           >
             <Button
-              texto="Fazer Login"
+              texto="Login"
               color="primary"
               outline
               className="mt-2 mx-auto"

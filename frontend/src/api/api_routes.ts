@@ -1,5 +1,5 @@
 import axios from "axios";
-import { User, Endereco } from "../types/api";
+import { User, Endereco, Notificacao } from "../types/api";
 
 const api = axios.create({
   baseURL: "http://localhost:4000/api",
@@ -175,5 +175,10 @@ export const getNotificacoesDoUsuario = async () => {
 
 export const deletarNotificacaoDoUsuario = async (id: number) => {
   const response = await api.delete(`/me/notificacao/${id}`);
+  return response.data;
+};
+
+export const enviarNotificacao = async (notificacao: Partial<Notificacao>) => {
+  const response = await api.post(`/users/notificacao/`, notificacao);
   return response.data;
 };

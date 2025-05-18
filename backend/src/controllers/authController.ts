@@ -578,3 +578,82 @@ export const trocarSenha = async (
     });
   }
 };
+
+export const registrarUsuario = async (req: Request, res: Response) => {
+  const user = req.body;
+
+  if (!user) {
+    res.status(400).json({ success: false, error: "Usuário é necessário." });
+    return;
+  }
+
+  const isEmailValido = (email: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const isEmailInstitucionalIFNMG = (email: string) => {
+    if (!isEmailValido(email)) return false;
+    const dominio = email.split("@")[1]?.toLowerCase();
+    return dominio?.endsWith("ifnmg.edu.br") ?? false;
+  };
+
+  const isAluno = (email: string) => {
+    if (!isEmailValido(email)) return false;
+    const dominio = email.split("@")[1]?.toLowerCase();
+    return dominio?.endsWith("aluno.ifnmg.edu.br") ?? false;
+  };
+
+  if (!isEmailValido(user.Email)) {
+    res.status(400).json({ success: false, error: "Email inválido." });
+    return;
+  }
+
+  if (!isEmailInstitucionalIFNMG(user.Email)) {
+    res
+      .status(400)
+      .json({
+        success: false,
+        error: "Este email não é de domínio institucional IFNMG.",
+      });
+    return;
+  }
+
+  try {
+    const [existing] = await connection
+      .promise()
+      .query<RowDataPacket[]>("SELECT Email FROM Users WHERE Email = ?", [
+        user.Email,
+      ]);
+
+    if (existing.length > 0) {
+      res
+        .status(400)
+        .json({ success: false, error: "Este email já está em uso." });
+      return;
+    }
+
+    user.Tipo = isAluno(user.Email) ? "aluno" : "servidor";
+    user.Senha = await bcrypt.hash(user.Senha, 10);
+    user.Email_Verificado = true;
+    user.Requer_Alteracao_Senha = true;
+
+    const [result] = await connection
+      .promise()
+      .query<ResultSetHeader>("INSERT INTO Users SET ?", user);
+
+    if (result.affectedRows === 0) {
+      res
+        .status(500)
+        .json({ success: false, error: "Erro ao registrar usuário." });
+      return;
+    }
+
+    registrarLog(`Novo usuário registrado: ${user.Email}`, result.insertId);
+    res
+      .status(200)
+      .json({ success: true, message: "Usuário registrado com sucesso." });
+  } catch (error) {
+    console.error("Erro ao registrar usuário:", error);
+    res
+      .status(500)
+      .json({ success: false, error: "Erro interno do servidor." });
+  }
+};

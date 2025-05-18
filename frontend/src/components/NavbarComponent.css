@@ -11,12 +11,12 @@
 
 .link-navbar.active {
   color: white;
-  background-color: #00000060;
+  background-color: #00000070;
 }
 
 .link-navbar.active:hover {
   color: white;
-  background-color: #00000056;
+  background-color: #00000066;
 }
 
 .link-navbar-menu {

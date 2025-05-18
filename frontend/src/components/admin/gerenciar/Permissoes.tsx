@@ -13,8 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Icon } from "@iconify-icon/react";
 import { toast } from "sonner";
-import { updateRole } from "@/api/api_routes";
-import { getAvatar } from "@/api/api_routes";
+import { updateRole, getAvatar, enviarNotificacao } from "@/api/api_routes";
 import AnimarAoVer from "@/components/AnimarAoVer";
 
 export default function Component() {
@@ -57,8 +56,16 @@ export default function Component() {
   }, [Users]);
 
   const handleRoleChange = async (User_ID: number, Role: User["Role"]) => {
+    toast.loading("Atualizando permissão...");
+    const notificacao = {
+      Titulo: "Permissão atualizada",
+      Mensagem: `A sua permissão foi atualizada para ${Role}`,
+      User_ID: User_ID,
+    }
     try {
       await updateRole({ User_ID, Role });
+      await enviarNotificacao(notificacao);
+      toast.dismiss();
       toast.success("Permissão atualizada com sucesso", {
         icon: (
           <Icon

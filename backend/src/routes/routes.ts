@@ -74,7 +74,7 @@ router.post(
   "/users",
   verifyToken,
   verifyRole(["admin"]),
-  userController.registrarUsuario
+  authController.registrarUsuario
 );
 router.get(
   "/users/:id",
@@ -109,7 +109,6 @@ router.delete(
 router.get("/users/avatar/:id", verifyToken, userController.getAvatar);
 router.post(
   "/users/notificacao",
-  verifyToken,
   userController.postEnviarNotificacao
 );
 

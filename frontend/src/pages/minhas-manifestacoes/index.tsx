@@ -23,7 +23,6 @@ const MinhasManifestacoes = () => {
         const response = await getManifestacoesDoUsuario();
         if (response.success) {
           setManifestacoes([response.data]);
-          console.log(response);
         } else {
           console.error("Erro ao buscar manifestações:", response.error);
         }
@@ -34,8 +33,6 @@ const MinhasManifestacoes = () => {
 
     fetchManifestacoes();
   }, [setManifestacoes]);
-
-  console.log(manifestacoes)
 
   const manifestacoesFiltradas = useMemo(() => {
     return manifestacoes.filter(

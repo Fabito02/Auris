@@ -98,7 +98,7 @@ export default function ConfirmarEmail() {
             O link de verificação expirou ou é inválido.
           </p>
           <Button
-            texto="fazer login"
+            texto="login"
             color="primary"
             outline
             className="mt-2 mx-auto"
