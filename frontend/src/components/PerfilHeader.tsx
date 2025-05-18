@@ -29,7 +29,10 @@ import {
 import { getAvatar } from "@/api/api_routes";
 import CardNotificacao from "./CardNotificacao";
 import { useUsuarioAtual } from "@/hooks/useUsuarioAtual";
-import { getNotificacoesDoUsuario } from "@/api/api_routes";
+import {
+  getNotificacoesDoUsuario,
+  deletarNotificacaoDoUsuario,
+} from "@/api/api_routes";
 import { Notificacao } from "@/types/api";
 
 const PerfilHeader = () => {
@@ -42,11 +45,15 @@ const PerfilHeader = () => {
   const [avatar, setAvatar] = useState<string | null>(null);
   const [notificacoes, setNotificacoes] = useState<Notificacao[]>([]);
 
-    const fetchNotificacoes = async () => {
+  const fetchNotificacoes = async () => {
+    try {
       const response = await getNotificacoesDoUsuario();
       const data = response.data;
-      setNotificacoes(Array.isArray(data) ? data.reverse() : [data]);
-    };
+      setNotificacoes([...(data || [])]);
+    } catch (err) {
+      console.error("Erro ao buscar notificações:", err);
+    }
+  };
 
   useEffect(() => {
     fetchNotificacoes();
@@ -86,10 +93,8 @@ const PerfilHeader = () => {
   return (
     <div className="flex flex-row justify-end items-center w-[125px]">
       <Popover>
-        <PopoverTrigger asChild>
-          <div className="botao-notificacao"
-            onClick={() => fetchNotificacoes()}
-          >
+        <PopoverTrigger asChild onClick={() => fetchNotificacoes()}>
+          <div className="botao-notificacao">
             <Icon
               icon="material-symbols:notifications-rounded"
               className="mr-[15px] text-[26px] text-[#00000075]"
@@ -107,7 +112,15 @@ const PerfilHeader = () => {
             <h1 className="text-center font-semibold">NOTIFICAÇÕES</h1>
           </div>
           <div className="my-1 border-t border-gray-200" />
-          <CardNotificacao notificacoes={notificacoes} />
+          <CardNotificacao
+            notificacoes={notificacoes}
+            onDelete={async (id) => {
+              await deletarNotificacaoDoUsuario(id);
+              setNotificacoes((prev) =>
+                prev.filter((n) => n.Notificacao_ID !== id)
+              );
+            }}
+          />
         </PopoverContent>
       </Popover>
 

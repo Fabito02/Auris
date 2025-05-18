@@ -1,22 +1,15 @@
 import { Notificacao } from "@/types/api";
 import Button from "@/components/buttons/Button";
-import { deletarNotificacaoDoUsuario } from "@/api/api_routes";
-import { useState } from "react";
 
 interface CardNotificacaoProps {
   notificacoes: Notificacao[];
+  onDelete: (id: number) => void;
 }
 
 const CardNotificacao = ({
-  notificacoes: notificacoesIniciais,
+  notificacoes, 
+  onDelete
 }: CardNotificacaoProps) => {
-  const [notificacoes, setNotificacoes] =
-    useState<Notificacao[]>(notificacoesIniciais);
-
-  const handleDelete = async (id: number) => {
-    await deletarNotificacaoDoUsuario(id);
-    setNotificacoes((prev) => prev.filter((n) => n.Notificacao_ID !== id));
-  };
 
   if (notificacoes.length === 0) {
     return (
@@ -36,7 +29,7 @@ const CardNotificacao = ({
           <div className="grid grid-cols-5 gap-2">
             <Button
               className="absolute top-[8px] right-[8px] p-1 w-[24px] h-[24px] flex items-center justify-center"
-              onClick={() => handleDelete(m.Notificacao_ID)}
+              onClick={() => onDelete(m.Notificacao_ID)}
               texto="×"
               color="danger"
               iconPosition="center"
