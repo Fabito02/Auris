@@ -20,12 +20,12 @@ export default function CardInfo({ conteudo_cards, className }: CardInfoProps) {
               whileHover={{ scale: 1.035 }}
               transition={{ duration: 0.3 }}
               key={index}
-              className={`card-info flex flex-col shadow-sm ${
+              className={`card-info flex flex-col shadow-sm py-3 rounded-xl ${
                 card.cor ?? "primary"
               }`}
             >
-              <h1 className="total ml-5">{card.total}</h1>
-              <h2 className="titulo-card-info text-gray-400 ml-12 mb-1">
+              <h1 className="total ml-5 text-5xl">{card.total}</h1>
+              <h2 className="titulo-card-info text-gray-400 text-center text-[1.36rem]">
                 {card.titulo}
               </h2>
             </motion.div>
