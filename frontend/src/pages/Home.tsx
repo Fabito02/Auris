@@ -8,7 +8,7 @@ import AnimarAoVer from "@/components/AnimarAoVer";
 import { motion } from "framer-motion";
 import "./Home.css";
 import { checkAuth } from "../api/auth";
-import { getPrecisaTrocarSenha } from "../api/api_routes";
+import { getPrecisaTrocarSenha, getManifestacoesDoUsuario, getUsuarioAtual } from "../api/api_routes";
 import {
   Dialog,
   DialogContent,
@@ -25,6 +25,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import CardManifestacao from "@/components/CardManifestacao";
+import { User } from "@/types/api";
 
 const slides = [
   "/home/slides/1.png",
@@ -51,64 +52,42 @@ const Home = () => {
 
   const [precisaTrocarSenha, setPrecisaTrocarSenha] = useState(false);
   const [manifestacoes, setManifestacoes] = useState<any[]>([]);
+  const [usuarioAtual, setUsuarioAtual] = useState<User>();
+
 
   useEffect(() => {
-    setManifestacoes([
-      {
-        Manifestacao_ID: 1,
-        Titulo: "Assédio no corredor principal",
-        Descricao:
-          "No dia 14/05/2025, por volta das 10h, eu (discente do curso de Zootecnia) estava caminhando pelo corredor principal do 2º prédio quando fui abordado pelo professor de matemática, que fez um comentário inapropriado sobre minha roupa. Eu me senti desconfortável e ofendido com o comportamento do professor.",
-        Tipo: "Assédio",
-        Tipo_manifestacao: "denuncia",
-        Prioridade: "urgente",
-        User_ID: 4,
-        Status: "pendente",
-        Data_Envio: new Date().toISOString(),
-        Anonimo: false,
-      },
-      {
-        Manifestacao_ID: 2,
-        Titulo: "Problema com a internet no laboratório de redes",
-        Descricao:
-          "A internet do laboratório 1 não está funcionando corretamente. Eu tentei conectar meu notebook, mas não consegui. Além disso, a rede Wi-Fi do laboratório não está aparecendo na lista de redes disponíveis.",
-        Tipo: "Equipamentos",
-        Tipo_manifestacao: "reclamacao",
-        Prioridade: "alta",
-        User_ID: 4,
-        Status: "em_andamento",
-        Data_Envio: new Date().toISOString(),
-        Anonimo: false,
-      },
-      {
-        Manifestacao_ID: 3,
-        Titulo: "Elogio pela limpeza do banheiro masculino",
-        Descricao:
-          "O banheiro masculino do 2º prédio está sempre impecável e bem cuidado. Eu gostaria de parabenizar a equipe de limpeza pelo ótimo trabalho que eles fazem.",
-        Tipo: "Estrutura e espaços",
-        Tipo_manifestacao: "elogio",
-        Local: "Prédio Pedagógico II",
-        Prioridade: "baixa",
-        User_ID: 4,
-        Status: "concluido",
-        Data_Envio: new Date().toISOString(),
-        Anonimo: false,
-      },
-      {
-        Manifestacao_ID: 4,
-        Titulo: "Sugestão de melhorias para o site da Campus",
-        Descricao:
-          "Sugestão de melhorias para o site da Campus, como a possibilidade de ter uma seção de notícias, uma seção de eventos e uma seção de links úteis. Além disso, sugestão de melhoria na navegação e responsividade do site.",
-        Tipo: "Serviço",
-        Tipo_manifestacao: "sugestao",
-        Prioridade: "media",
-        User_ID: 4,
-        Status: "pendente",
-        Data_Envio: new Date().toISOString(),
-        Anonimo: false,
-      },
-    ]);
-  }, []);
+    const fetchManifestacoes = async () => {
+      try {
+        const response = await getManifestacoesDoUsuario();
+        if (response.success) {
+          setManifestacoes(response.data.reverse().slice(0, 4));
+        } else {
+          console.error("Erro ao buscar manifestações:", response.error);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar manifestações:", error);
+      }
+    }
+
+    fetchManifestacoes();
+  }, [setManifestacoes]);
+
+  useEffect(() => {
+    const fetchUsuarioAtual = async () => {
+      try {
+        const response = await getUsuarioAtual();
+        if (response.success) {
+          setUsuarioAtual(response.user);
+        } else {
+          console.error("Erro ao buscar usuário:", response.error);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar usuário:", error);
+      }
+    }
+
+    fetchUsuarioAtual();
+  }, [setManifestacoes]);
 
   useEffect(() => {
     document.title = "Home";
@@ -141,7 +120,18 @@ const Home = () => {
       <section className="hero-banner bg-gray-100 py-12">
         <div className="max-w-5xl mx-auto px-4 text-center">
           <h1 className="text-5xl font-bold mb-4 frase-impactante">
-            Sua voz é importante!
+            {(() => {
+              const horaAtual = new Date().getHours();
+              let mensagem = "Olá";
+              if (horaAtual < 12) {
+                mensagem = "Bom dia";
+              } else if (horaAtual < 18) {
+                mensagem = "Boa tarde";
+              } else {
+                mensagem = "Boa noite";
+              }
+              return `${mensagem} ${usuarioAtual?.Nome.split(" ").slice(0, 1)}!`;
+            })()}
           </h1>
           <p className="mb-6 text-gray-600">
             Compartilhe aqui suas críticas, elogios, denúncias, sugestões ou

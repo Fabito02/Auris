@@ -37,7 +37,7 @@ const SearchBar = () => {
     if (visibilidade) {
       (async () => {
         const response = await getManifestacoesDoUsuario();
-        setManifestacoes([response.data]);
+        setManifestacoes(response.data.reverse());
       })();
     }
   }, [visibilidade]);
@@ -147,13 +147,23 @@ const SearchBar = () => {
       pagina: "/perfil",
     },
   ];
-  
+
   const todosResultados = [
     ...manifestacoes.map((m) => ({
       grupo: "Suas manifestações",
       label: m.Titulo,
-      icon: "material-symbols:article-rounded",
-      color: "var(--color-secondary)",
+      icon: {
+        "reclamacao": "material-symbols:feedback-rounded",
+        "elogio": "material-symbols:thumb-up-rounded",
+        "denuncia": "material-symbols:report-rounded",
+        "sugestao": "material-symbols:lightbulb-rounded",
+      }[m.Tipo_manifestacao],
+      color: {
+        "reclamacao": "var(--color-reclamacao)",
+        "elogio": "var(--color-elogio)",
+        "denuncia": "var(--color-denuncia)",
+        "sugestao": "var(--color-sugestao)",
+      }[m.Tipo_manifestacao],
       pagina: `/manifestacoes/${m.Manifestacao_ID}`,
     })),
     ...resultadosBase,

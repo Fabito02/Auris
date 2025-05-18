@@ -174,7 +174,7 @@ const Login = () => {
           </DialogHeader>
           <DialogFooter className="sm:justify-center mt-4">
             <Button
-              onClick={() => navigate("/home")}
+              onClick={() => window.location.href = "/home"}
               full_rounded
               color="success"
               className="w-full sm:max-w-[200px] px-5"

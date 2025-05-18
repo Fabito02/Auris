@@ -22,7 +22,7 @@ const MinhasManifestacoes = () => {
       try {
         const response = await getManifestacoesDoUsuario();
         if (response.success) {
-          setManifestacoes([response.data]);
+          setManifestacoes(response.data.reverse());
         } else {
           console.error("Erro ao buscar manifestações:", response.error);
         }
