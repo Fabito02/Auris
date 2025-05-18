@@ -24,7 +24,7 @@ export const getUsuarioAtual = async (
     const [rows] = await connection
       .promise()
       .query<RowDataPacket[]>(
-        "SELECT User_ID, Nome, Email, Telefone, Avatar, SIAPE, Tipo, Data_Criacao, Role FROM Users WHERE User_ID = ?",
+        "SELECT User_ID, Nome, Email, Telefone, Avatar, SIAPE, Tipo, Data_Criacao, Role, Primeiro_Acesso FROM Users WHERE User_ID = ?",
         [userId]
       );
 
@@ -33,7 +33,18 @@ export const getUsuarioAtual = async (
       return;
     }
 
-    res.json({ success: true, user: rows[0] });
+    res.status(200).json({ success: true, user: rows[0] });
+
+    if (rows[0].Primeiro_Acesso) {
+      rows[0].Primeiro_Acesso = false;
+      await connection
+        .promise()
+        .query(
+          "UPDATE Users SET Primeiro_Acesso = ? WHERE User_ID = ?",
+          [false, userId]
+        );
+    }
+    return;
   } catch (error) {
     console.error("Erro ao buscar usuário:", error);
     res.status(500).json({ success: false, error: "Erro interno" });

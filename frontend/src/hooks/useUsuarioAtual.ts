@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import {
   getUsuarioAtual,
-  verificarPrimeiroAcesso,
   enviarNotificacao,
 } from "@/api/api_routes";
 import { User } from "@/types/api";
@@ -12,21 +11,22 @@ export function useUsuarioAtual() {
   useEffect(() => {
     const fetchDados = async () => {
       try {
-        const responseUsuario = await getUsuarioAtual();
-        if (responseUsuario.success) {
-          setUsuario(responseUsuario.user);
-        } else {
-          console.error("Erro ao buscar usuário:", responseUsuario.error);
+        const res = await getUsuarioAtual();
+        if (!res.success) {
+          console.error("Erro ao buscar usuário:", res.error);
           return;
         }
 
-        const responseAcesso = await verificarPrimeiroAcesso();
-        if (responseAcesso.primeiroAcesso) {
+        setUsuario(res.user);
+
+        // Usa o objeto que acabou de chegar, e não o state antigo
+        if (res.user.Primeiro_Acesso) {
+          sessionStorage.setItem("primeiroAcesso", "true");
           await enviarNotificacao({
             Titulo: "Seja bem-vindo(a)!",
             Mensagem:
               "Na Auris, sua manifestação é valorizada. Fale com a gente e ajude a construir um ambiente melhor.",
-            User_ID: responseUsuario.user.User_ID,
+            User_ID: res.user.User_ID,
           });
         }
       } catch (error) {

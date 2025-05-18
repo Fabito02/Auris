@@ -2,13 +2,17 @@ export interface User {
   User_ID?: number;
   Nome: string;
   Email: string;
-  Telefone?: string | null;
-  Avatar?: string | null;
-  SIAPE?: string | null;
-  Tipo?: "aluno" | "servidor";
-  Data_Criacao?: string;
-  Role?: "user" | "admin" | "moderador";
   Senha?: string;
+  Telefone?: string;
+  Avatar?: string;
+  SIAPE?: string;
+  Tipo?: "aluno" | "servidor";
+  Data_Criacao?: Date;
+  Role?: "user" | "admin" | "moderador";
+  Email_Verificado?: boolean;
+  Token_Verificacao?: string;
+  Requer_Alteracao_Senha?: boolean;
+  Primeiro_Acesso?: boolean;
 }
 
 export interface Endereco {
@@ -42,11 +46,11 @@ export interface Manifestacao {
   Titulo?: string;
   Descricao: string;
   Tipo: string;
-  Tipo_manifestacao: 'elogio' | 'reclamacao' | 'sugestao' | 'denuncia';
+  Tipo_manifestacao: "elogio" | "reclamacao" | "sugestao" | "denuncia";
   Anonimo?: boolean;
   Local?: string;
-  Status: 'pendente' | 'em_andamento' | 'concluido';
-  Prioridade: 'baixa' | 'media' | 'alta' | 'urgente';
+  Status: "pendente" | "em_andamento" | "concluido";
+  Prioridade: "baixa" | "media" | "alta" | "urgente";
   User_ID: number;
 }
 
@@ -54,7 +58,7 @@ export interface Notificacao {
   Notificacao_ID: number;
   Titulo: string;
   Mensagem: string;
-  Status: 'lida' | 'pendente';
+  Status: "lida" | "pendente";
   Data_Criacao: string;
   User_ID: number;
 }

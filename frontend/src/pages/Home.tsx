@@ -11,7 +11,6 @@ import { checkAuth } from "../api/auth";
 import {
   getPrecisaTrocarSenha,
   getManifestacoesDoUsuario,
-  verificarPrimeiroAcesso,
 } from "../api/api_routes";
 import {
   Dialog,
@@ -60,6 +59,12 @@ const Home = () => {
   const [primeiroAcesso, setPrimeiroAcesso] = useState(false);
 
   useEffect(() => {
+  setPrimeiroAcesso(
+    sessionStorage.getItem("primeiroAcesso") === "true" ? true : false
+  );
+  }, []);
+
+  useEffect(() => {
     const fetchManifestacoes = async () => {
       try {
         const response = await getManifestacoesDoUsuario();
@@ -75,19 +80,6 @@ const Home = () => {
 
     fetchManifestacoes();
   }, [setManifestacoes]);
-
-    useEffect(() => {
-    (async () => {
-      try {
-        const response = await verificarPrimeiroAcesso();
-        if (response.primeiroAcesso) {
-          setPrimeiroAcesso(true);
-        }
-      } catch (error) {
-        console.error("Erro ao verificar acesso:", error);
-      }
-    })();
-  }, []);
 
   useEffect(() => {
     document.title = "Home";
@@ -117,6 +109,7 @@ const Home = () => {
 
   const closeModal2 = () => {
     setPrimeiroAcesso(false);
+    sessionStorage.removeItem("primeiroAcesso");
   };
 
   return (

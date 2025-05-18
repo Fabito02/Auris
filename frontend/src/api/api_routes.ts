@@ -183,8 +183,3 @@ export const enviarNotificacao = async (notificacao: Partial<Notificacao>) => {
   const response = await api.post(`/users/notificacao/`, notificacao);
   return response.data;
 };
-
-export const verificarPrimeiroAcesso = async () => {
-  const response = await api.get(`/auth/primeiro-acesso`);
-  return response.data;
-};

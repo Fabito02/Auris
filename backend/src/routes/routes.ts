@@ -35,12 +35,6 @@ router.post("/confirmar/recuperar", authController.confirmarRecuperacao);
 router.post("/recuperar", authController.recuperarSenha);
 router.get("/auth/senha", verifyToken, authController.checkPrecisaTrocarSenha);
 router.post("/auth/nova-senha", verifyToken, authController.trocarSenha);
-router.get(
-  "/auth/primeiro-acesso",
-  verifyToken,
-  authController.verificarPrimeiroAcesso
-);
-
 // rotas para usuário atual
 router.get("/me", verifyToken, meController.getUsuarioAtual);
 router.put("/me", verifyToken, meController.updateUsuarioAtual);

@@ -8,12 +8,13 @@ export interface User {
   Telefone?: string;
   Avatar?: string;
   SIAPE?: string;
-  Tipo?: string;
+  Tipo?: "aluno" | "servidor";
   Data_Criacao?: Date;
-  Role?: string;
+  Role?: "user" | "admin" | "moderador";
   Email_Verificado?: boolean;
   Token_Verificacao?: string;
   Requer_Alteracao_Senha?: boolean;
+  Primeiro_Acesso?: boolean;
 }
 
 export interface IUser extends RowDataPacket {

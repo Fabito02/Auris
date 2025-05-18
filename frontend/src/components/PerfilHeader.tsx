@@ -29,6 +29,8 @@ import {
 import { getAvatar } from "@/api/api_routes";
 import CardNotificacao from "./CardNotificacao";
 import { useUsuarioAtual } from "@/hooks/useUsuarioAtual";
+import { getNotificacoesDoUsuario } from "@/api/api_routes";
+import { Notificacao } from "@/types/api";
 
 const PerfilHeader = () => {
   const navigate = useNavigate();
@@ -38,6 +40,17 @@ const PerfilHeader = () => {
     undefined
   );
   const [avatar, setAvatar] = useState<string | null>(null);
+  const [notificacoes, setNotificacoes] = useState<Notificacao[]>([]);
+
+    const fetchNotificacoes = async () => {
+      const response = await getNotificacoesDoUsuario();
+      const data = response.data;
+      setNotificacoes(Array.isArray(data) ? data.reverse() : [data]);
+    };
+
+  useEffect(() => {
+    fetchNotificacoes();
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -50,6 +63,15 @@ const PerfilHeader = () => {
       fetchAvatar();
     }
   }, [user]);
+
+  useEffect(() => {
+    const botaoNotificacao = document.querySelector(".botao-notificacao");
+    if (notificacoes.length > 0) {
+      botaoNotificacao?.classList.add("active");
+    } else {
+      botaoNotificacao?.classList.remove("active");
+    }
+  }, [notificacoes]);
 
   const handleLogout = async () => {
     try {
@@ -65,7 +87,9 @@ const PerfilHeader = () => {
     <div className="flex flex-row justify-end items-center w-[125px]">
       <Popover>
         <PopoverTrigger asChild>
-          <div className="botao-notificacao active">
+          <div className="botao-notificacao"
+            onClick={() => fetchNotificacoes()}
+          >
             <Icon
               icon="material-symbols:notifications-rounded"
               className="mr-[15px] text-[26px] text-[#00000075]"
@@ -76,15 +100,14 @@ const PerfilHeader = () => {
         <PopoverContent
           className="shadow-lg mr-2 mt-5 dropdown border-0 rounded-[16px] menu-opcoes w-[100vw] max-w-[420px] max-h-[600px] mx-2 p-3 gap-2 overflow-auto"
           style={{
-            scrollbarWidth: "none"
+            scrollbarWidth: "none",
           }}
         >
           <div className="pb-2">
             <h1 className="text-center font-semibold">NOTIFICAÇÕES</h1>
           </div>
           <div className="my-1 border-t border-gray-200" />
-          <CardNotificacao />
-
+          <CardNotificacao notificacoes={notificacoes} />
         </PopoverContent>
       </Popover>
 
