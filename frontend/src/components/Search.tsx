@@ -147,8 +147,7 @@ const SearchBar = () => {
       pagina: "/perfil",
     },
   ];
-
-  // junta base + as manifestações do usuário
+  
   const todosResultados = [
     ...manifestacoes.map((m) => ({
       grupo: "Suas manifestações",
