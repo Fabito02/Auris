@@ -94,7 +94,7 @@ sudo mysql_secure_installation
 **• Clone o repositório**
 
 ```bash
-git clone https://github.com/Fabito02/Ouvidoria_Digital_IFNMG-Almenara.git
+git clone https://github.com/Fabito02/Auris.git
 ```
 
 
