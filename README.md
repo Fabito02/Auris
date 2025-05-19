@@ -222,8 +222,13 @@ git commit -m "feat: Adicionando minha nova feature"
 
 ---
 
-**Feito com carinho por estudantes do IFNMG — Campus Almenara ❤️.**
-
 Se algo quebrar, tente reiniciar o servidor.
 
-Se continuar quebrado, provavelmente o culpado está entre o teclado e a cadeira.
+Se continuar quebrado, provavelmente o culpado está entre o teclado e a cadeira
+
+**Feito com carinho por estudantes do IFNMG — Campus Almenara ❤️.**
+
+Este é um software proprietário desenvolvido por estudantes do IFNMG – Campus Almenara.  
+Seu uso, modificação ou redistribuição não são permitidos sem autorização expressa dos responsáveis pelo projeto.
+
+© IFNMG - Campus Almenara, 2025. Todos os direitos reservados.
