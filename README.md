@@ -1,10 +1,18 @@
-# Auris - Ouvidoria Digital IFNMG - Almenara
+# Auris - Ouvidoria Digital do IFNMG (Campus Almenara)
+
+Um sistema simples e eficiente para que alunos, servidores e colaboradores possam registrar sugestões, elogios, reclamações e denúncias — tudo de forma prática, digital e (quando necessário) anônima.
+
+> **Nota:** Este guia assume que você está usando uma distribuição Linux.
+> 
+> Por esse motivo o foco do tutorial é exclusivo para este sistema operacional, se adequando às tecnologias utilizadas no IFNMG - Campus Almenara.
+> 
+> Se estiver utilizando Windows ou MacOS... boa sorte.
 
 ## Etapas de configuração do dispositivo para o uso da aplicação local
 
 ### Requisitos:
 
-**• Git**
+**• Git (caso por motivo desconhecido não tenha instalado em algum momento nos últimos 10 anos)**
 
 ArchLinux
 
@@ -117,7 +125,7 @@ npm install
 
 Aguarde a instalação finalizar
 
-**• Execute o frontend da aplicação em um servidor local**
+**• Execute o backend da aplicação em um servidor local**
 
 ```bash
 npm run dev
@@ -206,3 +214,11 @@ git commit -m "feat: Adicionando minha nova feature"
 ```
 
 ***OBS: Esta parte pode ser feita de forma gráfica pelo Visual Studio Code**
+
+---
+
+**Feito com carinho por estudantes do IFNMG — Campus Almenara ❤️.**
+
+Se algo quebrar, tente reiniciar o servidor.
+
+Se continuar quebrado, provavelmente o culpado está entre o teclado e a cadeira.
