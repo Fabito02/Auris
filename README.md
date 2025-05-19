@@ -1,6 +1,6 @@
 # Auris - Ouvidoria Digital do IFNMG (Campus Almenara)
 ---
-
+[![License: NPOSL-3.0](https://img.shields.io/badge/License-NPOSL--3.0-blue.svg)](https://opensource.org/license/nposl-3-0)
 ![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
 ![Feito com Amor](https://img.shields.io/badge/feito%20com-carinho-red)
 
@@ -227,7 +227,7 @@ Se continuar quebrado, provavelmente o culpado está entre o teclado e a cadeira
 
 **Feito com carinho por estudantes do IFNMG — Campus Almenara ❤️.**
 
-Este é um software desenvolvido por estudantes do IFNMG – Campus Almenara.  
-Seu uso, modificação ou redistribuição não são permitidos sem autorização expressa dos responsáveis pelo projeto.
+## Licença
 
-© IFNMG - Campus Almenara, 2025. Todos os direitos reservados.
+Este projeto está licenciado sob a [Non-Profit Open Software License 3.0 (NPOSL-3.0)](https://opensource.org/license/nposl-3-0).  
+Consulte o arquivo [LICENSE](LICENSE) para mais detalhes.
