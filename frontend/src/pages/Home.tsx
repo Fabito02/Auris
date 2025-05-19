@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/card";
 import CardManifestacao from "@/components/CardManifestacao";
 import { useUsuarioAtual } from "@/hooks/useUsuarioAtual";
+import { Manifestacao } from "@/types/api";
 
 const slides = [
   "/home/slides/1.png",
@@ -43,19 +44,13 @@ const slides = [
   "/home/slides/10.png",
 ];
 
-const data_cards = [
-  { cor: "danger", total: 32, titulo: "Manifestações" },
-  { cor: "warning", total: 15, titulo: "Pendentes" },
-  { cor: "info", total: 3, titulo: "Em andamento" },
-  { cor: "success", total: 12, titulo: "Concluído" },
-];
-
 const Home = () => {
   const navigate = useNavigate();
   const usuarioAtual = useUsuarioAtual();
 
   const [precisaTrocarSenha, setPrecisaTrocarSenha] = useState(false);
   const [manifestacoes, setManifestacoes] = useState<any[]>([]);
+  const [manifestacoesTotais, setManifestacoesTotais] = useState<any[]>([]);
   const [primeiroAcesso, setPrimeiroAcesso] = useState(false);
 
   useEffect(() => {
@@ -69,6 +64,7 @@ const Home = () => {
       try {
         const response = await getManifestacoesDoUsuario();
         if (response.success) {
+          setManifestacoesTotais(response.data);
           setManifestacoes(response.data.reverse().slice(0, 4));
         } else {
           console.error("Erro ao buscar manifestações:", response.error);
@@ -80,6 +76,26 @@ const Home = () => {
 
     fetchManifestacoes();
   }, [setManifestacoes]);
+
+  const nManifestacoes = manifestacoesTotais.length;
+  const nManifestacoesPendentes = manifestacoesTotais.filter(
+    (manifestacao: Manifestacao) => manifestacao.Status === "pendente"
+  ).length;
+  const nManifestacoesEmAndamento = manifestacoesTotais.filter(
+    (manifestacao: Manifestacao) => manifestacao.Status === "em_andamento"
+  ).length;
+  const nManifestacoesConcluidas = manifestacoesTotais.filter(
+    (manifestacao: Manifestacao) => manifestacao.Status === "concluido"
+  ).length;
+
+  const data_cards = [
+    { cor: "danger", total: nManifestacoes, titulo: "Manifestações" },
+    { cor: "warning", total: nManifestacoesPendentes, titulo: "Pendentes" },
+    { cor: "info", total: nManifestacoesEmAndamento, titulo: "Em andamento" },
+    { cor: "success", total: nManifestacoesConcluidas, titulo: "Concluído" },
+  ];
+
+  console.log(nManifestacoes);
 
   useEffect(() => {
     document.title = "Home";

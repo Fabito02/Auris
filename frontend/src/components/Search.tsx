@@ -149,6 +149,7 @@ const SearchBar = () => {
   ];
 
   const todosResultados = [
+    ...resultadosBase,
     ...manifestacoes.map((m) => ({
       grupo: "Suas manifestações",
       label: m.Titulo,
@@ -166,7 +167,6 @@ const SearchBar = () => {
       }[m.Tipo_manifestacao],
       pagina: `/manifestacoes/${m.Manifestacao_ID}`,
     })),
-    ...resultadosBase,
   ];
 
   const resultadosFiltrados = todosResultados.filter((item) =>
