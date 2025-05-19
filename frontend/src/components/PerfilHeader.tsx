@@ -46,13 +46,8 @@ const PerfilHeader = () => {
   const [notificacoes, setNotificacoes] = useState<Notificacao[]>([]);
 
   const fetchNotificacoes = async () => {
-    try {
-      const response = await getNotificacoesDoUsuario();
-      const data = response.data;
-      setNotificacoes([...(data || [])]);
-    } catch (err) {
-      console.error("Erro ao buscar notificações:", err);
-    }
+    const response = await getNotificacoesDoUsuario();
+    setNotificacoes(response.data || []);
   };
 
   useEffect(() => {
