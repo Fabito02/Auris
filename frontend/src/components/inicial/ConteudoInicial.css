@@ -88,7 +88,7 @@
   transition: opacity 0.5s ease-out, transform 0.5s ease-out;
 }
 
-@media (max-width: 992px) {
+@media (max-width: 1280px) {
   .primeira-tela {
     margin-top: 50px;
   }
@@ -96,7 +96,7 @@
     text-align: center !important;
   }
   .title {
-    font-size: 2.5em;
+    font-size: 3em;
   }
   .complemento {
     font-size: 1.4em;

@@ -24,6 +24,7 @@ dist-ssr
 *.sw?
 
 .env
+cookie-parser
 
 src/uploads/avatars/*
 !src/uploads/avatars/.gitkeep

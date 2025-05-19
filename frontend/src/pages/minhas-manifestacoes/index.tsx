@@ -29,7 +29,7 @@ const MinhasManifestacoes = () => {
       } catch (error) {
         console.error("Erro ao buscar manifestações:", error);
       }
-    }
+    };
 
     fetchManifestacoes();
   }, [setManifestacoes]);
@@ -61,12 +61,7 @@ const MinhasManifestacoes = () => {
 
   useEffect(() => {
     document.title = "Minhas Manifestações";
-    const token = localStorage.getItem("auris_token");
-    if (!token) {
-      navigate("/errors/401");
-    } else {
-      checkAuth(navigate, ["admin", "moderador", "user"]);
-    }
+    checkAuth(navigate, ["admin", "moderador", "user"]);
   }, []);
 
   return (
@@ -152,7 +147,10 @@ const MinhasManifestacoes = () => {
               </div>
 
               <CardContent className="px-4 space-y-4">
-                <CardManifestacao filtrarTipo="reclamacao" manifestacoes={manifestacoesFiltradas} />
+                <CardManifestacao
+                  filtrarTipo="reclamacao"
+                  manifestacoes={manifestacoesFiltradas}
+                />
                 {manifestacoesFiltradas.length === 0 && (
                   <div className="text-muted-foreground w-full text-center ">
                     Nenhuma reclamação encontrada.
@@ -190,7 +188,10 @@ const MinhasManifestacoes = () => {
               </div>
 
               <CardContent className="px-4 space-y-4">
-                <CardManifestacao filtrarTipo="elogio" manifestacoes={manifestacoesFiltradas} />
+                <CardManifestacao
+                  filtrarTipo="elogio"
+                  manifestacoes={manifestacoesFiltradas}
+                />
                 {manifestacoesFiltradas.length === 0 && (
                   <div className="text-muted-foreground w-full text-center ">
                     Nenhum elogio encontrado.
@@ -228,7 +229,10 @@ const MinhasManifestacoes = () => {
               </div>
 
               <CardContent className="px-4 space-y-4">
-                <CardManifestacao filtrarTipo="denuncia" manifestacoes={manifestacoesFiltradas} />
+                <CardManifestacao
+                  filtrarTipo="denuncia"
+                  manifestacoes={manifestacoesFiltradas}
+                />
                 {manifestacoesFiltradas.length === 0 && (
                   <div className="text-muted-foreground w-full text-center ">
                     Nenhuma denúncia encontrada.
@@ -266,7 +270,10 @@ const MinhasManifestacoes = () => {
               </div>
 
               <CardContent className="px-4 space-y-4">
-                <CardManifestacao filtrarTipo="sugestao" manifestacoes={manifestacoesFiltradas} />
+                <CardManifestacao
+                  filtrarTipo="sugestao"
+                  manifestacoes={manifestacoesFiltradas}
+                />
                 {manifestacoesFiltradas.length === 0 && (
                   <div className="text-muted-foreground w-full text-center ">
                     Nenhuma sugestão encontrada.

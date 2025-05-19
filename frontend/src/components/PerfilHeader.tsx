@@ -77,9 +77,10 @@ const PerfilHeader = () => {
 
   const handleLogout = async () => {
     try {
-      await postLogout();
-      localStorage.removeItem("auris_token");
-      setLogoutSucesso(true);
+      const request = await postLogout();
+      if (request.success) {
+        setLogoutSucesso(true);
+      }
     } catch (error) {
       console.error("Erro ao fazer logout:", error);
     }

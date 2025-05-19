@@ -76,7 +76,7 @@ export const getEnderecoUsuarioAtual = async (
       return;
     }
 
-    res.json({ success: true, endereco: rows[0] });
+    res.status(200).json({ success: true, endereco: rows[0] });
   } catch (error) {
     res.status(500).json({ success: false, error: "Erro interno." });
   }

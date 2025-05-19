@@ -42,11 +42,6 @@ const Perfil: React.FC = () => {
 
   useEffect(() => {
     document.title = "Perfil";
-    const token = localStorage.getItem("auris_token");
-    if (!token) {
-      navigate("/errors/401");
-      return;
-    }
     checkAuth(navigate, ["admin", "moderador", "user"]);
     (async () => {
       const respEnd = await getEnderecoUsuarioAtual();

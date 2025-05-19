@@ -18,10 +18,10 @@ const ConteudoHome = () => {
       <img src="/home/auris.svg" alt="Logo Auris" className="logo-auris" />
 
       <AnimarAoVer>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 tela primeira-tela px-[7vw]">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 tela primeira-tela px-[7vw]">
           <div className="textos text-right coluna-tela">
             <h1 className="title">Auris – Ouvidoria Digital</h1>
-            <p className="complemento flex flex-col items-center lg:items-end">
+            <p className="complemento flex flex-col items-center xl:items-end">
               Envie sua manifestação na plataforma para construir um IFNMG -
               Campus Almenara melhor para todos(as).
               <Button
@@ -44,7 +44,7 @@ const ConteudoHome = () => {
 
       <div className="bg-cinza">
         <AnimarAoVer>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 tela px-[7vw]">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 tela px-[7vw]">
             <div className="textos text-right coluna-tela">
               <h1 className="title">Locais mais bem avaliados do campus:</h1>
               <p className="complemento">
@@ -59,7 +59,7 @@ const ConteudoHome = () => {
       </div>
 
       <AnimarAoVer>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 tela px-[7vw]">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 tela px-[7vw]">
           <div className="imagem col-inverso coluna-tela">
             <img
               src="/home/img2.svg"
@@ -78,7 +78,7 @@ const ConteudoHome = () => {
       </AnimarAoVer>
 
       <AnimarAoVer>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 tela px-[7vw]">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 tela px-[7vw]">
           <div className="textos text-right coluna-tela">
             <h1 className="title">Escutamos agora para melhorar sempre!</h1>
             <p className="complemento">
@@ -98,7 +98,7 @@ const ConteudoHome = () => {
 
       <div className="bg-cinza">
         <AnimarAoVer>
-          <div className="grid grid-cols-1 lg:grid-cols-1 gap-4 tela px-[7vw]">
+          <div className="grid grid-cols-1 xl:grid-cols-1 gap-4 tela px-[7vw]">
             <div className="column textos coluna-tela">
               <div className="title">Venha fazer parte da mudança!</div>
               <p className="complemento">

@@ -59,9 +59,9 @@ const Home = () => {
   const [primeiroAcesso, setPrimeiroAcesso] = useState(false);
 
   useEffect(() => {
-  setPrimeiroAcesso(
-    sessionStorage.getItem("primeiroAcesso") === "true" ? true : false
-  );
+    setPrimeiroAcesso(
+      sessionStorage.getItem("primeiroAcesso") === "true" ? true : false
+    );
   }, []);
 
   useEffect(() => {
@@ -83,13 +83,7 @@ const Home = () => {
 
   useEffect(() => {
     document.title = "Home";
-    const token = localStorage.getItem("auris_token");
-    if (!token) {
-      navigate("/errors/401");
-    } else {
-      checkAuth(navigate, ["admin", "moderador", "user"]);
-    }
-
+    checkAuth(navigate, ["admin", "moderador", "user"]);
     (async () => {
       try {
         const response = await getPrecisaTrocarSenha();

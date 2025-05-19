@@ -68,9 +68,17 @@ export const login = (req: Request, res: Response) => {
         }
 
         const token = generateToken(user as IUser);
+
+        res.cookie("AurisToken", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          maxAge: 24 * 60 * 60 * 1000,
+        });
+
         registrarLog(`Novo login de ${user.Email}`, user.User_ID);
 
-        return res.json({
+        return res.status(200).json({
           success: true,
           token,
           user: {
@@ -325,7 +333,7 @@ export async function confirmarEmail(req: Request, res: Response) {
 
     registrarLog("Email verificado", rows[0].User_ID);
 
-    res.json({ success: true, message: "Email verificado com sucesso!" });
+    res.status(200).json({ success: true, message: "Email verificado com sucesso!" });
   } catch (error) {
     console.error("Erro ao verificar email:", error);
     res

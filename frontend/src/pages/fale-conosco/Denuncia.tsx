@@ -49,12 +49,7 @@ const Denuncia = () => {
 
   useEffect(() => {
     document.title = "Enviar Denúncia";
-    const token = localStorage.getItem("auris_token");
-    if (!token) {
-      navigate("/errors/401");
-    } else {
-      checkAuth(navigate, ["admin", "moderador", "user"]);
-    }
+    checkAuth(navigate, ["admin", "moderador", "user"]);
   }, []);
 
   const handleSetProgresso = (

@@ -20,12 +20,7 @@ const Acompanhamento = () => {
 
   useEffect(() => {
     document.title = "Acompanhamento";
-    const token = localStorage.getItem("auris_token");
-    if (!token) {
-      navigate("/errors/401");
-    } else {
-      checkAuth(navigate, ["admin", "moderador"]);
-    }
+    checkAuth(navigate, ["admin", "moderador"]);
 
     const handleExibirTab = () => {
       const tabs = document.querySelectorAll(".tabContainer");

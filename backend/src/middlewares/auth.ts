@@ -16,27 +16,30 @@ export const verifyToken = (
   res: Response,
   next: NextFunction
 ): void => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  const token = req.cookies?.AurisToken;
+
+  if (!token) {
     res.status(401).json({ error: "Token não fornecido" });
-    return;
+    return
   }
-  const token = authHeader.split(" ")[1];
+
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
       User_ID: number;
       Email: string;
       role: string;
     };
+
     req.user = {
       User_ID: decoded.User_ID,
       role: decoded.role,
       email: decoded.Email,
     };
+
     next();
-  } catch {
+  } catch (err) {
     res.status(403).json({ error: "Token inválido" });
-    return;
+    return 
   }
 };
 

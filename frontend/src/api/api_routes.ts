@@ -4,15 +4,7 @@ import { API_BASE } from "@/config";
 
 const api = axios.create({
   baseURL: API_BASE,
-});
-
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("auris_token");
-  if (token) {
-    config.headers = config.headers || {};
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
+  withCredentials: true,
 });
 
 api.interceptors.response.use(

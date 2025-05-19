@@ -12,12 +12,19 @@ const router = Router();
 router.post("/auth/registrar", authController.registrar);
 router.post("/auth/login", authController.login);
 router.post("/logout", (req, res) => {
-  res.json({
-    success: true,
-    message:
-      "Logout realizado com sucesso. O token deve removido do localStorage no frontend.",
+  res.clearCookie("AurisToken", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
   });
+
+  res.status(200).json({
+    success: true,
+    message: "Logout realizado com sucesso. Cookie removido do navegador.",
+  });
+  return 
 });
+
 router.get(
   "/auth/role/:id",
   verifyToken,

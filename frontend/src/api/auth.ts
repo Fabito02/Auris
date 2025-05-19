@@ -5,17 +5,20 @@ export const checkAuth = async (
   navigate: ReturnType<typeof useNavigate>,
   roles: string[]
 ) => {
-  const token = localStorage.getItem("auris_token");
-  const response = await getRoleUsuarioAtual();
-  const roleUser = response.data.Role;
+  try {
+    const response = await getRoleUsuarioAtual();
 
-  if (!token) {
+    const roleUser = response.data.Role;
+
+    if (roles.includes(roleUser)) {
+      return true;
+    } else {
+      navigate("/errors/403");
+      return false;
+    }
+  } catch (error) {
+    console.error("Erro ao verificar autentica o:", error);
     navigate("/errors/401");
-    return false;
-  } else if (roles.includes(roleUser || "")) {
-    return true;
-  } else {
-    navigate("/errors/403");
     return false;
   }
 };

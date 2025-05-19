@@ -34,12 +34,7 @@ const Gerenciar = () => {
 
   useEffect(() => {
     document.title = "Acompanhamento";
-    const token = localStorage.getItem("auris_token");
-    if (!token) {
-      navigate("/errors/401");
-    } else {
-      checkAuth(navigate, ["admin"]);
-    }
+    checkAuth(navigate, ["admin"]);
   }, []);
 
   const handleSubmitArquivo = async (): Promise<void> => {
