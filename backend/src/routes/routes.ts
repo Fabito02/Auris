@@ -91,7 +91,7 @@ router.get(
 router.put(
   "/users/:id",
   verifyToken,
-  verifyRole(["admin", "moderador"]),
+  verifyRole(["admin"]),
   userController.updateUser
 );
 router.get(

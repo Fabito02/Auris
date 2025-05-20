@@ -58,7 +58,7 @@ const Gerenciar = () => {
   if (isAdminResult) {
     opcoes.push({
       icon: "material-symbols:security-rounded",
-      label: "Permissoes",
+      label: "Permissões",
     });
     opcoes.push({
       icon: "material-symbols:work-history-rounded",

@@ -1,4 +1,4 @@
-import { Request, Response, RequestHandler } from "express";
+import { Request, Response, RequestHandler, NextFunction } from "express";
 import connection from "../db";
 import { RowDataPacket } from "mysql2";
 import { User } from "../models/User";
@@ -98,69 +98,74 @@ export const updateUser = (
 
 export const deleteUser = (
   req: Request<{ User_ID: string }>,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
   const userId = Number(req.params.User_ID);
+  if (isNaN(userId)) {
+    res.status(400).json({ success: false, error: "ID inválido" });
+    return;
+  }
 
-  connection.beginTransaction((transactionErr) => {
-    if (transactionErr) {
-      return res.status(500).json({
-        success: false,
-        error: `Erro ao iniciar transação: ${transactionErr.message}`,
-      });
-    }
+  connection.beginTransaction((err) => {
+    if (err) return next(err);
 
     connection.query(
-      "DELETE FROM Manifestacoes WHERE User_ID = ?",
+      "DELETE FROM Manifestacoes WHERE User_id = ?",
       [userId],
       (deleteErr) => {
         if (deleteErr) {
-          return connection.rollback(() => {
-            res.status(500).json({
-              success: false,
-              error: `Erro ao deletar manifestações: ${deleteErr.message}`,
-            });
-          });
+          connection.rollback(() => next(deleteErr));
+          return;
         }
 
         connection.query(
-          "DELETE FROM Users WHERE User_ID = ?",
-          [userId],
-          (userDeleteErr, results: ResultSetHeader) => {
-            if (userDeleteErr) {
-              return connection.rollback(() => {
-                res.status(500).json({
-                  success: false,
-                  error: `Erro ao deletar usuário: ${userDeleteErr.message}`,
-                });
-              });
+          "INSERT INTO Logs (Acao, User_ID) VALUES (?, ?)",
+          ["Usuário deletado", userId],
+          (logErr) => {
+            if (logErr) {
+              connection.rollback(() => next(logErr));
+              return;
             }
 
-            if (results.affectedRows === 0) {
-              return connection.rollback(() => {
-                res
-                  .status(404)
-                  .json({ success: false, error: "Usuário não encontrado" });
-              });
-            }
+            connection.query(
+              "DELETE FROM Users WHERE User_ID = ?",
+              [userId],
+              (userDeleteErr, results: ResultSetHeader) => {
+                if (userDeleteErr) {
+                  connection.rollback(() => {
+                    res.status(500).json({
+                      success: false,
+                      error: `Erro ao deletar usuário: ${userDeleteErr.message}`,
+                    });
+                    return;
+                  });
+                }
 
-            connection.commit((commitErr) => {
-              if (commitErr) {
-                return connection.rollback(() => {
-                  res.status(500).json({
-                    success: false,
-                    error: `Erro ao confirmar transação: ${commitErr.message}`,
+                if (results.affectedRows === 0) {
+                  connection.rollback(() => {
+                    res
+                      .status(404)
+                      .json({
+                        success: false,
+                        error: "Usuário não encontrado",
+                      });
+                  });
+                  return;
+                }
+
+                connection.commit((commitErr) => {
+                  if (commitErr) {
+                    connection.rollback(() => next(commitErr));
+                    return;
+                  }
+                  res.status(200).json({
+                    success: true,
+                    message: "Usuário deletado com sucesso",
                   });
                 });
               }
-
-              registrarLog(`Usuário deletado`, userId);
-
-              return res.status(200).json({
-                success: true,
-                message: "Usuário deletado com sucesso",
-              });
-            });
+            );
           }
         );
       }
@@ -310,13 +315,11 @@ export const postEnviarNotificacao = async (
       },
     });
 
-
     const [user] = await connection
       .promise()
-      .query<RowDataPacket[]>(
-        "SELECT * FROM Users WHERE User_ID = ?",
-        [req.body.User_ID]
-      );
+      .query<RowDataPacket[]>("SELECT * FROM Users WHERE User_ID = ?", [
+        req.body.User_ID,
+      ]);
 
     const link = `${URL_BASE_FRONTEND}/home`;
 
@@ -332,7 +335,9 @@ export const postEnviarNotificacao = async (
                 <div style="padding: 30px; background-color: #ffffff; color: #2c2c2c;">
                   <h2 style="color: #2c2c2c; margin: 0; text-align: center; margin-bottom: 30px;">NOVA NOTIFICAÇÃO</h2>
                   <p style="font-size: 16px;">Olá ${user[0].Nome || ""},</p>
-                  <span style="font-size: 16px; margin-top: 10px; font-weight: bold">${results2[0].Titulo || ""}</span>
+                  <span style="font-size: 16px; margin-top: 10px; font-weight: bold">${
+                    results2[0].Titulo || ""
+                  }</span>
                   <p style="font-size: 16px;">${results2[0].Mensagem || ""}</p>
                   <div style="text-align: center; margin: 30px 0;">
                     <a href="${link}" style="background-color: #16aa51; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 12px; font-size: 16px;">ACESSAR PLATAFORMA</a>

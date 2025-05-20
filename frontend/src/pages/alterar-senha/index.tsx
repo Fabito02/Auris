@@ -150,7 +150,7 @@ const AlterarSenha = () => {
               full_rounded
               color="success"
               className="w-full px-5"
-              texto="ok"
+              texto="sim"
             />
             <Button
               onClick={closeModal}

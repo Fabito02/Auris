@@ -175,3 +175,8 @@ export const enviarNotificacao = async (notificacao: Partial<Notificacao>) => {
   const response = await api.post(`/users/notificacao/`, notificacao);
   return response.data;
 };
+
+export const deleteUser = async (userId: number) => {
+  const response = await api.delete(`/users/${userId}`);
+  return response.data;
+};

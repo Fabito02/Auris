@@ -16,8 +16,20 @@ import {
   getUsuarioByUserId,
   getEnderecoByUserId,
   getAvatar,
+  deleteUser
 } from "@/api/api_routes";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
 import { useParams } from "react-router-dom";
+import Button from "@/components/buttons/Button";
+import { toast } from "sonner";
 
 const Perfil: React.FC = () => {
   const { id } = useParams();
@@ -28,10 +40,12 @@ const Perfil: React.FC = () => {
   const [endereco, setEndereco] = useState<Endereco | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [profilePic, setProfilePic] = useState<string | null>(null);
+  const [openConfirmacao, setOpenConfirmacao] = useState(false);
+  const [openSuccess, setOpenSuccess] = useState(false);
 
   useEffect(() => {
     document.title = "Perfil";
-    checkAuth(navigate, ["admin", "moderador", "user"]);
+    checkAuth(navigate, ["admin", "moderador"]);
     (async () => {
       const respUser = await getUsuarioByUserId(userId);
       setUser(respUser.data);
@@ -63,6 +77,44 @@ const Perfil: React.FC = () => {
       fetchAvatar();
     }
   }, [user]);
+  
+    const closeModal = () => {
+      setOpenConfirmacao(false);
+    };
+  
+    const closeSuccess = () => {
+      setOpenSuccess(false);
+      navigate("/admin/gerenciar");
+    };
+  
+    const handleDelete = async () => {
+      try {
+        const response = await deleteUser(userId);
+        if (response.success) {
+          setOpenConfirmacao(false);
+          setOpenSuccess(true);
+        } else {
+          toast.error("Erro ao conectar com o servidor:" + response.error, {
+            icon: (
+              <Icon
+                icon="mdi:alert-circle"
+                className="text-[var(--color-danger)]"
+              />
+            ),
+          });
+        }
+      } catch (err: any) {
+        toast.error("Erro ao conectar com o servidor:" + err.message, {
+          icon: (
+            <Icon
+              icon="mdi:alert-circle"
+              className="text-[var(--color-danger)]"
+            />
+          ),
+        });
+      }
+    };
+
   return (
     <BlankLayout showFooter={false} showHeader showNavbar>
       <div className="py-10 max-w-5xl mx-auto">
@@ -229,9 +281,79 @@ const Perfil: React.FC = () => {
                 />
               </div>
             </div>
+              <div className="grid md:grid-cols-2 md:flex-row gap-3 col-span-3 mt-4">
+                <Button
+                  type="button"
+                  color="danger"
+                  onClick={() => setOpenConfirmacao(true)}
+                  className="w-auto"
+                  texto="deletar usuário"
+                >
+                  <Icon icon="material-symbols-light:delete-rounded" className="mr-2" />
+                </Button>
+
+                <Button
+                  type="submit"
+                  className="w-auto"
+                  texto="Salvar Alterações"
+                >
+                  <Icon icon="material-symbols-light:save" className="mr-2" />
+                </Button>
+              </div>
           </CardContent>
         </Card>
       </div>
+
+      <Dialog open={openConfirmacao} onOpenChange={closeModal}>
+        <DialogContent className="sm:max-w-[400px] rounded-xl [&>button]:hidden">
+          <DialogHeader>
+            <DialogTitle className="text-center text-[var(--color-primary)] text-3xl mb-4">
+              Confirme a sua ação.
+            </DialogTitle>
+            <DialogDescription className="text-center">
+              Deseja realmente deletar o usuário?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="grid grid-cols-2 gap-4 mt-4">
+            <Button
+              onClick={handleDelete}
+              full_rounded
+              color="success"
+              className="w-full px-5"
+              texto="sim"
+            />
+            <Button
+              onClick={closeModal}
+              full_rounded
+              color="danger"
+              className="w-full px-5"
+              texto="cancelar"
+            />
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      <Dialog open={openSuccess} onOpenChange={closeSuccess}>
+        <DialogContent className="sm:max-w-[400px] rounded-xl [&>button]:hidden">
+          <DialogHeader>
+            <DialogTitle className="text-center text-[var(--color-primary)] text-3xl mb-4">
+              Usuário deletado com sucesso!
+            </DialogTitle>
+            <DialogDescription className="text-center">
+              Clique no botão abaixo para voltar ao gerenciamento.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="sm:justify-center mt-4">
+            <Button
+              onClick={closeSuccess}
+              full_rounded
+              color="success"
+              className="w-full sm:max-w-[200px] px-5"
+              texto="gerenciar"
+            />
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </BlankLayout>
   );
 };
