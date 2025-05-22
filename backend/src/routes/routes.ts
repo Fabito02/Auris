@@ -1,9 +1,9 @@
 import { Router } from "express";
 import * as userController from "../controllers/userController";
+import * as manifestacaoController from "../controllers/manifestacaoController";
 import * as meController from "../controllers/meController";
 import * as authController from "../controllers/authController";
 import * as logController from "../controllers/logController";
-import * as manifestacaoController from "../controllers/manifestacaoController";
 import { verifyToken, verifyRole } from "../middlewares/auth";
 
 const router = Router();
@@ -116,11 +116,9 @@ router.get("/users/avatar/:id", verifyToken, userController.getAvatar);
 router.post("/users/notificacao", verifyToken, userController.postEnviarNotificacao);
 
 // rotas para manifestações
-router.get(
-  "/me/manifestacoes",
-  verifyToken,
-  manifestacaoController.getManifestacoesDoUsuario
-);
+router.get("/me/manifestacoes", verifyToken, manifestacaoController.getManifestacoesDoUsuario);
+router.get("/manifestacoes", verifyToken, verifyRole(["admin", "moderador"]), manifestacaoController.getManifestacoes);
+router.get("/manifestacoes/:id", verifyToken, verifyRole(["admin", "moderador"]), manifestacaoController.getManifestacaoPorId);
 
 // rotas de logs
 router.get("/logs", verifyToken, verifyRole(["admin"]), logController.getLogs);

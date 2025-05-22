@@ -1,6 +1,6 @@
-  import { Request, Response } from "express";
-  import connection from "../db";
-  import { RowDataPacket } from "mysql2";
+import { Request, Response } from "express";
+import connection from "../db";
+import { RowDataPacket } from "mysql2";
 
   export const getManifestacoesDoUsuario = (
     req: Request,
@@ -23,7 +23,58 @@
             .status(404)
             .json({ success: false, error: "Nenhuma manifestação encontrada" });
         }
+        return res.status(200).json({ success: true, data: results[0] });
+      }
+    );
+  }; 
+
+  export const getManifestacoes = (
+    req: Request,
+    res: Response
+  ) => {
+    connection.query(
+      "SELECT * FROM Manifestacoes",
+      (err, results: RowDataPacket[]) => {
+        if (err) {
+          return res.status(500).json({
+            success: false,
+            error: `Erro ao buscar manifestações: ${err.message}`,
+          });
+        }
+        if (results.length === 0) {
+          return res.status(404).json({
+            success: false,
+            error: "Nenhuma manifestação encontrada",
+          });
+        }
         return res.status(200).json({ success: true, data: results });
+      }
+    );
+  };
+  
+  export const getManifestacaoPorId = (req: Request, res: Response) => {
+    const id = Number(req.params.id);
+  
+    connection.query(
+      "SELECT * FROM Manifestacoes WHERE Manifestacao_ID = ?",
+      [id],
+      (err, results: RowDataPacket[]) => {
+        if (err) {
+          return res.status(500).json({
+            success: false,
+            error: `Erro ao buscar manifestação: ${err.message}`,
+          });
+        }
+        if (results.length === 0) {
+          return res.status(404).json({
+            success: false,
+            error: "Manifestação não encontrada",
+          });
+        }
+        return res.status(200).json({
+          success: true,
+          data: results[0],
+        });
       }
     );
   };
