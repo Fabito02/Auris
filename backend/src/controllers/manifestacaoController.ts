@@ -23,7 +23,7 @@ import { RowDataPacket } from "mysql2";
             .status(404)
             .json({ success: false, error: "Nenhuma manifestação encontrada" });
         }
-        return res.status(200).json({ success: true, data: results[0] });
+        return res.status(200).json({ success: true, data: results });
       }
     );
   }; 

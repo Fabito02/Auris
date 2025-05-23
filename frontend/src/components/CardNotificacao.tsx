@@ -19,9 +19,13 @@ const CardNotificacao = ({
     );
   }
 
+  const sortedNotificacoes = [...notificacoes].sort((a, b) => 
+    new Date(b.Data_Criacao).getTime() - new Date(a.Data_Criacao).getTime()
+  );
+
   return (
     <div className="grid grid-cols-1 gap-3.5 w-full mt-3">
-      {notificacoes.map((m) => (
+      {sortedNotificacoes.map((m) => (
         <div
           key={m.Notificacao_ID}
           className="rounded-[12px] p-4 notificacao shadow-md relative"
@@ -69,3 +73,4 @@ const CardNotificacao = ({
 };
 
 export default CardNotificacao;
+

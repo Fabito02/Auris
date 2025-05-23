@@ -49,8 +49,8 @@ const Home = () => {
   const usuarioAtual = useUsuarioAtual();
 
   const [precisaTrocarSenha, setPrecisaTrocarSenha] = useState(false);
-  const [manifestacoes, setManifestacoes] = useState<any[]>([]);
-  const [manifestacoesTotais, setManifestacoesTotais] = useState<any[]>([]);
+  const [manifestacoes, setManifestacoes] = useState<Manifestacao[]>([]);
+  const [manifestacoesTotais, setManifestacoesTotais] = useState<Manifestacao[]>([]);
   const [primeiroAcesso, setPrimeiroAcesso] = useState(false);
 
   useEffect(() => {
@@ -94,8 +94,6 @@ const Home = () => {
     { cor: "info", total: nManifestacoesEmAndamento, titulo: "Em andamento" },
     { cor: "success", total: nManifestacoesConcluidas, titulo: "Concluído" },
   ];
-
-  console.log(nManifestacoes);
 
   useEffect(() => {
     document.title = "Home";
