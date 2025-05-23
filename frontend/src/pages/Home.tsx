@@ -45,6 +45,8 @@ const slides = [
 ];
 
 const Home = () => {
+  window.scrollTo(0, 0);
+  
   const navigate = useNavigate();
   const usuarioAtual = useUsuarioAtual();
 
@@ -174,7 +176,7 @@ const Home = () => {
             <CardDescription>Visualize suas últimas atividades</CardDescription>
           </CardHeader>
           <CardContent className="px-4 space-y-4">
-            <CardManifestacao manifestacoes={manifestacoes} />
+            <CardManifestacao manifestacoes={manifestacoes} action="/minhas-manifestacoes/" />
             {manifestacoes.length === 0 && (
               <div className="text-muted-foreground w-full text-center ">
                 Nenhuma manifestação encontrada.

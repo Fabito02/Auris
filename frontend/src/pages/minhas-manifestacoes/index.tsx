@@ -109,7 +109,7 @@ const MinhasManifestacoes = () => {
               </div>
 
               <CardContent className="px-4 space-y-4">
-                <CardManifestacao manifestacoes={manifestacoesFiltradas} />
+                <CardManifestacao action="/minhas-manifestacoes/" manifestacoes={manifestacoesFiltradas} />
                 {manifestacoesFiltradas.length === 0 && (
                   <div className="text-muted-foreground w-full text-center ">
                     Nenhuma manifestação encontrada.
@@ -148,6 +148,7 @@ const MinhasManifestacoes = () => {
 
               <CardContent className="px-4 space-y-4">
                 <CardManifestacao
+                  action="/minhas-manifestacoes/" 
                   filtrarTipo="reclamacao"
                   manifestacoes={manifestacoesFiltradas}
                 />
@@ -189,6 +190,7 @@ const MinhasManifestacoes = () => {
 
               <CardContent className="px-4 space-y-4">
                 <CardManifestacao
+                  action="/minhas-manifestacoes/" 
                   filtrarTipo="elogio"
                   manifestacoes={manifestacoesFiltradas}
                 />
@@ -230,6 +232,7 @@ const MinhasManifestacoes = () => {
 
               <CardContent className="px-4 space-y-4">
                 <CardManifestacao
+                  action="/minhas-manifestacoes/"
                   filtrarTipo="denuncia"
                   manifestacoes={manifestacoesFiltradas}
                 />
@@ -271,6 +274,7 @@ const MinhasManifestacoes = () => {
 
               <CardContent className="px-4 space-y-4">
                 <CardManifestacao
+                  action="/minhas-manifestacoes/"
                   filtrarTipo="sugestao"
                   manifestacoes={manifestacoesFiltradas}
                 />

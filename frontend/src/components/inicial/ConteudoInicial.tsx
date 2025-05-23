@@ -7,6 +7,7 @@ import AnimarAoVer from "../AnimarAoVer";
 
 const ConteudoHome = () => {
   const navigate = useNavigate();
+  window.scrollTo(0, 0);
 
   return (
     <BlankLayout removeBodyPadding>

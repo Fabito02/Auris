@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 interface CardManifestacaoProps {
   manifestacoes: Manifestacao[];
   filtrarTipo?: 'reclamacao' | 'elogio' | 'sugestao' | 'denuncia'
+  action?: string;
 }
 
 interface ManifestacaoComAvatar extends Manifestacao {
@@ -24,7 +25,7 @@ interface ManifestacaoComAvatar extends Manifestacao {
 
 const formatDate = (iso: string) => new Date(iso).toLocaleDateString("pt-BR");
 
-const CardManifestacao = ({ manifestacoes, filtrarTipo }: CardManifestacaoProps) => {
+const CardManifestacao = ({ manifestacoes, filtrarTipo, action }: CardManifestacaoProps) => {
   const navigate = useNavigate();
 
   const [lista, setLista] = useState<ManifestacaoComAvatar[]>([]);
@@ -53,9 +54,7 @@ const CardManifestacao = ({ manifestacoes, filtrarTipo }: CardManifestacaoProps)
         <Card
           key={m.Manifestacao_ID}
           className="cursor-pointer transition duration-300 ease-in-out hover:bg-gray-100 py-4 px-0 gap-4"
-          onClick={() => {
-            navigate(`/manifestacoes/${m.Manifestacao_ID}`);
-          }}
+          onClick={action ? () => navigate(action + m.Manifestacao_ID) : undefined}
         >
           <CardHeader className="flex items-center font-semibold text-sm space-x-2 px-4">
             <Avatar className="w-7 h-7">

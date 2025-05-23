@@ -1,5 +1,5 @@
 import axios from "axios";
-import { User, Endereco, Notificacao } from "../types/api";
+import { User, Endereco, Notificacao, Manifestacao } from "../types/api";
 import { API_BASE } from "@/config";
 
 const api = axios.create({
@@ -178,5 +178,12 @@ export const enviarNotificacao = async (notificacao: Partial<Notificacao>) => {
 
 export const deleteUser = async (userId: number) => {
   const response = await api.delete(`/users/${userId}`);
+  return response.data;
+};
+
+export const getManifestacaoPorId = async (id: number): Promise<{
+  data: Manifestacao;
+}> => {
+  const response = await api.get(`/manifestacoes/${id}`);
   return response.data;
 };
