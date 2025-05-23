@@ -111,4 +111,32 @@ import { RowDataPacket } from "mysql2";
       }
     );
   };
+
+  export const getRespostasManifestacao = (
+    req: Request,
+    res: Response
+  ) => {
+    const manifestacaoId = req.params.id
+
+    connection.query(
+      "SELECT * FROM  Respostas WHERE Manifestacao_ID = ?",
+      [manifestacaoId],
+      (err, results: RowDataPacket[]) => {
+        if (err) {
+          return res.status(500).json({
+            success: false,
+            error: `Erro ao buscar manifestações: ${err.message}`,
+          });
+        }
+        if (results.length === 0) {
+          return res.status(404).json({
+            success: false,
+            error: "Nenhuma manifestação encontrada",
+          });
+        }
+        return res.status(200).json({ success: true, data: results });
+      }
+    );
+  };
+  
   
