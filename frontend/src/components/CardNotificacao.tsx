@@ -6,11 +6,7 @@ interface CardNotificacaoProps {
   onDelete: (id: number) => void;
 }
 
-const CardNotificacao = ({
-  notificacoes, 
-  onDelete
-}: CardNotificacaoProps) => {
-
+const CardNotificacao = ({ notificacoes, onDelete }: CardNotificacaoProps) => {
   if (notificacoes.length === 0) {
     return (
       <h2 className="text-muted-foreground p-4 text-center">
@@ -19,9 +15,19 @@ const CardNotificacao = ({
     );
   }
 
-  const sortedNotificacoes = [...notificacoes].sort((a, b) => 
-    new Date(b.Data_Criacao).getTime() - new Date(a.Data_Criacao).getTime()
+  const sortedNotificacoes = [...notificacoes].sort(
+    (a, b) =>
+      new Date(b.Data_Criacao).getTime() - new Date(a.Data_Criacao).getTime()
   );
+
+  const formatDate = (iso: string) =>
+    new Intl.DateTimeFormat("pt-BR", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(new Date(iso));
 
   return (
     <div className="grid grid-cols-1 gap-3.5 w-full mt-3">
@@ -48,14 +54,7 @@ const CardNotificacao = ({
             </p>
 
             <div className="text-xs text-gray-400 col-span-3 flex items-center justify-start">
-              {new Date(m.Data_Criacao).toLocaleDateString("pt-BR", {
-                day: "2-digit",
-                month: "2-digit",
-              })}{" "}
-              {new Date(m.Data_Criacao).toLocaleTimeString("pt-BR", {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
+              {formatDate(m.Data_Criacao)}
             </div>
 
             <div
@@ -73,4 +72,3 @@ const CardNotificacao = ({
 };
 
 export default CardNotificacao;
-

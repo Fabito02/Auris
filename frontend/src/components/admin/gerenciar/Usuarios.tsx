@@ -5,10 +5,10 @@ import { User } from "@/types/api";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Icon } from "@iconify-icon/react";
-import { getAvatar } from "@/api/api_routes";
 import { useNavigate } from "react-router-dom";
 import Button from "@/components/buttons/Button";
 import AnimarAoVer from "@/components/AnimarAoVer";
+import { URL_BASE_AVATAR } from "@/config";
 
 export default function Component() {
   const navigate = useNavigate();
@@ -26,11 +26,15 @@ export default function Component() {
   useEffect(() => {
     async function fetchAvatars() {
       const avatarPromises = Users.map(async (user: User) => {
+        if (!user.Avatar) {
+          return { id: user.User_ID, url: "/user_placeholder.png" };
+        }
+        
+        const avatarUrl = `${URL_BASE_AVATAR}/${user.Avatar}`;
         try {
-          const res = await getAvatar(user.User_ID || 0);
           return {
             id: user.User_ID,
-            url: res?.avatarUrl || "/user_placeholder.png",
+            url: avatarUrl|| "/user_placeholder.png",
           };
         } catch (error) {
           return { id: user.User_ID, url: "/user_placeholder.png" };

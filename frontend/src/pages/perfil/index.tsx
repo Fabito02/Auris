@@ -21,11 +21,11 @@ import {
   updateEnderecoUsuarioAtual,
   updateUsuarioAtual,
   updateAvatarUsuarioAtual,
-  getAvatar,
 } from "@/api/api_routes";
 import { toast } from "sonner";
 import "./Perfil.css";
 import { useUsuarioAtual } from "@/hooks/useUsuarioAtual";
+import { URL_BASE_AVATAR } from "@/config";
 
 const Perfil: React.FC = () => {
   const user = useUsuarioAtual();
@@ -48,18 +48,17 @@ const Perfil: React.FC = () => {
       setEndereco(respEnd.endereco);
     })();
   }, [navigate]);
-
-  useEffect(() => {
-    if (user) {
+  
+    useEffect(() => {
       const fetchAvatar = async () => {
-        if (!user?.User_ID) return;
-        const avatar = await getAvatar(user.User_ID);
-        setProfilePic(avatar.avatarUrl);
+        if (user?.Avatar) {
+          setProfilePic(
+            `${URL_BASE_AVATAR}/${user.Avatar}`
+          );
+        }
       };
-
       fetchAvatar();
-    }
-  }, [user]);
+    }, [user, setProfilePic]);
 
   const handlePicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

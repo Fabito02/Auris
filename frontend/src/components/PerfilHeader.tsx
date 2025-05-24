@@ -26,7 +26,6 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
-import { getAvatar } from "@/api/api_routes";
 import CardNotificacao from "./CardNotificacao";
 import { useUsuarioAtual } from "@/hooks/useUsuarioAtual";
 import {
@@ -34,6 +33,7 @@ import {
   deletarNotificacaoDoUsuario,
 } from "@/api/api_routes";
 import { Notificacao } from "@/types/api";
+import { URL_BASE_AVATAR } from "@/config";
 
 const PerfilHeader = () => {
   const navigate = useNavigate();
@@ -55,16 +55,15 @@ const PerfilHeader = () => {
   }, []);
 
   useEffect(() => {
-    if (user) {
-      const fetchAvatar = async () => {
-        if (!user?.User_ID) return;
-        const avatar = await getAvatar(user.User_ID);
-        setAvatar(avatar.avatarUrl);
-      };
-
-      fetchAvatar();
-    }
-  }, [user]);
+    const fetchAvatar = async () => {
+      if (user?.Avatar) {
+        setAvatar(
+          `${URL_BASE_AVATAR}/${user.Avatar}`
+        );
+      }
+    };
+    fetchAvatar();
+  }, [user, setAvatar]);
 
   useEffect(() => {
     const botaoNotificacao = document.querySelector(".botao-notificacao");

@@ -41,7 +41,7 @@ async function createTables(conn: mysql.Connection) {
             Nome VARCHAR(100) NOT NULL,
             Email VARCHAR(100) UNIQUE NOT NULL,
             Telefone VARCHAR(20),
-            Avatar VARCHAR(255),
+            Avatar VARCHAR(255) DEFAULT NULL,
             SIAPE VARCHAR(50),
             Tipo ENUM('servidor', 'aluno'),
             Senha VARCHAR(255) NOT NULL,
@@ -84,7 +84,7 @@ async function createTables(conn: mysql.Connection) {
     `CREATE TABLE IF NOT EXISTS Respostas (
             Resposta_ID INT AUTO_INCREMENT PRIMARY KEY,
             Descricao TEXT NOT NULL,
-            Data DATETIME DEFAULT CURRENT_TIMESTAMP,
+            Data_Criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
             User_ID INT NOT NULL,
             Manifestacao_ID INT NOT NULL,
             FOREIGN KEY (User_ID) REFERENCES Users(User_ID),
@@ -206,7 +206,8 @@ async function insertSeeds(conn: mysql.Connection) {
       },
       {
         Titulo: "As carteiras estão muito danificadas",
-        Descricao: "As carteiras das salas de aula estão muito danificadas e precisam ser trocadas.",
+        Descricao:
+          "As carteiras das salas de aula estão muito danificadas e precisam ser trocadas.",
         Tipo: "Recursos",
         Tipo_manifestacao: "reclamacao",
         Local: "Biblioteca",
@@ -236,12 +237,65 @@ async function insertSeeds(conn: mysql.Connection) {
       },
       {
         Titulo: "Agressão no refeitorio",
-        Descricao: "Um aluno foi agredido na refeitorio e ficou gravemente ferido.",
+        Descricao:
+          "Um aluno foi agredido na refeitorio e ficou gravemente ferido.",
         Tipo: "Segurança",
         Tipo_manifestacao: "denuncia",
         Local: "Biblioteca",
         Prioridade: "urgente",
         User_ID: 1,
+        Status: "em_andamento",
+      },
+      {
+        Titulo: "Problema na iluminação",
+        Descricao: "As luzes do corredor principal não estão funcionando.",
+        Tipo: "Infraestrutura",
+        Tipo_manifestacao: "reclamacao",
+        Local: "Corredor principal, 2º andar",
+        Prioridade: "alta",
+        User_ID: 2,
+        Status: "pendente",
+      },
+      {
+        Titulo: "As carteiras estão muito danificadas",
+        Descricao:
+          "As carteiras das salas de aula estão muito danificadas e precisam ser trocadas.",
+        Tipo: "Recursos",
+        Tipo_manifestacao: "reclamacao",
+        Local: "Biblioteca",
+        Prioridade: "alta",
+        User_ID: 2,
+        Status: "pendente",
+      },
+      {
+        Titulo: "A higiene do campus está excelente",
+        Descricao: "O campus está muito limpo e organizado nos ultimos dias!",
+        Tipo: "Higiene",
+        Tipo_manifestacao: "elogio",
+        Local: "Biblioteca",
+        Prioridade: "baixa",
+        User_ID: 3,
+        Status: "concluido",
+      },
+      {
+        Titulo: "Solicitação de material",
+        Descricao: "Poderiam solicitar mais livros para a biblioteca.",
+        Tipo: "Recursos",
+        Tipo_manifestacao: "sugestão",
+        Local: "Biblioteca",
+        Prioridade: "media",
+        User_ID: 3,
+        Status: "em_andamento",
+      },
+      {
+        Titulo: "Agressão no refeitorio",
+        Descricao:
+          "Um aluno foi agredido na refeitorio e ficou gravemente ferido.",
+        Tipo: "Segurança",
+        Tipo_manifestacao: "denuncia",
+        Local: "Biblioteca",
+        Prioridade: "urgente",
+        User_ID: 2,
         Status: "em_andamento",
       },
     ];
@@ -254,13 +308,13 @@ async function insertSeeds(conn: mysql.Connection) {
     const respostas = [
       {
         Descricao: "Já solicitamos a manutenção da iluminação",
-        User_ID: 1,
+        User_ID: 2,
         Manifestacao_ID: 1,
       },
       {
-        Descricao: "Os livros já foram encomendados e chegarão em breve",
+        Descricao: 'Irei marcar como "concluído", pois já foi resolvido.',
         User_ID: 1,
-        Manifestacao_ID: 2,
+        Manifestacao_ID: 1,
       },
     ];
 

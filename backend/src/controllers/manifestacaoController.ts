@@ -106,7 +106,7 @@ import { RowDataPacket } from "mysql2";
   
         return res.status(200).json({
           success: true,
-          data: results[0], // apenas uma manifestação
+          data: results[0],
         });
       }
     );
@@ -121,6 +121,34 @@ import { RowDataPacket } from "mysql2";
     connection.query(
       "SELECT * FROM  Respostas WHERE Manifestacao_ID = ?",
       [manifestacaoId],
+      (err, results: RowDataPacket[]) => {
+        if (err) {
+          return res.status(500).json({
+            success: false,
+            error: `Erro ao buscar manifestações: ${err.message}`,
+          });
+        }
+        if (results.length === 0) {
+          return res.status(404).json({
+            success: false,
+            error: "Nenhuma manifestação encontrada",
+          });
+        }
+        return res.status(200).json({ success: true, data: results });
+      }
+    );
+  };
+
+  export const getRespostasManifestacaoDoUsuario = (
+    req: Request,
+    res: Response
+  ) => {
+    const userId = req.user?.User_ID
+    const manifestacaoId = req.params.id
+
+    connection.query(
+      "SELECT * FROM  Respostas WHERE Manifestacao_ID = ? AND User_ID = ?",
+      [manifestacaoId, userId],
       (err, results: RowDataPacket[]) => {
         if (err) {
           return res.status(500).json({
