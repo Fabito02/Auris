@@ -1,6 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { checkAuth } from "@/api/auth";
 import CardManifestacao from "@/components/CardManifestacao";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Button from "@/components/buttons/Button";
