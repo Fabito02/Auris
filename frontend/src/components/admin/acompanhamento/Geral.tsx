@@ -211,7 +211,7 @@ export default function Component({ manifestacoes, usuarios }: props) {
           </CardContent>
         </Card>
 
-        <Card className="flex flex-col col-span-3 md:col-span-1">
+        <Card className="flex flex-col col-span-3 md:col-span-2">
           <CardHeader className="items-center pb-0">
             <CardTitle>Visão Geral das Manifestações</CardTitle>
             <CardDescription>
@@ -276,10 +276,21 @@ export default function Component({ manifestacoes, usuarios }: props) {
                 </Pie>
               </PieChart>
             </ChartContainer>
+            <div className="flex flex-wrap justify-center gap-2 mt-4">
+              {visãoGeral.map((item) => (
+                <div key={item.nome} className="flex items-center gap-1">
+                  <div
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: item.fill }}
+                  />
+                  <span className="text-sm">{item.nome}</span>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
 
-        <Card className="flex flex-col col-span-3 md:col-span-2">
+        <Card className="flex flex-col col-span-3 md:col-span-1">
           <CardHeader className="items-center pb-0">
             <CardTitle>Distribuição de Manifestações</CardTitle>
             <CardDescription>Por perfil do usuário</CardDescription>
