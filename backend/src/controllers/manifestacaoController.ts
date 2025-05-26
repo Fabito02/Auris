@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import connection from "../db";
 import { RowDataPacket } from "mysql2";
+import { registrarLog } from "../utils/logger";
+import { ResultSetHeader } from "mysql2";
 
   export const getManifestacoesDoUsuario = (
     req: Request,
@@ -166,5 +168,72 @@ import { RowDataPacket } from "mysql2";
       }
     );
   };
-  
-  
+
+export const deleteManifestacaoDoUsuario = async (
+  req: Request,
+  res: Response
+) => {
+  const userId = Number(req.user?.User_ID);
+  const manifestacaoId = Number(req.params.id);
+
+  await connection
+    .promise()
+    .query<ResultSetHeader>(
+      "DELETE FROM Respostas WHERE Manifestacao_ID = ? AND User_ID = ?",
+      [manifestacaoId, userId]
+    );
+
+  await connection
+    .promise()
+    .query<ResultSetHeader>(
+      "DELETE FROM Respostas WHERE Manifestacao_ID = ? AND User_ID = ?",
+      [manifestacaoId, userId]
+    );
+
+  let manifestacaoTitulo: string | undefined;
+  try {
+    const [rows] = await connection
+      .promise()
+      .query<RowDataPacket[]>(
+        "SELECT Titulo FROM Manifestacoes WHERE Manifestacao_ID = ? AND User_ID = ?",
+        [manifestacaoId, userId]
+      );
+    if (Array.isArray(rows) && rows.length > 0) {
+      manifestacaoTitulo = rows[0].Titulo;
+    }
+  } catch (err) {
+    manifestacaoTitulo = undefined;
+  }
+  try {
+    const [results] = await connection
+      .promise()
+      .query<ResultSetHeader>(
+        "DELETE FROM Manifestacoes WHERE Manifestacao_ID = ? AND User_ID = ?",
+        [manifestacaoId, userId]
+      );
+
+    if (results.affectedRows === 0) {
+      res.status(404).json({
+        success: false,
+        error: "Nenhuma manifestação encontrada",
+      });
+      return;
+    }
+
+    registrarLog(`Manifestação "${manifestacaoTitulo}" deletada.`, userId);
+
+    res.status(200).json({
+      success: true,
+      message: "Manifestação deletada com sucesso",
+    });
+    return;
+  } catch (err) {
+    const errorMessage =
+      err instanceof Error ? err.message : "Erro desconhecido";
+    res.status(500).json({
+      success: false,
+      error: `Erro ao deletar manifestação: ${errorMessage}`,
+    });
+    return;
+  }
+};

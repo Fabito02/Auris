@@ -4,6 +4,7 @@ import {
   getManifestacaoDoUsuario,
   getRespostasManifestacaoDoUsuario,
   getUsuarioByUserId,
+  deleteManifestacaoDoUsuario,
 } from "@/api/api_routes";
 import { Manifestacao, Resposta, User } from "@/types/api";
 import {
@@ -18,9 +19,23 @@ import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
 import Button from "@/components/buttons/Button";
 import { URL_BASE_AVATAR } from "@/config";
 import { checkAuth } from "@/api/auth";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import "./manifestacao.css";
 
 const MinhaManifestacao = () => {
-    
   const navigate = useNavigate();
   const { id } = useParams();
   const [manifestacao, setManifestacao] = useState<Manifestacao>();
@@ -29,6 +44,8 @@ const MinhaManifestacao = () => {
   const [usuariosRespostas, setUsuariosRespostas] = useState<
     Record<number, User>
   >({});
+  const [openConfirmacao, setOpenConfirmacao] = useState(false);
+  const [openSuccess, setOpenSuccess] = useState(false);
 
   useEffect(() => {
     checkAuth(navigate, ["admin", "moderador", "user"]);
@@ -57,7 +74,6 @@ const MinhaManifestacao = () => {
     const fetchManifestacao = async () => {
       try {
         const response = await getManifestacaoDoUsuario(Number(id));
-        console.log(response);
         setManifestacao(response.data);
         document.title = response.data.Titulo?.toString() || "Manifestação";
         if (response.error) {
@@ -79,7 +95,9 @@ const MinhaManifestacao = () => {
       try {
         const response = await getUsuarioByUserId(manifestacao?.User_ID ?? 0);
         if (response.data) {
-          setAvatar(`${URL_BASE_AVATAR}/${response.data.Avatar}`);
+          response.data.Avatar?
+          setAvatar(`${URL_BASE_AVATAR}/${response.data.Avatar}`)
+          : setAvatar("/user_placeholder.png");
         }
       } catch (error) {
         console.error("Erro ao buscar avatar:", error);
@@ -105,70 +123,113 @@ const MinhaManifestacao = () => {
       minute: "2-digit",
     }).format(new Date(iso));
 
+  const handleDelete = async () => {
+    try {
+      await deleteManifestacaoDoUsuario(Number(id));
+      setOpenConfirmacao(false);
+      setOpenSuccess(true);
+    } catch (error) {
+      console.error("Erro ao deletar manifestação:", error);
+    }
+  };
+
+  const closeModal = () => {
+    setOpenConfirmacao(false);
+  };
+
+  const closeSuccess = () => {
+    setOpenSuccess(false);
+    navigate("/minhas-manifestacoes");
+  };
+
   return (
     <div className="grid grid-cols-2 w-full max-w-6xl mx-auto px-6 pt-12 pb-24 min-h-full ">
-      <div className="col-span-2 h-8 w-full flex gap-2 items-center">
-        <Avatar
-          onClick={() =>
-            navigate(`/admin/gerenciar/${manifestacao.User_ID}/perfil`)
-          }
-        >
-          <AvatarImage
-            className="h-8 min-h-8 aspect-square cursor-pointer rounded-full"
-            src={avatar || "/user_placeholder.png"}
-            alt="Ícone do Usuário"
-          />
-        </Avatar>
-
-        <div
-          className={`rounded-full px-3 py-1 font-bold flex items-center h-7 text-sm text-white ${
-            {
-              reclamacao: "bg-[var(--color-reclamacao)]",
-              elogio: "bg-[var(--color-elogio)]",
-              sugestao: "bg-[var(--color-sugestao)]",
-              denuncia: "bg-[var(--color-denuncia)]",
-            }[manifestacao.Tipo_manifestacao]
-          }`}
-        >
-          {manifestacao.Tipo_manifestacao === "elogio"
-            ? "ELOGIO"
-            : manifestacao.Tipo_manifestacao === "reclamacao"
-            ? "RECLAMAÇÃO"
-            : manifestacao.Tipo_manifestacao === "sugestao"
-            ? "SUGESTÃO"
-            : "DENÚNCIA"}
-        </div>
-
-        <p className="truncate">• {manifestacao.Tipo} •</p>
-
-        <div
-          className={`w-7 h-7 aspect-square rounded-full flex items-center justify-center ${
-            manifestacao.Prioridade === "alta"
-              ? "bg-[var(--color-danger)]"
-              : manifestacao.Prioridade === "urgente"
-              ? "bg-[var(--color-danger-dark)]"
-              : manifestacao.Prioridade === "media"
-              ? "bg-[var(--color-warning)]"
-              : "bg-[var(--color-success)]"
-          }`}
-          title={`Prioridade ${
-            manifestacao.Prioridade.charAt(0).toUpperCase() +
-            manifestacao.Prioridade.slice(1)
-          }`}
-        >
-          <Icon
-            icon={
-              manifestacao.Prioridade === "alta" ||
-              manifestacao.Prioridade === "urgente"
-                ? "material-symbols:e911-emergency-rounded"
-                : manifestacao.Prioridade === "media"
-                ? "material-symbols:gpp-maybe-rounded"
-                : "material-symbols:clock-arrow-down-rounded"
+      <div className="col-span-2 display flex w-full justify-between">
+        <div className="h-8 w-full flex gap-2 items-center">
+          <Avatar
+            onClick={() =>
+              navigate(`/admin/gerenciar/${manifestacao.User_ID}/perfil`)
             }
-            width={20}
-            className="m-auto text-white"
-          />
+          >
+            <AvatarImage
+              className="h-8 min-h-8 aspect-square cursor-pointer rounded-full"
+              src={avatar || "/user_placeholder.png"}
+              alt="Ícone do Usuário"
+            />
+          </Avatar>
+
+          <div
+            className={`rounded-full px-3 py-1 font-bold flex items-center h-7 text-sm text-white ${
+              {
+                reclamacao: "bg-[var(--color-reclamacao)]",
+                elogio: "bg-[var(--color-elogio)]",
+                sugestao: "bg-[var(--color-sugestao)]",
+                denuncia: "bg-[var(--color-denuncia)]",
+              }[manifestacao.Tipo_manifestacao]
+            }`}
+          >
+            {manifestacao.Tipo_manifestacao === "elogio"
+              ? "ELOGIO"
+              : manifestacao.Tipo_manifestacao === "reclamacao"
+              ? "RECLAMAÇÃO"
+              : manifestacao.Tipo_manifestacao === "sugestao"
+              ? "SUGESTÃO"
+              : "DENÚNCIA"}
+          </div>
+
+          <p className="truncate">• {manifestacao.Tipo} •</p>
+
+          <div
+            className={`w-7 h-7 aspect-square rounded-full flex items-center justify-center ${
+              manifestacao.Prioridade === "alta"
+                ? "bg-[var(--color-danger)]"
+                : manifestacao.Prioridade === "urgente"
+                ? "bg-[var(--color-danger-dark)]"
+                : manifestacao.Prioridade === "media"
+                ? "bg-[var(--color-warning)]"
+                : "bg-[var(--color-success)]"
+            }`}
+            title={`Prioridade ${
+              manifestacao.Prioridade.charAt(0).toUpperCase() +
+              manifestacao.Prioridade.slice(1)
+            }`}
+          >
+            <Icon
+              icon={
+                manifestacao.Prioridade === "alta" ||
+                manifestacao.Prioridade === "urgente"
+                  ? "material-symbols:e911-emergency-rounded"
+                  : manifestacao.Prioridade === "media"
+                  ? "material-symbols:gpp-maybe-rounded"
+                  : "material-symbols:clock-arrow-down-rounded"
+              }
+              width={20}
+              className="m-auto text-white"
+            />
+          </div>
         </div>
+        <DropdownMenu modal={false}>
+          <DropdownMenuTrigger className="focus:outline-none">
+            <Icon
+              icon="heroicons-solid:menu-alt-3"
+              height="30px"
+              className="text-gray-700 pl-4 "
+            />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="menu-mobile-content mt-1 mr-2 border-0">
+            <DropdownMenuItem className="custom-menu !bg-[var(--color-primary)] !text-white">
+              <Icon icon="material-symbols:edit-rounded" />
+              EDITAR
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="custom-menu !bg-[var(--color-danger)] !text-white"
+              onClick={() => setOpenConfirmacao(true)}
+            >
+              <Icon icon="material-symbols:delete-rounded" />
+              DELETAR
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <div className="mt-5 col-span-2 ml-4">
@@ -225,7 +286,7 @@ const MinhaManifestacao = () => {
             </CardContent>
             <CardFooter className="border-t pb-2">
               <p className="text-sm text-red-500 w-full text-center">
-                *OBS: mantenha um tom respeitoso ao escrever seu comentário.
+                Mantenha um tom respeitoso ao escrever seu comentário.
               </p>
             </CardFooter>
           </Card>
@@ -245,10 +306,7 @@ const MinhaManifestacao = () => {
                 <CardHeader className="px-4 flex flex-row items-center">
                   <Avatar>
                     <AvatarImage
-                      src={
-                        `${URL_BASE_AVATAR}/${usuario?.Avatar}` ||
-                        "/user_placeholder.png"
-                      }
+                      src={usuario?.Avatar ? `${URL_BASE_AVATAR}/${usuario.Avatar}` : "/user_placeholder.png"}
                       alt="Ícone do Usuário"
                       className="w-10 h-10 aspect-square cursor-pointer rounded-full"
                     />
@@ -272,6 +330,57 @@ const MinhaManifestacao = () => {
           })}
         </div>
       </div>
+
+      <Dialog open={openConfirmacao} onOpenChange={closeModal}>
+        <DialogContent className="sm:max-w-[400px] rounded-xl [&>button]:hidden">
+          <DialogHeader>
+            <DialogTitle className="text-center text-[var(--color-primary)] text-3xl mb-4">
+              Confirme a sua ação.
+            </DialogTitle>
+            <DialogDescription className="text-center">
+              Deseja realmente deletar a manifestação?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="grid grid-cols-2 gap-4 mt-4">
+            <Button
+              onClick={handleDelete}
+              full_rounded
+              color="success"
+              className="w-full px-5"
+              texto="sim"
+            />
+            <Button
+              onClick={closeModal}
+              full_rounded
+              color="danger"
+              className="w-full px-5"
+              texto="cancelar"
+            />
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={openSuccess} onOpenChange={closeSuccess}>
+        <DialogContent className="sm:max-w-[400px] rounded-xl [&>button]:hidden">
+          <DialogHeader>
+            <DialogTitle className="text-center text-[var(--color-primary)] text-3xl mb-4">
+              Manifestação deletada com sucesso!
+            </DialogTitle>
+            <DialogDescription className="text-center">
+              Clique no botão abaixo para voltar às suas manifestações.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="sm:justify-center mt-4">
+            <Button
+              onClick={closeSuccess}
+              full_rounded
+              color="success"
+              className="w-full sm:max-w-[200px] px-5"
+              texto="voltar"
+            />
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

@@ -25,81 +25,156 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import CardInfo from "../../card-info/CardInfo";
+import { Manifestacao, User } from "@/types/api";
 
-const data_cards = [
-  { cor: "danger", total: 32, titulo: "Denúncias" },
-  { cor: "warning", total: 15, titulo: "Pendentes" },
-  { cor: "info", total: 3, titulo: "Em andamento" },
-  { cor: "success", total: 12, titulo: "Concluído" },
-];
+interface props {
+  manifestacoes: Manifestacao[];
+  usuarios: User[];
+}
 
-const visãoGeral = [
-  { tipo: "Assédio Moral", Total: 196, fill: "var(--color-success)" },
-  { tipo: "Assédio Sexual", Total: 30, fill: "var(--color-secondary)" },
-  { tipo: "Discriminação", Total: 160, fill: "var(--color-success)" },
-  { tipo: "Violência", Total: 73, fill: "var(--color-secondary)" },
-  { tipo: "Ameaça / Intimidação", Total: 45, fill: "var(--color-success)" },
-  { tipo: "Bullying", Total: 50, fill: "var(--color-secondary)" },
-  {
-    tipo: "Negligência / Abuso de Autoridade",
-    Total: 25,
-    fill: "var(--color-success)",
-  },
-  {
-    tipo: "Corrupção, Fraude, Irregularidades",
-    Total: 40,
-    fill: "var(--color-secondary)",
-  },
-  { tipo: "Abuso de Poder", Total: 35, fill: "var(--color-success)" },
-  {
-    tipo: "Desvios de Conduta / Ética",
-    Total: 20,
-    fill: "var(--color-secondary)",
-  },
-  { tipo: "Infraestrutura", Total: 15, fill: "var(--color-success)" },
-  { tipo: "Conduta Inadequada", Total: 10, fill: "var(--color-secondary)" },
-  { tipo: "Falta de Higiene", Total: 5, fill: "var(--color-success)" },
-  { tipo: "Descarte Irregular", Total: 8, fill: "var(--color-secondary)" },
-  { tipo: "Outros", Total: 3, fill: "var(--color-success)" },
-];
+export default function Component({ manifestacoes, usuarios }: props) {
+  const manifestacoesInfo = {
+    manifestacoes: manifestacoes.length,
+    tipos: Array.from(new Set(manifestacoes.map((m) => m.Tipo))).filter(
+      (t) => t !== ""
+    ).length,
+    pendentes: manifestacoes.filter(
+      (manifestacao) => manifestacao.Status === "pendente"
+    ).length,
+    emAndamento: manifestacoes.filter(
+      (manifestacao) => manifestacao.Status === "em_andamento"
+    ).length,
+    concluido: manifestacoes.filter(
+      (manifestacao) => manifestacao.Status === "concluido"
+    ).length,
+    urgente: manifestacoes.filter(
+      (manifestacao) => manifestacao.Prioridade === "urgente"
+    ).length,
+    alta: manifestacoes.filter(
+      (manifestacao) => manifestacao.Prioridade === "alta"
+    ).length,
+    media: manifestacoes.filter(
+      (manifestacao) => manifestacao.Prioridade === "media"
+    ).length,
+    baixa: manifestacoes.filter(
+      (manifestacao) => manifestacao.Prioridade === "baixa"
+    ).length,
+  };
 
-const dadosPrioridade = [
-  { nome: "Urgente", valor: 8, cor: "var(--color-danger-dark)" },
-  { nome: "Alta", valor: 12, cor: "var(--color-danger)" },
-  { nome: "Média", valor: 25, cor: "var(--color-warning)" },
-  { nome: "Baixa", valor: 15, cor: "var(--color-success)" },
-];
+  const categoriaColors = ["var(--color-success)", "var(--color-secondary)"];
 
-const dadosPorPerfil = [
-  { nome: "Docentes", valor: 48, cor: "var(--color-info)" },
-  { nome: "Discentes", valor: 32, cor: "var(--color-success)" },
-  { nome: "Servidores", valor: 25, cor: "var(--color-primary)" },
-  { nome: "Direção", valor: 18, cor: "var(--color-secondary)" },
-  { nome: "Outros", valor: 12, cor: "var(--color-warning)" },
-];
+  const tiposManifestacao = Array.from(
+    new Set(manifestacoes.map((m) => m.Tipo).filter((t) => t && t !== ""))
+  );
 
-const totalManifestacoes = [
-  { dia: "Segunda", Total: 266 },
-  { dia: "Terça", Total: 505 },
-  { dia: "Quarta", Total: 357 },
-  { dia: "Quinta", Total: 263 },
-  { dia: "Sexta", Total: 339 },
-  { dia: "Sábado", Total: 354 },
-  { dia: "Domingo", Total: 400 },
-];
+  const visãoGeral = tiposManifestacao.map((tipo, idx) => ({
+    tipo,
+    Total: manifestacoes.filter((m) => m.Tipo === tipo).length,
+    fill: categoriaColors[idx % categoriaColors.length],
+  }));
 
-const chartConfig = {} satisfies ChartConfig;
+  const dataDeHoje = new Date();
+  const manifestacoesInfo7dias = Array.from({ length: 7 }, (_, i) => {
+    const start = new Date(
+      dataDeHoje.getFullYear(),
+      dataDeHoje.getMonth(),
+      dataDeHoje.getDate() - (6 - i)
+    );
+    const end = new Date(
+      dataDeHoje.getFullYear(),
+      dataDeHoje.getMonth(),
+      dataDeHoje.getDate() - (6 - i) + 1
+    );
+    return manifestacoes.filter((manifestacao) => {
+      const dataEnvio = new Date(manifestacao.Data_Envio);
+      return dataEnvio >= start && dataEnvio < end;
+    }).length;
+  });
 
-export default function Component() {
+  const manifestacoesPorTipoUsuario = {
+    alunos: manifestacoes.filter((manifestacao) =>
+      usuarios.find(
+        (usuario) =>
+          usuario.User_ID === manifestacao.User_ID && usuario.Tipo === "aluno"
+      )
+    ).length,
+    servidores: manifestacoes.filter((manifestacao) =>
+      usuarios.find(
+        (usuario) =>
+          usuario.User_ID === manifestacao.User_ID &&
+          usuario.Tipo === "servidor"
+      )
+    ).length,
+  };
+
+  const data_cards = [
+    {
+      cor: "danger",
+      total: manifestacoesInfo.manifestacoes,
+      titulo: "Denúncias",
+    },
+    { cor: "warning", total: manifestacoesInfo.pendentes, titulo: "Pendentes" },
+    {
+      cor: "info",
+      total: manifestacoesInfo.emAndamento,
+      titulo: "Em andamento",
+    },
+    { cor: "success", total: manifestacoesInfo.concluido, titulo: "Concluído" },
+  ];
+
+  const totalManifestacoes = [
+    { Total: manifestacoesInfo7dias[0] },
+    { Total: manifestacoesInfo7dias[1] },
+    { Total: manifestacoesInfo7dias[2] },
+    { Total: manifestacoesInfo7dias[3] },
+    { Total: manifestacoesInfo7dias[4] },
+    { Total: manifestacoesInfo7dias[5] },
+    { Total: manifestacoesInfo7dias[6] },
+  ];
+
+  const dadosPorPerfil = [
+    {
+      nome: "Servidores",
+      valor: manifestacoesPorTipoUsuario.servidores,
+      cor: "var(--color-secondary)",
+    },
+    {
+      nome: "Alunos",
+      valor: manifestacoesPorTipoUsuario.alunos,
+      cor: "var(--color-success)",
+    },
+  ];
+
+  const dadosPrioridade = [
+    {
+      nome: "Urgente",
+      valor: manifestacoesInfo.urgente,
+      cor: "var(--color-danger-dark)",
+    },
+    { nome: "Alta", valor: manifestacoesInfo.alta, cor: "var(--color-danger)" },
+    {
+      nome: "Média",
+      valor: manifestacoesInfo.media,
+      cor: "var(--color-warning)",
+    },
+    {
+      nome: "Baixa",
+      valor: manifestacoesInfo.baixa,
+      cor: "var(--color-success)",
+    },
+  ];
+
+  const chartConfig = {} satisfies ChartConfig;
+
   return (
     <div className="p-6 max-w-7xl mx-auto">
-      <CardInfo conteudo_cards={data_cards} className="mt-4 mb-4" />
+      <CardInfo conteudo_cards={data_cards} className="mb-4" />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card className="flex flex-col col-span-3">
           <CardHeader className="items-center pb-0">
             <CardTitle>Denúncias por categoria</CardTitle>
             <CardDescription>
-              Com base em dados dos últimos 30 dias
+              Distribuição dos dados totais por categoria
             </CardDescription>
           </CardHeader>
           <CardContent className="flex-1 pb-0">
@@ -130,7 +205,6 @@ export default function Component() {
                 <Bar
                   dataKey="Total"
                   fill="var(--color-secondary)"
-                  barSize={40}
                   radius={[6, 6, 6, 6]}
                 />
               </BarChart>
@@ -185,7 +259,7 @@ export default function Component() {
             </ChartContainer>
           </CardContent>
         </Card>
-        <Card className="flex flex-col col-span-3 md:col-span-1">
+        <Card className="flex flex-col col-span-3 md:col-span-2">
           <CardHeader className="items-center pb-0">
             <CardTitle>Prioridade das Denúncias</CardTitle>
             <CardDescription>
@@ -207,9 +281,9 @@ export default function Component() {
                   dataKey="valor"
                   nameKey="nome"
                   innerRadius={60}
-                  outerRadius={80}
+                  outerRadius={90}
                   paddingAngle={2}
-                  strokeWidth={0}
+                  strokeWidth={5}
                 >
                   <Label
                     content={({ viewBox }) => {
@@ -250,7 +324,6 @@ export default function Component() {
                 </Pie>
               </PieChart>
             </ChartContainer>
-            {/* Legenda */}
             <div className="flex flex-wrap justify-center gap-2 mt-4">
               {dadosPrioridade.map((item) => (
                 <div key={item.nome} className="flex items-center gap-1">
@@ -265,7 +338,7 @@ export default function Component() {
           </CardContent>
         </Card>
 
-        <Card className="flex flex-col col-span-3 md:col-span-2">
+        <Card className="flex flex-col col-span-3 md:col-span-1">
           <CardHeader className="items-center pb-0">
             <CardTitle>Distribuição de Denúncias</CardTitle>
             <CardDescription>Por perfil do usuário</CardDescription>
@@ -285,9 +358,9 @@ export default function Component() {
                   dataKey="valor"
                   nameKey="nome"
                   innerRadius={60}
-                  outerRadius={80}
+                  outerRadius={90}
                   paddingAngle={2}
-                  strokeWidth={0}
+                  strokeWidth={5}
                 >
                   <Label
                     content={({ viewBox }) => {

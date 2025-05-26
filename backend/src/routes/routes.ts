@@ -125,6 +125,11 @@ router.get(
   verifyToken,
   manifestacaoController.getManifestacoesDoUsuario
 );
+router.delete(
+  "/me/manifestacoes/:id",
+  verifyToken,
+  manifestacaoController.deleteManifestacaoDoUsuario
+);
 router.get(
   "/manifestacoes",
   verifyToken,

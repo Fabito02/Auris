@@ -15,11 +15,12 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
+import { Manifestacao } from "@/types/api";
 
 const GerenciarManifestacoes = () => {
   const navigate = useNavigate();
 
-  const [manifestacoes, setManifestacoes] = useState<any[]>([]);
+  const [manifestacoes, setManifestacoes] = useState<Manifestacao[]>([]);
   const [search, setSearch] = useState("");
   const [filtroStatus, setFiltroStatus] = useState("todos");
 
@@ -72,7 +73,7 @@ const GerenciarManifestacoes = () => {
 
   return (
     <BlankLayout showFooter={false} showHeader showNavbar>
-      <div className="px-4 mt-12 max-w-6xl mx-auto">
+      <div className="px-4 max-w-6xl mx-auto mt-14">
         <Tabs defaultValue="manifestacoes" className="mb-10">
           <TabsList
             className="flex w-full justify-start overflow-x-auto whitespace-nowrap h-[40px] px-1 gap-2"

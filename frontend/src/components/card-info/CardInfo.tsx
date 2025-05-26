@@ -20,7 +20,7 @@ export default function CardInfo({ conteudo_cards, className }: CardInfoProps) {
               whileHover={{ scale: 1.035 }}
               transition={{ duration: 0.3 }}
               key={index}
-              className={`card-info flex flex-col shadow-sm py-3 rounded-xl ${
+              className={`card-info flex flex-col py-3 rounded-xl shadow bg-white ${
                 card.cor ?? "primary"
               }`}
             >

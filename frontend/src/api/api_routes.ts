@@ -210,8 +210,15 @@ export const getManifestacaoDoUsuario = async (id: number): Promise<{
 };
 
 export const getManifestacoes = async (): Promise<{
-  data: Manifestacao, error?: string, success?: boolean;
+  data: Manifestacao[], error?: string, success?: boolean;
 }> => {
   const response = await api.get(`/manifestacoes`);
+  return response.data;
+};
+
+export const deleteManifestacaoDoUsuario = async (id: number): Promise<{
+  data: Manifestacao, error?: string, success?: boolean;
+}> => {
+  const response = await api.delete(`/me/manifestacoes/${id}`);
   return response.data;
 };

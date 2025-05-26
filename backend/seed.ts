@@ -246,58 +246,6 @@ async function insertSeeds(conn: mysql.Connection) {
         User_ID: 1,
         Status: "em_andamento",
       },
-      {
-        Titulo: "Problema na iluminação",
-        Descricao: "As luzes do corredor principal não estão funcionando.",
-        Tipo: "Infraestrutura",
-        Tipo_manifestacao: "reclamacao",
-        Local: "Corredor principal, 2º andar",
-        Prioridade: "alta",
-        User_ID: 2,
-        Status: "pendente",
-      },
-      {
-        Titulo: "As carteiras estão muito danificadas",
-        Descricao:
-          "As carteiras das salas de aula estão muito danificadas e precisam ser trocadas.",
-        Tipo: "Recursos",
-        Tipo_manifestacao: "reclamacao",
-        Local: "Biblioteca",
-        Prioridade: "alta",
-        User_ID: 2,
-        Status: "pendente",
-      },
-      {
-        Titulo: "A higiene do campus está excelente",
-        Descricao: "O campus está muito limpo e organizado nos ultimos dias!",
-        Tipo: "Higiene",
-        Tipo_manifestacao: "elogio",
-        Local: "Biblioteca",
-        Prioridade: "baixa",
-        User_ID: 3,
-        Status: "concluido",
-      },
-      {
-        Titulo: "Solicitação de material",
-        Descricao: "Poderiam solicitar mais livros para a biblioteca.",
-        Tipo: "Recursos",
-        Tipo_manifestacao: "sugestão",
-        Local: "Biblioteca",
-        Prioridade: "media",
-        User_ID: 3,
-        Status: "em_andamento",
-      },
-      {
-        Titulo: "Agressão no refeitorio",
-        Descricao:
-          "Um aluno foi agredido na refeitorio e ficou gravemente ferido.",
-        Tipo: "Segurança",
-        Tipo_manifestacao: "denuncia",
-        Local: "Biblioteca",
-        Prioridade: "urgente",
-        User_ID: 2,
-        Status: "em_andamento",
-      },
     ];
 
     for (const manifestacao of manifestacoes) {
@@ -308,7 +256,7 @@ async function insertSeeds(conn: mysql.Connection) {
     const respostas = [
       {
         Descricao: "Já solicitamos a manutenção da iluminação",
-        User_ID: 2,
+        User_ID: 1,
         Manifestacao_ID: 1,
       },
       {
