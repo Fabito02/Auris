@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { getUsuarios } from "@/api/api_routes";
 import { useEffect, useState, useMemo } from "react";
 import { User } from "@/types/api";

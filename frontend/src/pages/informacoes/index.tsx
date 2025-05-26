@@ -109,13 +109,13 @@ export default function Faq() {
   }, []);
 
   return (
-    <section className="max-w-5xl mx-auto px-4 py-8 min-h-[calc(100vh-100px)]">
-      <div className="grid md:grid-cols-2 gap-6 items-center mb-24">
+    <section className="max-w-5xl mx-auto px-6 py-8 min-h-[calc(100vh-100px)]">
+      <div className="grid md:grid-cols-2 gap-6 items-center mb-14">
         <div className="w-full flex justify-center mt-5">
           <img
             src="/faq/FAQ.svg"
             alt="Imagem representando o FAQ"
-            className="w-3/4"
+            className="w-6/10"
           />
         </div>
         <div className="text-center md:text-left mt-5">
