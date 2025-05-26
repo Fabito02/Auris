@@ -32,33 +32,6 @@ interface props {
 }
 
 export default function Component({ manifestacoes, usuarios }: props) {
-  const manifestacoesInfo = {
-    manifestacoes: manifestacoes.length,
-    tipos: Array.from(new Set(manifestacoes.map((m) => m.Tipo))).filter(
-      (t) => t !== ""
-    ).length,
-    pendentes: manifestacoes.filter(
-      (manifestacao) => manifestacao.Status === "pendente"
-    ).length,
-    emAndamento: manifestacoes.filter(
-      (manifestacao) => manifestacao.Status === "em_andamento"
-    ).length,
-    concluido: manifestacoes.filter(
-      (manifestacao) => manifestacao.Status === "concluido"
-    ).length,
-    urgente: manifestacoes.filter(
-      (manifestacao) => manifestacao.Prioridade === "urgente"
-    ).length,
-    alta: manifestacoes.filter(
-      (manifestacao) => manifestacao.Prioridade === "alta"
-    ).length,
-    media: manifestacoes.filter(
-      (manifestacao) => manifestacao.Prioridade === "media"
-    ).length,
-    baixa: manifestacoes.filter(
-      (manifestacao) => manifestacao.Prioridade === "baixa"
-    ).length,
-  };
 
   const categoriaColors = ["var(--color-success)", "var(--color-secondary)"];
 
@@ -106,21 +79,6 @@ export default function Component({ manifestacoes, usuarios }: props) {
     ).length,
   };
 
-  const data_cards = [
-    {
-      cor: "danger",
-      total: manifestacoesInfo.manifestacoes,
-      titulo: "Manifestações",
-    },
-    { cor: "warning", total: manifestacoesInfo.pendentes, titulo: "Pendentes" },
-    {
-      cor: "info",
-      total: manifestacoesInfo.emAndamento,
-      titulo: "Em andamento",
-    },
-    { cor: "success", total: manifestacoesInfo.concluido, titulo: "Concluído" },
-  ];
-
   const totalManifestacoes = [
     { Total: manifestacoesInfo7dias[0] },
     { Total: manifestacoesInfo7dias[1] },
@@ -140,25 +98,6 @@ export default function Component({ manifestacoes, usuarios }: props) {
     {
       nome: "Alunos",
       valor: manifestacoesPorTipoUsuario.alunos,
-      cor: "var(--color-success)",
-    },
-  ];
-
-  const dadosPrioridade = [
-    {
-      nome: "Urgente",
-      valor: manifestacoesInfo.urgente,
-      cor: "var(--color-danger-dark)",
-    },
-    { nome: "Alta", valor: manifestacoesInfo.alta, cor: "var(--color-danger)" },
-    {
-      nome: "Média",
-      valor: manifestacoesInfo.media,
-      cor: "var(--color-warning)",
-    },
-    {
-      nome: "Baixa",
-      valor: manifestacoesInfo.baixa,
       cor: "var(--color-success)",
     },
   ];

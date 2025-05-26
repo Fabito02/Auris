@@ -99,7 +99,6 @@
 }
 
 .conteudoContainer {
-  background-color: #fff !important;
   max-width: 100%;
   min-height: calc(100vh - 115px);
 }

@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Icon } from "@iconify-icon/react";
 import { BlankLayout } from "../../components/BlankLayout/BlankLayout";
 import { Input } from "../../components/ui/input";
-import { Card, CardContent } from "../../components/ui/card";
 import {
   Select,
   SelectContent,
