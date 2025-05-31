@@ -11,10 +11,60 @@ import Denuncias from "@/components/admin/acompanhamento/Denuncias";
 import Sugestoes from "@/components/admin/acompanhamento/Sugestoes";
 import { useNavigate } from "react-router-dom";
 import { checkAuth } from "@/api/auth";
+import { getManifestacoes, getUsuarios } from "@/api/api_routes";
+import { Manifestacao, User } from "@/types/api";
 
 const Acompanhamento = () => {
+
   const [expandido, setExpandido] = useState(false);
   const [abaSelecionada, setAbaSelecionada] = useState("0");
+  const [manifestacoes, setManifestacoes] = useState<Manifestacao[]>([]);
+  const [reclamacoes, setReclamacoes] = useState<Manifestacao[]>([]);
+  const [elogios, setElogios] = useState<Manifestacao[]>([]);
+  const [denuncias, setDenuncias] = useState<Manifestacao[]>([]);
+  const [sugestoes, setSugestoes] = useState<Manifestacao[]>([]);
+  const [usuarios, setUsuarios] = useState<User[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const manifestacoesResponse = await getManifestacoes();
+        const usuariosResponse = await getUsuarios();
+
+        if (manifestacoesResponse.success) {
+          setManifestacoes(manifestacoesResponse.data);
+          setReclamacoes(
+            manifestacoesResponse.data.filter(
+              (manifestacao) => manifestacao.Tipo_manifestacao === "reclamacao"
+            )
+          );
+          setElogios(
+            manifestacoesResponse.data.filter(
+              (manifestacao) => manifestacao.Tipo_manifestacao === "elogio"
+            )
+          );
+          setDenuncias(
+            manifestacoesResponse.data.filter(
+              (manifestacao) => manifestacao.Tipo_manifestacao === "denuncia"
+            )
+          );
+          setSugestoes(
+            manifestacoesResponse.data.filter(
+              (manifestacao) => manifestacao.Tipo_manifestacao === "sugestao"
+            )
+          );
+        }
+
+        if (usuariosResponse.success) {
+          setUsuarios(usuariosResponse.data);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar manifestações:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const navigate = useNavigate();
 
@@ -84,19 +134,19 @@ const Acompanhamento = () => {
         >
           <div className="conteudoContainer">
             <div className="tabContainer hidden" id="tab-0">
-              <Geral />
+              <Geral manifestacoes={manifestacoes} usuarios={usuarios} />
             </div>
             <div className="tabContainer hidden" id="tab-1">
-              <Reclamacoes />
+              <Reclamacoes manifestacoes={reclamacoes} usuarios={usuarios} />
             </div>
             <div className="tabContainer hidden" id="tab-2">
-              <Elogios />
+              <Elogios manifestacoes={elogios} usuarios={usuarios} />
             </div>
             <div className="tabContainer hidden" id="tab-3">
-              <Denuncias />
+              <Denuncias manifestacoes={denuncias} usuarios={usuarios} />
             </div>
             <div className="tabContainer hidden" id="tab-4">
-              <Sugestoes />
+              <Sugestoes manifestacoes={sugestoes} usuarios={usuarios} />
             </div>
           </div>
         </div>

@@ -24,44 +24,85 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Manifestacao, User } from "@/types/api";
 
-const visãoGeral = [
-  { tipo: "Estrutura e Espaços", Total: 196, fill: "var(--color-success)" },
-  { tipo: "Atendimento", Total: 30, fill: "var(--color-secondary)" },
-  { tipo: "Serviço", Total: 160, fill: "var(--color-success)" },
-  { tipo: "Segurança", Total: 73, fill: "var(--color-secondary)" },
-  { tipo: "Higiene", Total: 45, fill: "var(--color-success)" },
-  { tipo: "Alimentação", Total: 50, fill: "var(--color-secondary)" },
-  { tipo: "Equipamentos", Total: 25, fill: "var(--color-success)" },
-  { tipo: "Docentes", Total: 40, fill: "var(--color-secondary)" },
-  { tipo: "Servidores", Total: 35, fill: "var(--color-success)" },
-  { tipo: "Acessibilidade", Total: 20, fill: "var(--color-secondary)" },
-  { tipo: "Eventos", Total: 15, fill: "var(--color-success)" },
-  { tipo: "Burocracia", Total: 10, fill: "var(--color-secondary)" },
-  { tipo: "Outros", Total: 5, fill: "var(--color-success)" },
-];
+interface props {
+  manifestacoes: Manifestacao[];
+  usuarios: User[];
+}
 
-const dadosPorPerfil = [
-  { nome: "Docentes", valor: 48, cor: "var(--color-info)" },
-  { nome: "Discentes", valor: 32, cor: "var(--color-success)" },
-  { nome: "Servidores", valor: 25, cor: "var(--color-primary)" },
-  { nome: "Direção", valor: 18, cor: "var(--color-secondary)" },
-  { nome: "Outros", valor: 12, cor: "var(--color-warning)" },
-];
+export default function Component({ manifestacoes, usuarios }: props) {
 
-const totalManifestacoes = [
-  { dia: "Segunda", Total: 120 },
-  { dia: "Terça", Total: 150 },
-  { dia: "Quarta", Total: 130 },
-  { dia: "Quinta", Total: 140 },
-  { dia: "Sexta", Total: 160 },
-  { dia: "Sábado", Total: 90 },
-  { dia: "Domingo", Total: 60 },
-];
+  const categoriaColors = ["var(--color-success)", "var(--color-secondary)"];
 
-const chartConfig = {} satisfies ChartConfig;
+  const tiposManifestacao = Array.from(
+    new Set(manifestacoes.map((m) => m.Tipo).filter((t) => t && t !== ""))
+  );
 
-export default function Component() {
+  const visãoGeral = tiposManifestacao.map((tipo, idx) => ({
+    tipo,
+    Total: manifestacoes.filter((m) => m.Tipo === tipo).length,
+    fill: categoriaColors[idx % categoriaColors.length],
+  }));
+
+  const dataDeHoje = new Date();
+  const manifestacoesInfo7dias = Array.from({ length: 7 }, (_, i) => {
+    const start = new Date(
+      dataDeHoje.getFullYear(),
+      dataDeHoje.getMonth(),
+      dataDeHoje.getDate() - (6 - i)
+    );
+    const end = new Date(
+      dataDeHoje.getFullYear(),
+      dataDeHoje.getMonth(),
+      dataDeHoje.getDate() - (6 - i) + 1
+    );
+    return manifestacoes.filter((manifestacao) => {
+      const dataEnvio = new Date(manifestacao.Data_Envio);
+      return dataEnvio >= start && dataEnvio < end;
+    }).length;
+  });
+
+  const manifestacoesPorTipoUsuario = {
+    alunos: manifestacoes.filter((manifestacao) =>
+      usuarios.find(
+        (usuario) =>
+          usuario.User_ID === manifestacao.User_ID && usuario.Tipo === "aluno"
+      )
+    ).length,
+    servidores: manifestacoes.filter((manifestacao) =>
+      usuarios.find(
+        (usuario) =>
+          usuario.User_ID === manifestacao.User_ID &&
+          usuario.Tipo === "servidor"
+      )
+    ).length,
+  };
+
+  const totalManifestacoes = [
+    { Total: manifestacoesInfo7dias[0] },
+    { Total: manifestacoesInfo7dias[1] },
+    { Total: manifestacoesInfo7dias[2] },
+    { Total: manifestacoesInfo7dias[3] },
+    { Total: manifestacoesInfo7dias[4] },
+    { Total: manifestacoesInfo7dias[5] },
+    { Total: manifestacoesInfo7dias[6] },
+  ];
+
+  const dadosPorPerfil = [
+    {
+      nome: "Servidores",
+      valor: manifestacoesPorTipoUsuario.servidores,
+      cor: "var(--color-secondary)",
+    },
+    {
+      nome: "Alunos",
+      valor: manifestacoesPorTipoUsuario.alunos,
+      cor: "var(--color-success)",
+    },
+  ];
+  const chartConfig = {} satisfies ChartConfig;
+
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -69,7 +110,7 @@ export default function Component() {
           <CardHeader className="items-center pb-0">
             <CardTitle>Sugestões por categoria</CardTitle>
             <CardDescription>
-              Com base em dados dos últimos 30 dias
+              Distribuição dos dados totais por categoria
             </CardDescription>
           </CardHeader>
           <CardContent className="flex-1 pb-0">
@@ -100,7 +141,6 @@ export default function Component() {
                 <Bar
                   dataKey="Total"
                   fill="var(--color-secondary)"
-                  barSize={40}
                   radius={[6, 6, 6, 6]}
                 />
               </BarChart>
@@ -176,9 +216,9 @@ export default function Component() {
                   dataKey="valor"
                   nameKey="nome"
                   innerRadius={60}
-                  outerRadius={80}
+                  outerRadius={90}
                   paddingAngle={2}
-                  strokeWidth={0}
+                  strokeWidth={5}
                 >
                   <Label
                     content={({ viewBox }) => {
@@ -192,7 +232,7 @@ export default function Component() {
                             x={viewBox.cx}
                             y={viewBox.cy}
                             textAnchor="middle"
-                            dominantline="middle"
+                            dominantBaseline="middle"
                           >
                             <tspan
                               x={viewBox.cx}

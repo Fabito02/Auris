@@ -41,7 +41,7 @@ async function createTables(conn: mysql.Connection) {
             Nome VARCHAR(100) NOT NULL,
             Email VARCHAR(100) UNIQUE NOT NULL,
             Telefone VARCHAR(20),
-            Avatar VARCHAR(255),
+            Avatar VARCHAR(255) DEFAULT NULL,
             SIAPE VARCHAR(50),
             Tipo ENUM('servidor', 'aluno'),
             Senha VARCHAR(255) NOT NULL,
@@ -84,7 +84,7 @@ async function createTables(conn: mysql.Connection) {
     `CREATE TABLE IF NOT EXISTS Respostas (
             Resposta_ID INT AUTO_INCREMENT PRIMARY KEY,
             Descricao TEXT NOT NULL,
-            Data DATETIME DEFAULT CURRENT_TIMESTAMP,
+            Data_Criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
             User_ID INT NOT NULL,
             Manifestacao_ID INT NOT NULL,
             FOREIGN KEY (User_ID) REFERENCES Users(User_ID),
@@ -168,23 +168,33 @@ async function insertSeeds(conn: mysql.Connection) {
 
     const enderecos = [
       {
-        Logradouro: "Rua das Flores",
-        Bairro: "Centro",
-        Cidade: "São Paulo",
-        Numero: "100",
-        Complemento: "Sala 101",
-        Estado: "SP",
-        CEP: "01001-000",
+        Logradouro: "Rua das Acácias",
+        Bairro: "Jardim Primavera",
+        Cidade: "Rio de Janeiro",
+        Numero: "150",
+        Complemento: "Apto 202",
+        Estado: "RJ",
+        CEP: "20031-170",
         User_ID: 1,
       },
       {
-        Logradouro: "Avenida Paulista",
-        Bairro: "Bela Vista",
-        Cidade: "São Paulo",
-        Numero: "2000",
-        Estado: "SP",
-        CEP: "01310-200",
+        Logradouro: "Avenida Atlântica",
+        Bairro: "Copacabana",
+        Cidade: "Rio de Janeiro",
+        Numero: "3000",
+        Estado: "RJ",
+        CEP: "22070-001",
         User_ID: 2,
+      },
+      {
+        Logradouro: "Praça da Liberdade",
+        Bairro: "Liberdade",
+        Cidade: "Belo Horizonte",
+        Numero: "50",
+        Complemento: "Edifício Central",
+        Estado: "MG",
+        CEP: "30140-010",
+        User_ID: 3,
       },
     ];
 
@@ -206,7 +216,8 @@ async function insertSeeds(conn: mysql.Connection) {
       },
       {
         Titulo: "As carteiras estão muito danificadas",
-        Descricao: "As carteiras das salas de aula estão muito danificadas e precisam ser trocadas.",
+        Descricao:
+          "As carteiras das salas de aula estão muito danificadas e precisam ser trocadas.",
         Tipo: "Recursos",
         Tipo_manifestacao: "reclamacao",
         Local: "Biblioteca",
@@ -236,12 +247,63 @@ async function insertSeeds(conn: mysql.Connection) {
       },
       {
         Titulo: "Agressão no refeitorio",
-        Descricao: "Um aluno foi agredido na refeitorio e ficou gravemente ferido.",
+        Descricao:
+          "Um aluno foi agredido na refeitorio e ficou gravemente ferido.",
         Tipo: "Segurança",
         Tipo_manifestacao: "denuncia",
         Local: "Biblioteca",
         Prioridade: "urgente",
         User_ID: 1,
+        Status: "em_andamento",
+      },
+      {
+        Titulo: "Computadores lentos",
+        Descricao: "Os computadores do laboratório estão muito lentos.",
+        Tipo: "Tecnologia",
+        Tipo_manifestacao: "reclamacao",
+        Local: "Laboratório de Informática",
+        Prioridade: "media",
+        User_ID: 2,
+        Status: "pendente",
+      },
+      {
+        Titulo: "Falta de papel higiênico",
+        Descricao: "Os banheiros estão sem papel higiênico há dias.",
+        Tipo: "Infraestrutura",
+        Tipo_manifestacao: "reclamacao",
+        Local: "Banheiros do bloco B",
+        Prioridade: "alta",
+        User_ID: 2,
+        Status: "pendente",
+      },
+      {
+        Titulo: "Excelente atendimento",
+        Descricao: "O atendimento na secretaria está excelente.",
+        Tipo: "Serviço",
+        Tipo_manifestacao: "elogio",
+        Local: "Secretaria",
+        Prioridade: "baixa",
+        User_ID: 2,
+        Status: "concluido",
+      },
+      {
+        Titulo: "Mais opções vegetarianas",
+        Descricao: "Seria interessante adicionar mais opções vegetarianas no cardápio.",
+        Tipo: "Alimentação",
+        Tipo_manifestacao: "sugestão",
+        Local: "Refeitório",
+        Prioridade: "media",
+        User_ID: 3,
+        Status: "em_andamento",
+      },
+      {
+        Titulo: "Roubo de bicicleta",
+        Descricao: "Minha bicicleta foi roubada no estacionamento.",
+        Tipo: "Segurança",
+        Tipo_manifestacao: "denuncia",
+        Local: "Estacionamento",
+        Prioridade: "urgente",
+        User_ID: 3,
         Status: "em_andamento",
       },
     ];
@@ -258,9 +320,29 @@ async function insertSeeds(conn: mysql.Connection) {
         Manifestacao_ID: 1,
       },
       {
-        Descricao: "Os livros já foram encomendados e chegarão em breve",
+        Descricao: 'Irei marcar como "concluído", pois já foi resolvido.',
         User_ID: 1,
+        Manifestacao_ID: 1,
+      },
+      {
+        Descricao: "Estamos analisando a situação para tomar as medidas necessárias.",
+        User_ID: 2,
         Manifestacao_ID: 2,
+      },
+      {
+        Descricao: "Agradecemos seu elogio, continuaremos nos esforçando!",
+        User_ID: 2,
+        Manifestacao_ID: 3,
+      },
+      {
+        Descricao: "Estamos considerando sua sugestão para futuras atualizações.",
+        User_ID: 3,
+        Manifestacao_ID: 4,
+      },
+      {
+        Descricao: "As medidas de segurança estão sendo reforçadas.",
+        User_ID: 3,
+        Manifestacao_ID: 5,
       },
     ];
 
@@ -270,12 +352,6 @@ async function insertSeeds(conn: mysql.Connection) {
     console.log("Respostas inseridas/verificadas");
 
     const notificacoes = [
-      {
-        Titulo: "Bem-vindo ao Auris!",
-        Mensagem: "Sua conta foi criada com sucesso. Aproveite a plataforma!",
-        Status: "lida",
-        User_ID: 1,
-      },
       {
         Titulo: "Nova manifestação recebida",
         Mensagem: "Você recebeu uma nova manifestação para análise.",
@@ -288,6 +364,32 @@ async function insertSeeds(conn: mysql.Connection) {
           'Sua manifestação "Solicitação de material" recebeu uma resposta.',
         Status: "pendente",
         User_ID: 3,
+      },
+      {
+        Titulo: "Nova manifestação recebida",
+        Mensagem: "Você recebeu uma nova manifestação para análise.",
+        Status: "pendente",
+        User_ID: 2,
+      },
+      {
+        Titulo: "Resposta recebida",
+        Mensagem:
+          'Sua manifestação "Elogio ao professor" recebeu uma resposta.',
+        Status: "pendente",
+        User_ID: 2,
+      },
+      {
+        Titulo: "Nova manifestação recebida",
+        Mensagem: "Você recebeu uma nova manifestação para análise.",
+        Status: "pendente",
+        User_ID: 3,
+      },
+      {
+        Titulo: "Resposta recebida",
+        Mensagem:
+          'Sua manifestação "Solicitação de manutenção" recebeu uma resposta.',
+        Status: "pendente",
+        User_ID: 1,
       },
     ];
 

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { User, Endereco, Notificacao, Manifestacao } from "../types/api";
+import { User, Endereco, Notificacao, Manifestacao, Resposta } from "../types/api";
 import { API_BASE } from "@/config";
 
 const api = axios.create({
@@ -185,5 +185,40 @@ export const getManifestacaoPorId = async (id: number): Promise<{
   data: Manifestacao;
 }> => {
   const response = await api.get(`/manifestacoes/${id}`);
+  return response.data;
+};
+
+export const getRespostasManifestacao = async (id: number): Promise<{
+  data: Resposta[];
+}> => {
+  const response = await api.get(`/manifestacoes/${id}/respostas`);
+  return response.data;
+};
+
+export const getRespostasManifestacaoDoUsuario = async (id: number): Promise<{
+  data: Resposta[];
+}> => {
+  const response = await api.get(`/me/manifestacoes/${id}/respostas`);
+  return response.data;
+};
+
+export const getManifestacaoDoUsuario = async (id: number): Promise<{
+  data: Manifestacao, error?: string;
+}> => {
+  const response = await api.get(`/me/manifestacoes/${id}`);
+  return response.data;
+};
+
+export const getManifestacoes = async (): Promise<{
+  data: Manifestacao[], error?: string, success?: boolean;
+}> => {
+  const response = await api.get(`/manifestacoes`);
+  return response.data;
+};
+
+export const deleteManifestacaoDoUsuario = async (id: number): Promise<{
+  data: Manifestacao, error?: string, success?: boolean;
+}> => {
+  const response = await api.delete(`/me/manifestacoes/${id}`);
   return response.data;
 };
