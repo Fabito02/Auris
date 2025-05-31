@@ -6,28 +6,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Button from "@/components/buttons/Button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BlankLayout } from "@/components/BlankLayout/BlankLayout";
+import { Manifestacao } from "@/types/api";
 import { Icon } from "@iconify-icon/react";
 import { Input } from "@/components/ui/input";
 import { getManifestacoesDoUsuario } from "@/api/api_routes";
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-} from "@/components/ui/select";
 
 const MinhasManifestacoes = () => {
   const navigate = useNavigate();
 
   const [manifestacoes, setManifestacoes] = useState<any[]>([]);
   const [search, setSearch] = useState("");
-  const [filtroStatus, setFiltroStatus] = useState("todos");
-
-  useEffect(() => {
-    document.title = "Minhas Manifestações";
-    checkAuth(navigate, ["admin", "moderador", "user"]);
-  }, []);
 
   useEffect(() => {
     const fetchManifestacoes = async () => {
@@ -47,38 +35,38 @@ const MinhasManifestacoes = () => {
   }, [setManifestacoes]);
 
   const manifestacoesFiltradas = useMemo(() => {
-    if (search) {
-      return manifestacoes.filter((manifestacao) => {
-        const lowerSearch = search.toLowerCase();
-        return (
-          manifestacao.Titulo?.toLowerCase().includes(lowerSearch) ||
-          manifestacao.Descricao.toString().toLowerCase().includes(lowerSearch) ||
-          manifestacao.Tipo_manifestacao.toString().toLowerCase().includes(lowerSearch) ||
-          manifestacao.Prioridade.toString().toLowerCase().includes(lowerSearch) ||
-          manifestacao.Tipo?.toString().toLowerCase().includes(lowerSearch) ||
-          manifestacao.Status?.toString().toLowerCase().includes(lowerSearch) ||
-          manifestacao.Data_Envio?.toString().toLowerCase().includes(lowerSearch)
-        );
-      });
-    } else {
-      return manifestacoes;
-    }
+    return manifestacoes.filter(
+      (manifestacoes: Manifestacao) =>
+        manifestacoes.Titulo?.toLowerCase().includes(search.toLowerCase()) ||
+        manifestacoes.Descricao.toString()
+          .toLowerCase()
+          .includes(search.toLowerCase()) ||
+        manifestacoes.Tipo_manifestacao.toString()
+          .toLowerCase()
+          .includes(search.toLowerCase()) ||
+        manifestacoes.Prioridade.toString()
+          .toLowerCase()
+          .includes(search.toLowerCase()) ||
+        manifestacoes.Tipo?.toString()
+          .toLowerCase()
+          .includes(search.toLowerCase()) ||
+        manifestacoes.Status?.toString()
+          .toLowerCase()
+          .includes(search.toLowerCase()) ||
+        manifestacoes.Data_Envio?.toString()
+          .toLowerCase()
+          .includes(search.toLowerCase())
+    );
   }, [search, manifestacoes]);
 
-  const manifestacoesFiltradasStatus = useMemo(() => {
-    if (filtroStatus === "todos") {
-      return manifestacoesFiltradas;
-    } else if (filtroStatus) {
-      return manifestacoesFiltradas.filter(
-        (manifestacao) =>
-          manifestacao.Status?.toLowerCase() === filtroStatus.toLowerCase()
-      );
-    }
-  }, [filtroStatus, manifestacoesFiltradas]);
+  useEffect(() => {
+    document.title = "Minhas Manifestações";
+    checkAuth(navigate, ["admin", "moderador", "user"]);
+  }, []);
 
   return (
     <BlankLayout showFooter={false} showHeader showNavbar>
-      <div className="px-4 mt-12 max-w-6xl mx-auto">
+      <div className="px-4 mt-12 w-6xl mx-auto">
         <Tabs defaultValue="manifestacoes" className="mb-10">
           <TabsList
             className="flex w-full justify-start overflow-x-auto whitespace-nowrap h-[40px] px-1 gap-2"
@@ -104,43 +92,25 @@ const MinhasManifestacoes = () => {
                 ></Button>
               </CardHeader>
 
-              <div className="flex justify-between px-4 gap-4">
-                <div className="relative w-[calc(100%-55px)] md:max-w-md">
+              <div className=" px-4">
+                <div className="relative">
                   <Icon
                     icon="lucide:search"
                     height={18}
-                    className="absolute left-3 top-1/2 transform -translate-y-1/1 text-muted-foreground"
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
                   />
                   <Input
                     placeholder="Pesquisar por título, status, tipo, prioridade..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="mb-4 pl-9"
+                    className="mb-4 w-[calc(100%-55px)] md:max-w-md pl-9"
                   />
                 </div>
-
-                <Select
-                  value={filtroStatus}
-                  onValueChange={(value) => setFiltroStatus(value)}
-                >
-                  <SelectTrigger className="custom-select">
-                    <SelectValue placeholder="Filtrar por status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="todos">Todos</SelectItem>
-                    <SelectItem value="pendente">Pendente</SelectItem>
-                    <SelectItem value="em_andamento">Em andamento</SelectItem>
-                    <SelectItem value="concluido">Concluído</SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
 
               <CardContent className="px-4 space-y-4">
-                <CardManifestacao
-                  action="/minhas-manifestacoes/"
-                  manifestacoes={manifestacoesFiltradasStatus??[]}
-                />
-                {manifestacoesFiltradasStatus?.length === 0 && (
+                <CardManifestacao action="/minhas-manifestacoes/" manifestacoes={manifestacoesFiltradas} />
+                {manifestacoesFiltradas.length === 0 && (
                   <div className="text-muted-foreground w-full text-center ">
                     Nenhuma manifestação encontrada.
                   </div>
@@ -160,44 +130,29 @@ const MinhasManifestacoes = () => {
                 ></Button>
               </CardHeader>
 
-              <div className="flex justify-between px-4 gap-4">
-                <div className="relative w-[calc(100%-55px)] md:max-w-md">
+              <div className=" px-4">
+                <div className="relative">
                   <Icon
                     icon="lucide:search"
                     height={18}
-                    className="absolute left-3 top-1/2 transform -translate-y-1/1 text-muted-foreground"
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
                   />
                   <Input
                     placeholder="Pesquisar por título, status, tipo, prioridade..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="mb-4 pl-9"
+                    className="mb-4 w-[calc(100%-55px)] md:max-w-md pl-9"
                   />
                 </div>
-
-                <Select
-                  value={filtroStatus}
-                  onValueChange={(value) => setFiltroStatus(value)}
-                >
-                  <SelectTrigger className="custom-select">
-                    <SelectValue placeholder="Filtrar por status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="todos">Todos</SelectItem>
-                    <SelectItem value="pendente">Pendente</SelectItem>
-                    <SelectItem value="em_andamento">Em andamento</SelectItem>
-                    <SelectItem value="concluido">Concluído</SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
 
               <CardContent className="px-4 space-y-4">
                 <CardManifestacao
-                  action="/minhas-manifestacoes/"
+                  action="/minhas-manifestacoes/" 
                   filtrarTipo="reclamacao"
-                  manifestacoes={manifestacoesFiltradasStatus??[]}
+                  manifestacoes={manifestacoesFiltradas}
                 />
-                {manifestacoesFiltradasStatus?.length === 0 && (
+                {manifestacoesFiltradas.length === 0 && (
                   <div className="text-muted-foreground w-full text-center ">
                     Nenhuma reclamação encontrada.
                   </div>
@@ -217,44 +172,29 @@ const MinhasManifestacoes = () => {
                 ></Button>
               </CardHeader>
 
-              <div className="flex justify-between px-4 gap-4">
-                <div className="relative w-[calc(100%-55px)] md:max-w-md">
+              <div className=" px-4">
+                <div className="relative">
                   <Icon
                     icon="lucide:search"
                     height={18}
-                    className="absolute left-3 top-1/2 transform -translate-y-1/1 text-muted-foreground"
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
                   />
                   <Input
                     placeholder="Pesquisar por título, status, tipo, prioridade..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="mb-4 pl-9"
+                    className="mb-4 w-[calc(100%-55px)] md:max-w-md pl-9"
                   />
                 </div>
-
-                <Select
-                  value={filtroStatus}
-                  onValueChange={(value) => setFiltroStatus(value)}
-                >
-                  <SelectTrigger className="custom-select">
-                    <SelectValue placeholder="Filtrar por status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="todos">Todos</SelectItem>
-                    <SelectItem value="pendente">Pendente</SelectItem>
-                    <SelectItem value="em_andamento">Em andamento</SelectItem>
-                    <SelectItem value="concluido">Concluído</SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
 
               <CardContent className="px-4 space-y-4">
                 <CardManifestacao
-                  action="/minhas-manifestacoes/"
+                  action="/minhas-manifestacoes/" 
                   filtrarTipo="elogio"
-                  manifestacoes={manifestacoesFiltradasStatus??[]}
+                  manifestacoes={manifestacoesFiltradas}
                 />
-                {manifestacoesFiltradasStatus?.length === 0 && (
+                {manifestacoesFiltradas.length === 0 && (
                   <div className="text-muted-foreground w-full text-center ">
                     Nenhum elogio encontrado.
                   </div>
@@ -274,44 +214,29 @@ const MinhasManifestacoes = () => {
                 ></Button>
               </CardHeader>
 
-              <div className="flex justify-between px-4 gap-4">
-                <div className="relative w-[calc(100%-55px)] md:max-w-md">
+              <div className=" px-4">
+                <div className="relative">
                   <Icon
                     icon="lucide:search"
                     height={18}
-                    className="absolute left-3 top-1/2 transform -translate-y-1/1 text-muted-foreground"
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
                   />
                   <Input
                     placeholder="Pesquisar por título, status, tipo, prioridade..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="mb-4 pl-9"
+                    className="mb-4 w-[calc(100%-55px)] md:max-w-md pl-9"
                   />
                 </div>
-
-                <Select
-                  value={filtroStatus}
-                  onValueChange={(value) => setFiltroStatus(value)}
-                >
-                  <SelectTrigger className="custom-select">
-                    <SelectValue placeholder="Filtrar por status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="todos">Todos</SelectItem>
-                    <SelectItem value="pendente">Pendente</SelectItem>
-                    <SelectItem value="em_andamento">Em andamento</SelectItem>
-                    <SelectItem value="concluido">Concluído</SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
 
               <CardContent className="px-4 space-y-4">
                 <CardManifestacao
                   action="/minhas-manifestacoes/"
                   filtrarTipo="denuncia"
-                  manifestacoes={manifestacoesFiltradasStatus??[]}
+                  manifestacoes={manifestacoesFiltradas}
                 />
-                {manifestacoesFiltradasStatus?.length === 0 && (
+                {manifestacoesFiltradas.length === 0 && (
                   <div className="text-muted-foreground w-full text-center ">
                     Nenhuma denúncia encontrada.
                   </div>
@@ -331,44 +256,29 @@ const MinhasManifestacoes = () => {
                 ></Button>
               </CardHeader>
 
-              <div className="flex justify-between px-4 gap-4">
-                <div className="relative w-[calc(100%-55px)] md:max-w-md">
+              <div className=" px-4">
+                <div className="relative">
                   <Icon
                     icon="lucide:search"
                     height={18}
-                    className="absolute left-3 top-1/2 transform -translate-y-1/1 text-muted-foreground"
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
                   />
                   <Input
                     placeholder="Pesquisar por título, status, tipo, prioridade..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="mb-4 pl-9"
+                    className="mb-4 w-[calc(100%-55px)] md:max-w-md pl-9"
                   />
                 </div>
-
-                <Select
-                  value={filtroStatus}
-                  onValueChange={(value) => setFiltroStatus(value)}
-                >
-                  <SelectTrigger className="custom-select">
-                    <SelectValue placeholder="Filtrar por status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="todos">Todos</SelectItem>
-                    <SelectItem value="pendente">Pendente</SelectItem>
-                    <SelectItem value="em_andamento">Em andamento</SelectItem>
-                    <SelectItem value="concluido">Concluído</SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
 
               <CardContent className="px-4 space-y-4">
                 <CardManifestacao
                   action="/minhas-manifestacoes/"
                   filtrarTipo="sugestao"
-                  manifestacoes={manifestacoesFiltradasStatus??[]}
+                  manifestacoes={manifestacoesFiltradas}
                 />
-                {manifestacoesFiltradasStatus?.length === 0 && (
+                {manifestacoesFiltradas.length === 0 && (
                   <div className="text-muted-foreground w-full text-center ">
                     Nenhuma sugestão encontrada.
                   </div>

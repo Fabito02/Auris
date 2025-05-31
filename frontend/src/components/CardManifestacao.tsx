@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 
 interface CardManifestacaoProps {
   manifestacoes: Manifestacao[];
-  filtrarTipo?: "reclamacao" | "elogio" | "sugestao" | "denuncia";
+  filtrarTipo?: 'reclamacao' | 'elogio' | 'sugestao' | 'denuncia'
   action?: string;
 }
 
@@ -23,20 +23,9 @@ interface ManifestacaoComAvatar extends Manifestacao {
   avatarUrl: string;
 }
 
-const formatDate = (iso: string) =>
-  new Intl.DateTimeFormat("pt-BR", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(iso));
+const formatDate = (iso: string) => new Date(iso).toLocaleDateString("pt-BR");
 
-const CardManifestacao = ({
-  manifestacoes,
-  filtrarTipo,
-  action,
-}: CardManifestacaoProps) => {
+const CardManifestacao = ({ manifestacoes, filtrarTipo, action }: CardManifestacaoProps) => {
   const navigate = useNavigate();
 
   const [lista, setLista] = useState<ManifestacaoComAvatar[]>([]);
@@ -65,11 +54,9 @@ const CardManifestacao = ({
         <Card
           key={m.Manifestacao_ID}
           className="cursor-pointer transition duration-300 ease-in-out hover:bg-gray-100 py-4 px-0 gap-4"
-          onClick={
-            action ? () => navigate(action + m.Manifestacao_ID) : undefined
-          }
+          onClick={action ? () => navigate(action + m.Manifestacao_ID) : undefined}
         >
-          <CardHeader className="flex items-center font-semibold text-sm space-x-1 px-4">
+          <CardHeader className="flex items-center font-semibold text-sm space-x-2 px-4">
             <Avatar className="w-7 h-7">
               <AvatarImage src={m.avatarUrl} alt="Ícone do Usuário" />
             </Avatar>

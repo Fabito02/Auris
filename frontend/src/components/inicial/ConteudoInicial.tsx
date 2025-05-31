@@ -12,7 +12,7 @@ const ConteudoHome = () => {
   return (
     <BlankLayout removeBodyPadding>
       <Button
-        texto="entrar"
+        texto="login"
         className="login-btn z-100"
         onClick={() => navigate("/login")}
       />
@@ -30,8 +30,6 @@ const ConteudoHome = () => {
                 texto="acessar plataforma"
                 className="plataforma-btn mt-4"
                 onClick={() => navigate("/home")}
-                icon="material-symbols:arrow-forward-rounded"
-                iconPosition="right"
               />
             </p>
           </div>
@@ -111,10 +109,8 @@ const ConteudoHome = () => {
               <Button
                 full_rounded
                 texto="acessar plataforma"
-                className="plataforma-btn mt-4"
+                className="plataforma-btn"
                 onClick={() => navigate("/home")}
-                icon="material-symbols:arrow-forward-rounded"
-                iconPosition="right"
               />
             </div>
           </div>

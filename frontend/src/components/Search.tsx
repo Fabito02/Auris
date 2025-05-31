@@ -14,6 +14,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
+import { useNavigate } from "react-router-dom";
 import { getManifestacoesDoUsuario } from "@/api/api_routes";
 import { Manifestacao } from "@/types/api";
 
@@ -25,6 +26,8 @@ const SearchBar = () => {
     browserSupportsSpeechRecognition,
     isMicrophoneAvailable,
   } = useSpeechRecognition();
+
+  const navigate = useNavigate();
 
   const [visibilidade, setVisibilidade] = useState(false);
   const [busca, setBusca] = useState("");
@@ -162,7 +165,7 @@ const SearchBar = () => {
         "denuncia": "var(--color-denuncia)",
         "sugestao": "var(--color-sugestao)",
       }[m.Tipo_manifestacao],
-      pagina: `/minhas-manifestacoes/${m.Manifestacao_ID}`,
+      pagina: `/manifestacoes/${m.Manifestacao_ID}`,
     })),
   ];
 
@@ -182,7 +185,6 @@ const SearchBar = () => {
           value={busca}
           onValueChange={(value) => setBusca(value)}
           onFocus={() => setVisibilidade(true)}
-          onClick={() => setVisibilidade(true)}
           onBlur={() => setVisibilidade(false)}
         />
 
@@ -219,8 +221,8 @@ const SearchBar = () => {
                           e.preventDefault();
                           e.stopPropagation();
                         }}
-                        onSelect={() => { window.location.href = item.pagina; setVisibilidade(false); }}
-                        onClick={() => { window.location.href = item.pagina; setVisibilidade(false); }}
+                        onSelect={() => navigate(item.pagina)}
+                        onClick={() => navigate(item.pagina)}
                         className="search-item"
                       >
                         <Icon

@@ -73,7 +73,7 @@ export const login = (req: Request, res: Response) => {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           sameSite: "lax",
-          maxAge: 60 * 60 * 1000,
+          maxAge: 24 * 60 * 60 * 1000,
         });
 
         registrarLog(`Novo login de ${user.Email}`, user.User_ID);
@@ -86,7 +86,7 @@ export const login = (req: Request, res: Response) => {
             Email: user.Email,
             role: user.Role,
           },
-          expiresIn: "1h",
+          expiresIn: "1d",
         });
       } catch (error) {
         console.error("Erro no login:", error);

@@ -62,11 +62,3 @@ export interface Notificacao {
   Data_Criacao: string;
   User_ID: number;
 }
-
-export interface Resposta {
-  Resposta_ID: number;
-  Descricao: string;
-  Manifestacao_ID: number;
-  User_ID: number;
-  Data_Criacao: string;
-}

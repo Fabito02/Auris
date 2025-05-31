@@ -6,7 +6,7 @@ import bcrypt from "bcryptjs";
 import { ResultSetHeader } from "mysql2";
 import { registrarLog } from "../utils/logger";
 import nodemailer from "nodemailer";
-import { URL_BASE_FRONTEND, URL_BASE_AVATAR } from "../config";
+import { URL_BASE_FRONTEND } from "../config";
 
 export const listUsers = (req: Request, res: Response): void => {
   connection.query(
@@ -269,7 +269,9 @@ export const getAvatar = (req: Request, res: Response): void => {
           .json({ success: false, error: "Usuário não possui avatar" });
       }
 
-      const avatarUrl = `${URL_BASE_AVATAR}/${avatarFilename}`;
+      const avatarUrl = `${req.protocol}://${req.get(
+        "host"
+      )}/uploads/avatars/${avatarFilename}`;
 
       return res.status(200).json({
         success: true,
