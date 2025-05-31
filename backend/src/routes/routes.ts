@@ -120,7 +120,7 @@ router.post("/users/notificacao", verifyToken, userController.postEnviarNotifica
 router.get("/me/manifestacoes", verifyToken, manifestacaoController.getManifestacoesDoUsuario);
 router.get("/manifestacoes", verifyToken, verifyRole(["admin", "moderador"]), manifestacaoController.getManifestacoes);
 router.get("/manifestacoes/:id", verifyToken, verifyRole(["admin", "moderador"]), manifestacaoController.getManifestacaoPorId);
-router.get("/me/manifestacoes/:id", verifyToken, manifestacaoController.responderManifestacao);
+router.get("/me/manifestacoes/:id", verifyToken, manifestacaoController.getMinhaManifestacao);
 router.get("/manifestacoes/:id/respostas", verifyToken, verifyRole(["admin", "moderador"]), manifestacaoController.getRespostasManifestacao);
 
 // rotas de logs
