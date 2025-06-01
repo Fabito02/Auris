@@ -163,4 +163,6 @@ router.put(
 // rotas de logs
 router.get("/logs", verifyToken, verifyRole(["admin"]), logController.getLogs);
 
+router.put("/manifestacoes/:id", verifyToken, verifyRole(["admin", "moderador"]), manifestacaoController.atualizarManifestacao);
+
 export default router;

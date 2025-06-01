@@ -229,3 +229,43 @@ export const atualizarResposta = (req: Request, res: Response) => {
     }
   );
 };
+
+export const atualizarManifestacao = (req: Request, res: Response): void => {
+  const id = Number(req.params.id);
+  const dadosAtualizados = req.body;
+
+  if (!id || isNaN(id)) {
+    res.status(400).json({
+      success: false,
+      error: "ID inválido para manifestação.",
+    });
+    return;
+  }
+
+  connection.query<ResultSetHeader>(
+    "UPDATE Manifestacoes SET ? WHERE Manifestacao_ID = ?",
+    [dadosAtualizados, id],
+    (err, results) => {
+      if (err) {
+        res.status(500).json({
+          success: false,
+          error: `Erro ao atualizar manifestação: ${err.message}`,
+        });
+        return;
+      }
+
+      if (results.affectedRows === 0) {
+        res.status(404).json({
+          success: false,
+          error: "Manifestação não encontrada.",
+        });
+        return;
+      }
+
+      res.status(200).json({
+        success: true,
+        message: "Manifestação atualizada com sucesso.",
+      });
+    }
+  );
+};
