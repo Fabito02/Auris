@@ -68,7 +68,10 @@ function RecuperarSenha() {
   return (
     <BlankLayout showFooter={false}>
       <div className="max-w-md mx-auto py-10 px-4">
-        <div className="bg-white rounded-lg p-6">
+        <div
+          className="bg-white rounded-xl p-6"
+          style={{ boxShadow: "0 0 2px 1px rgba(0,0,0,0.1)" }}
+        >
           <h1 className="text-3xl font-semibold text-center mb-10">
             Recuperar Senha
           </h1>

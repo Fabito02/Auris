@@ -68,6 +68,6 @@ export const generateToken = (user: IUser) => {
       role: user.Role,
     },
     jwtSecret,
-    { expiresIn: "1d" }
+    { expiresIn: "1h" }
   );
 };

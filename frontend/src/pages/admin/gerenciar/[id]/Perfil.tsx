@@ -15,7 +15,6 @@ import { User, Endereco } from "@/types/api";
 import {
   getUsuarioByUserId,
   getEnderecoByUserId,
-  getAvatar,
   deleteUser
 } from "@/api/api_routes";
 import {
@@ -30,6 +29,7 @@ import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
 import { useParams } from "react-router-dom";
 import Button from "@/components/buttons/Button";
 import { toast } from "sonner";
+import { URL_BASE_AVATAR } from "@/config";
 
 const Perfil: React.FC = () => {
   const { id } = useParams();
@@ -53,30 +53,28 @@ const Perfil: React.FC = () => {
       setEndereco(respEnd.data);
     })();
   }, [navigate]);
+  
+  useEffect(() => {
+    const fetchAvatar = async () => {
+      if (user?.Avatar) {
+        setProfilePic(
+          `${URL_BASE_AVATAR}/${user.Avatar}`
+        );
+      }
+    };
+    fetchAvatar();
+  }, [user, setProfilePic]);
 
   useEffect(() => {
-    if (user) {
-      const fetchAvatar = async () => {
-        if (!user?.User_ID) return;
-        const avatar = await getAvatar(user.User_ID);
-        setProfilePic(avatar.avatarUrl);
-      };
-
-      fetchAvatar();
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (user) {
-      const fetchAvatar = async () => {
-        if (!userId) return;
-        const avatar = await getAvatar(userId);
-        setProfilePic(avatar.avatarUrl);
-      };
-
-      fetchAvatar();
-    }
-  }, [user]);
+    const fetchAvatar = async () => {
+      if (user?.Avatar) {
+        setProfilePic(
+          `${URL_BASE_AVATAR}/${user.Avatar}`
+        );
+      }
+    };
+    fetchAvatar();
+  }, [user, setProfilePic]);
   
     const closeModal = () => {
       setOpenConfirmacao(false);

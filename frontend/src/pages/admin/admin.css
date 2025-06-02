@@ -1,6 +1,5 @@
 .corpoDoSite {
   display: flex;
-  height: calc(100vh - 114px);
   padding: 0;
 }
 
@@ -96,16 +95,16 @@
   width: 100%;
   margin-left: 90px;
   transition: filter 0.3s ease;
+  background-color: #fcfcfc;
 }
 
 .conteudoContainer {
-  background-color: #fff !important;
   max-width: 100%;
   min-height: calc(100vh - 115px);
 }
 
 .conteudo.escurecido {
-  filter: brightness(0.65);
+  filter: brightness(0.80);
 }
 
 @media (max-width: 992px) {

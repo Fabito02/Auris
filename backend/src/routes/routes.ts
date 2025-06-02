@@ -115,9 +115,13 @@ router.delete(
 );
 router.get("/users/avatar/:id", verifyToken, userController.getAvatar);
 router.post(
+  
   "/users/notificacao",
+ 
   verifyToken,
+ 
   userController.postEnviarNotificacao
+
 );
 
 // rotas para manifestações
@@ -136,7 +140,7 @@ router.get(
   "/manifestacoes/:id",
   verifyToken,
   verifyRole(["admin", "moderador"]),
-  manifestacaoController.getManifestacaoPorId
+  manifestacaoController.getMinhaManifestacao
 );
 router.get(
   "/me/manifestacoes/:id",
@@ -159,7 +163,44 @@ router.put(
   verifyToken,
   manifestacaoController.atualizarResposta
 );
-
+router.get(
+  "/me/manifestacoes",
+  verifyToken,
+  manifestacaoController.getManifestacoesDoUsuario
+);
+router.delete(
+  "/me/manifestacoes/:id",
+  verifyToken,
+  manifestacaoController.deleteManifestacaoDoUsuario
+);
+router.get(
+  "/manifestacoes",
+  verifyToken,
+  verifyRole(["admin", "moderador"]),
+  manifestacaoController.getManifestacoes
+);
+router.get(
+  "/manifestacoes/:id",
+  verifyToken,
+  verifyRole(["admin", "moderador"]),
+  manifestacaoController.getManifestacoesPorId
+);
+router.get(
+  "/me/manifestacoes/:id",
+  verifyToken,
+  manifestacaoController.getMinhaManifestacao
+);
+router.get(
+  "/me/manifestacoes/:id/respostas",
+  verifyToken,
+  manifestacaoController.getRespostasManifestacaoDoUsuario
+);
+router.get(
+  "/manifestacoes/:id/respostas",
+  verifyToken,
+  verifyRole(["admin", "moderador"]),
+  manifestacaoController.getRespostasManifestacao
+);
 // rotas de logs
 router.get("/logs", verifyToken, verifyRole(["admin"]), logController.getLogs);
 
