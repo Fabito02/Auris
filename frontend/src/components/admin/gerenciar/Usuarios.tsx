@@ -87,7 +87,7 @@ export default function Component() {
           onClick={() => navigate("/admin/adicionar-usuario")}
         ></Button>
       </div>
-      <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {usersFiltrados
           .slice()
           .reverse()
@@ -95,7 +95,7 @@ export default function Component() {
             <AnimarAoVer>
               <Card
                 key={User.User_ID}
-                className="grid grid-cols-6 items-center gap-2 p-3 cursor-pointer hover:bg-[var(--color-cinza-semitransparente-claro)]"
+                className="grid grid-cols-6 items-center gap-2 p-3 cursor-pointer hover:bg-gray-100"
                 style={{ transition: "background-color 0.3s ease-in-out" }}
                 onClick={() =>
                   navigate(`/admin/gerenciar/${User.User_ID}/perfil`)
@@ -141,7 +141,7 @@ export default function Component() {
           ))}
 
         {usersFiltrados.length === 0 && (
-          <div className="text-muted-foreground mt-4 w-full text-center ">
+          <div className="text-muted-foreground mt-10 w-full text-center col-span-2">
             Nenhum usuário encontrado.
           </div>
         )}

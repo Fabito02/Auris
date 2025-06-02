@@ -183,7 +183,7 @@ router.get(
   "/manifestacoes/:id",
   verifyToken,
   verifyRole(["admin", "moderador"]),
-  manifestacaoController.getManifestacoesPorId
+  manifestacaoController.getManifestacaoPorId
 );
 router.get(
   "/me/manifestacoes/:id",

@@ -119,7 +119,7 @@ export default function Component() {
           className="mb-4 md:max-w-md pl-9"
         />
       </div>
-      <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {usersFiltrados
           .slice()
           .reverse()
@@ -166,7 +166,7 @@ export default function Component() {
           ))}
 
         {usersFiltrados.length === 0 && (
-          <div className="text-muted-foreground mt-4 w-full text-center ">
+          <div className="text-muted-foreground mt-10 w-full text-center col-span-2">
             Nenhum usuário encontrado.
           </div>
         )}
