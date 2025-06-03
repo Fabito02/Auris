@@ -1,7 +1,6 @@
 import { Notificacao } from "@/types/api";
 import Button from "@/components/buttons/Button";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Dialog,
   DialogContent,
@@ -18,8 +17,6 @@ interface CardNotificacaoProps {
 }
 
 const CardNotificacao = ({ notificacoes, onDelete }: CardNotificacaoProps) => {
-  const navigate = useNavigate();
-
   const [openNotificacao, setOpenNotificacao] = useState(false);
   const [notificacaoAberta, setNotificacaoAberta] =
     useState<Notificacao | null>();
@@ -111,7 +108,11 @@ const CardNotificacao = ({ notificacoes, onDelete }: CardNotificacaoProps) => {
             </DialogTitle>
             <DialogDescription className="border-l px-4 text-gray-800">
               {notificacaoAberta?.Mensagem}
-            <div className="text-xs text-muted-foreground mt-2">{formatDate(notificacaoAberta?.Data_Criacao || "")}</div>
+              <div className="text-xs text-muted-foreground mt-2">
+                {notificacaoAberta?.Data_Criacao
+                  ? formatDate(notificacaoAberta.Data_Criacao)
+                  : "Data inválida"}
+              </div>
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="sm:justify-center mt-4">

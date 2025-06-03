@@ -114,8 +114,9 @@ export const responderManifestacao = (req: Request, res: Response) => {
       const { Real_User_ID, Anonimo } = mfResults[0];
       const isDono = Real_User_ID === userId;
       const isAdmin = role === "admin";
+      const isModerador = role === "moderador";
 
-      if (!isDono && !isAdmin) {
+      if (!isDono && !isAdmin && !isModerador) {
         res.status(403).json({
           success: false,
           error:
@@ -250,7 +251,7 @@ export const getRespostasManifestacao = (req: Request, res: Response) => {
 
       const { Real_User_ID } = manifestacaoResults[0];
 
-      if (userId !== Real_User_ID && role !== "admin") {
+      if (userId !== Real_User_ID && role !== "admin" && role !== "moderador") {
         res.status(403).json({
           success: false,
           error: "Você não tem permissão para visualizar essas respostas.",
@@ -315,7 +316,7 @@ export const getRespostasManifestacaoDoUsuario = (
 
       const { Real_User_ID } = manifestacaoResults[0];
 
-      if (userId !== Real_User_ID && role !== "admin") {
+      if (userId !== Real_User_ID && role !== "admin" && role !== "moderador") {
         res.status(403).json({
           success: false,
           error: "Você não tem permissão para visualizar essas respostas.",
@@ -435,6 +436,8 @@ export const atualizarStatusManifestacao = (
         return;
       }
 
+      registrarLog(`Status da manifestação com ID ${id} atualizado para "${novoStatus}".`, req.user?.User_ID as number);
+
       res.status(200).json({
         success: true,
         message: "Manifestação atualizada com sucesso.",
@@ -486,6 +489,8 @@ export const enviarManifestacao = (req: Request, res: Response) => {
           error: "Erro ao enviar a manifestação",
         });
       }
+
+      registrarLog(`Manifestação "${manifestacao.Titulo}" foi criada.`, userId as number);
 
       return res.status(201).json({
         success: true,

@@ -211,7 +211,6 @@ const GerenciarManifestacao = () => {
         manifestacao.Manifestacao_ID,
         novaResposta
       );
-      console.log(response.data);
       setRespostas([response.data, ...(respostas || [])]);
       setResposta("");
     } catch (error) {
@@ -272,7 +271,7 @@ const GerenciarManifestacao = () => {
                 : "DENÚNCIA"}
             </div>
 
-            <p className="truncate">• {manifestacao.Tipo} •</p>
+            <p className="truncate font-medium">• {manifestacao.Tipo} •</p>
 
             <div
               className={`w-7 h-7 aspect-square rounded-full flex items-center justify-center ${
@@ -336,15 +335,15 @@ const GerenciarManifestacao = () => {
 
         <div className="mt-5 col-span-2 ml-4">
           <h1 className="text-2xl font-semibold">{manifestacao.Titulo}</h1>
-          <div className="ql-snow border-l border-r my-8">
+          <div className="ql-snow border-l my-8">
             <div
               className="ql-editor"
               dangerouslySetInnerHTML={{ __html: manifestacao.Descricao }}
             />
           </div>
           <div className="flex items-center justify-between mt-4">
-            <p className="text-xs text-gray-600 flex items-center">
-              {formatDate(manifestacao.Data_Envio)}
+            <p className="text-sm text-gray-600 flex items-cente truncate">
+              {formatDate(manifestacao.Data_Envio)} {manifestacao.Local && ` - Local: ${manifestacao.Local}`}
             </p>
             <div
               className={`px-2 text-xs text-white h-6 ${
@@ -398,6 +397,11 @@ const GerenciarManifestacao = () => {
                       e.target.style.height = e.target.scrollHeight + "px";
                     }}
                     value={resposta}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handlePostResposta();
+                      }
+                    }}
                   ></Textarea>
                   <Button
                     icon="material-symbols:send"
@@ -503,7 +507,7 @@ const GerenciarManifestacao = () => {
                 Editar status
               </DialogTitle>
               <Select
-                defaultValue={manifestacao.Status}
+                defaultValue={status}
                 onValueChange={(e) =>
                   setStatusEdicao(
                     e as "pendente" | "em_andamento" | "concluido"

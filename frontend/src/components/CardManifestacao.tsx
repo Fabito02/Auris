@@ -104,7 +104,7 @@ const CardManifestacao = ({
                 : "DENÚNCIA"}
             </div>
 
-            <p className="truncate">• {m.Tipo} •</p>
+            <p className="truncate text-medium">• {m.Tipo} •</p>
 
             <div
               className={`w-7 h-7 aspect-square rounded-full flex items-center justify-center ${
@@ -142,7 +142,7 @@ const CardManifestacao = ({
           </CardContent>
 
           <CardFooter className="flex justify-between pr-4">
-            <p className="text-xs text-gray-600">{formatDate(m.Data_Envio)}</p>
+            <p className="text-xs text-gray-600 truncate">{formatDate(m.Data_Envio)} {m.Local && ` - Local: ${m.Local}`}</p>
             <div
               className={`px-2 text-xs text-white h-6 ${
                 m.Status === "pendente"
