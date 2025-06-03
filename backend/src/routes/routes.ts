@@ -194,6 +194,12 @@ router.post(
   verifyToken,
   manifestacaoController.enviarManifestacao
 );
+router.put(
+  "/manifestacoes/:id/status",
+  verifyToken,
+  verifyRole(["admin", "moderador"]),
+  manifestacaoController.atualizarStatusManifestacao
+);
 
 // rotas de logs
 router.get("/logs", verifyToken, verifyRole(["admin"]), logController.getLogs);
