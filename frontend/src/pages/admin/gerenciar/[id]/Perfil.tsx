@@ -115,7 +115,12 @@ const Perfil: React.FC = () => {
           <div className="col-span-3 md:col-span-1 flex justify-center">
             <div className="relative w-[220px] h-[220px] rounded-full overflow-hidden">
               <img
-                src={profilePic || "/user_placeholder.png"}
+                src={
+                  profilePic ||
+                  (user?.Role === "anonimo"
+                    ? "/user_placeholder_anonimo.png"
+                    : "/user_placeholder.png")
+                }
                 alt="Foto de perfil"
                 className="w-full h-full object-cover"
               />
