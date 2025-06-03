@@ -470,7 +470,7 @@ export const enviarManifestacao = (req: Request, res: Response) => {
   }
 
   connection.query(
-    "INSERT INTO Manifestacoes ?",
+    "INSERT INTO Manifestacoes SET ?",
     [manifestacao],
     (err, results: RowDataPacket[]) => {
       if (err) {

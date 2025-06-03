@@ -6,13 +6,11 @@ import {
   CardHeader,
   CardContent,
   CardTitle,
-  CardDescription,
   CardFooter,
 } from "@/components/ui/card";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { getAvatar } from "@/api/api_routes";
 import { useNavigate } from "react-router-dom";
-import { URL_BASE_AVATAR } from "@/config";
 
 interface CardManifestacaoProps {
   manifestacoes: Manifestacao[];
@@ -62,6 +60,15 @@ const CardManifestacao = ({
       })
     ).then((res) => setLista(res));
   }, [manifestacoesFiltradas]);
+
+  function getPlainTextFromQuill(html: string): string {
+    const container = document.createElement("div");
+    container.innerHTML = html;
+
+    container.querySelectorAll("img, video").forEach((el) => el.remove());
+
+    return container.textContent || "";
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -129,9 +136,9 @@ const CardManifestacao = ({
 
           <CardContent className="mx-3 px-4">
             <CardTitle className="truncate mb-2">{m.Titulo}</CardTitle>
-            <CardDescription>
-              <p className="line-clamp-1">{m.Descricao}</p>
-            </CardDescription>
+            <div className="mt-2 text-muted-foreground border-l px-2">
+              <p className="truncate">{getPlainTextFromQuill(m.Descricao)}</p>
+            </div>
           </CardContent>
 
           <CardFooter className="flex justify-between pr-4">

@@ -190,7 +190,7 @@ router.get(
   manifestacaoController.getRespostasManifestacao
 );
 router.post(
-  "/manifestacoes/",
+  "/manifestacoes",
   verifyToken,
   manifestacaoController.enviarManifestacao
 );

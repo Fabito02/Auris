@@ -71,7 +71,7 @@ async function createTables(conn: mysql.Connection) {
             Manifestacao_ID INT AUTO_INCREMENT PRIMARY KEY,
             Data_Envio DATETIME DEFAULT CURRENT_TIMESTAMP,
             Titulo VARCHAR(100) NOT NULL,
-            Descricao TEXT NOT NULL,
+            Descricao LONGTEXT NOT NULL,
             Tipo VARCHAR(50),
             Tipo_manifestacao ENUM('reclamacao', 'sugestao', 'denuncia', 'elogio') NOT NULL,
             Anonimo BOOLEAN DEFAULT FALSE,
@@ -135,7 +135,6 @@ async function insertSeeds(conn: mysql.Connection) {
         Email_Verificado: true,
         Primeiro_Acesso: false,
         is_anonymous: true,
-        Avatar: "user_placeholder_anonimo.png",
       },
       {
         Nome: "admin",

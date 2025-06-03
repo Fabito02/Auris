@@ -173,7 +173,7 @@ const AlterarSenha = () => {
               Senha alterada com sucesso!
             </DialogTitle>
             <DialogDescription className="text-center">
-              Clique no botão abaixo para ir à home.
+              Clique no botão abaixo para voltar à home.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="sm:justify-center mt-4">

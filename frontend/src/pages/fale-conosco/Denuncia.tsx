@@ -1,19 +1,16 @@
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import Button from "@/components/buttons/Button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Progress } from "@/components/ui/progress";
-import { motion, AnimatePresence } from "framer-motion";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
+  CardFooter,
 } from "@/components/ui/card";
 import { BlankLayout } from "@/components/BlankLayout/BlankLayout";
 import {
@@ -26,48 +23,45 @@ import {
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
 import { useNavigate } from "react-router-dom";
 import { checkAuth } from "@/api/auth";
-
-const tabVariants = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 },
-};
+import { enviarManifestacao } from "@/api/api_routes";
+import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 const Denuncia = () => {
-  const [tab, setTab] = useState<
-    "contato" | "tipo" | "descricao" | "finalizar"
-  >("contato");
-
-  const [salvarContato, setSalvarContato] = useState(false);
-  const [tipoDenuncia, setTipoDenuncia] = useState("");
+  const [anonimo, setAnonimo] = useState(false);
+  const [tipo, setTipo] = useState("");
   const [titulo, setTitulo] = useState("");
   const quillContainerRef = useRef<HTMLDivElement | null>(null);
   const quillRef = useRef<Quill | null>(null);
-  const [progresso, setProgresso] = useState(1);
+  const [local, setLocal] = useState("");
+  const [openSuccess, setOpenSuccess] = useState(false);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    document.title = "Enviar Denúncia";
+    document.title = "Enviar Reclamação";
     checkAuth(navigate, ["admin", "moderador", "user"]);
   }, []);
 
-  const handleSetProgresso = (
-    value: "contato" | "tipo" | "descricao" | "finalizar"
-  ) => {
-    if (value === "contato") {
-      setProgresso(25);
-    } else if (value === "tipo") {
-      setProgresso(50);
-    } else if (value === "descricao") {
-      setProgresso(75);
-    } else {
-      setProgresso(100);
-    }
+  const closeSuccess = () => {
+    setOpenSuccess(false);
+    navigate("/home");
   };
 
+  const hasInitialized = useRef(false);
+
   useEffect(() => {
-    if (tab === "descricao" && quillContainerRef.current) {
+    if (hasInitialized.current) return;
+    hasInitialized.current = true;
+
+    if (quillContainerRef.current) {
       quillContainerRef.current.innerHTML = "";
       quillRef.current = new Quill(quillContainerRef.current, {
         theme: "snow",
@@ -87,20 +81,96 @@ const Denuncia = () => {
         },
       });
     }
+  }, []);
 
-    handleSetProgresso(tab);
-  }, [tab]);
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const descricaoHTML = quillRef.current?.root.innerHTML || "";
-    console.log({
-      salvarContato,
-      tipoDenuncia,
-      titulo,
-      descricao: descricaoHTML,
-    });
-    // lógica de envio...
+
+    if (!tipo) {
+      toast.error("Selecione um tipo para a sua manifestação.", {
+        icon: (
+          <Icon
+            icon="mdi:alert-circle"
+            className="text-[var(--color-warning)]"
+            height={20}
+          />
+        ),
+      });
+      return;
+    }
+
+    if (descricaoHTML.length < 5) {
+      toast.error("A descricao deve ter pelo menos 5 caracteres.", {
+        icon: (
+          <Icon
+            icon="mdi:alert-circle"
+            className="text-[var(--color-warning)]"
+            height={20}
+          />
+        ),
+      });
+      return;
+    }
+
+    if (tipo === "Estrutura e Espaços" && !local) {
+      toast.error("Selecione a área do campus.", {
+        icon: (
+          <Icon
+            icon="mdi:alert-circle"
+            className="text-[var(--color-warning)]"
+            height={20}
+          />
+        ),
+      });
+      return;
+    }
+
+    if (titulo.length < 5) {
+      toast.error("O título deve ter pelo menos 5 caracteres.", {
+        icon: (
+          <Icon
+            icon="mdi:alert-circle"
+            className="text-[var(--color-warning)]"
+            height={20}
+          />
+        ),
+      });
+      return;
+    }
+
+    const data = {
+      Anonimo: anonimo,
+      Tipo_manifestacao: "denuncia" as "denuncia",
+      Tipo: tipo,
+      Titulo: titulo,
+      Descricao: descricaoHTML,
+      Local: local,
+    };
+    try {
+      await enviarManifestacao(data);
+      setAnonimo(false);
+      setTipo("");
+      setTitulo("");
+      setLocal("");
+      quillRef.current?.setContents([]);
+      setOpenSuccess(true);
+    } catch (error: any) {
+      toast.error(
+        error.response?.data?.error ||
+          error.message ||
+          "Erro ao enviar o denuncia. Tente novamente mais tarde.",
+        {
+          icon: (
+            <Icon
+              icon="mdi:alert-circle"
+              className="text-[var(--color-warning)]"
+              height={20}
+            />
+          ),
+        }
+      );
+    }
   };
 
   return (
@@ -113,241 +183,146 @@ const Denuncia = () => {
           className="w-5xl overflow-auto"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          <Progress
-            value={progresso}
-            className="w-[100%] mb-2 h-3 [&>div]:bg-[var(--color-primary)] bg-gray-200"
-          />
-
-          <Tabs
-            value={tab}
-            onValueChange={(value) =>
-              setTab(value as "contato" | "tipo" | "descricao" | "finalizar")
-            }
-          >
-            <TabsList
-              className="flex w-full justify-start overflow-x-auto whitespace-nowrap h-[40px] px-1 gap-2"
-              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-            >
-              <TabsTrigger value="contato">Contato</TabsTrigger>
-              <TabsTrigger value="tipo">Tipo de Denúncia</TabsTrigger>
-              <TabsTrigger value="descricao">Descrição</TabsTrigger>
-              <TabsTrigger value="finalizar">Finalizar</TabsTrigger>
-            </TabsList>
-
-            <AnimatePresence mode="wait">
-              {tab === "contato" && (
-                <TabsContent value="contato" forceMount>
-                  <motion.div
-                    key="contato"
-                    initial="initial"
-                    animate="animate"
-                    exit="exit"
-                    variants={tabVariants}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Contato</CardTitle>
-                        <CardDescription>
-                          Você deseja enviar suas informações de contato?
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent className="space-y-2">
-                        <Checkbox
-                          id="enviarContato"
-                          checked={salvarContato}
-                          className="data-[state=checked]:bg-[#16aa51] data-[state=checked]:border-[#16aa51]"
-                          onCheckedChange={(c) => setSalvarContato(!!c)}
-                        />
-                        <span className="ml-2 text-sm text-muted-foreground">
-                          Desejo fazer uma manifestação anônima.
-                        </span>
-                      </CardContent>
-                      <CardFooter className="border-t">
-                        <p className="text-sm text-red-500">
-                          *OBS: Estas informações serão usadas para entrar em
-                          contato com você. Denúncias identificadas permitem um
-                          acompanhamento mais eficaz.
-                        </p>
-                      </CardFooter>
-                    </Card>
-                  </motion.div>
-                </TabsContent>
-              )}
-
-              {tab === "tipo" && (
-                <TabsContent value="tipo" forceMount>
-                  <motion.div
-                    key="tipo"
-                    initial="initial"
-                    animate="animate"
-                    exit="exit"
-                    variants={tabVariants}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Tipo de Denúncia</CardTitle>
-                        <CardDescription>
-                          Selecione o tipo da sua denúncia.
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent className="space-y-2">
-                        <Select
-                          name="tipoDenuncia"
-                          onValueChange={(value) => setTipoDenuncia(value)}
-                        >
-                          <SelectTrigger className="custom-select">
-                            <SelectValue placeholder="Selecione..." />
-                          </SelectTrigger>
-                          <SelectContent className="custom-select-content">
-                            <SelectItem value="assedio-moral">
-                              Assédio Moral
-                            </SelectItem>
-                            <SelectItem value="assedio-sexual">
-                              Assédio Sexual
-                            </SelectItem>
-                            <SelectItem value="discriminacao">
-                              Discriminação (Racial, de Gênero, etc.)
-                            </SelectItem>
-                            <SelectItem value="violencia">
-                              Violência ou Agressão Física
-                            </SelectItem>
-                            <SelectItem value="ameaça">
-                              Ameaça ou Intimidação
-                            </SelectItem>
-                            <SelectItem value="bullying">
-                              Bullying ou Cyberbullying
-                            </SelectItem>
-                            <SelectItem value="negligencia">
-                              Negligência ou Abuso de Autoridade
-                            </SelectItem>
-                            <SelectItem value="corrupcao">
-                              Corrupção, Fraude ou Irregularidades
-                            </SelectItem>
-                            <SelectItem value="abuso-poder">
-                              Abuso de Poder
-                            </SelectItem>
-                            <SelectItem value="desvios-eticos">
-                              Desvios de Conduta ou Ética
-                            </SelectItem>
-                            <SelectItem value="infraestrutura-perigosa">
-                              Infraestrutura Perigosa ou Insegura
-                            </SelectItem>
-                            <SelectItem value="conduta-inadequada">
-                              Conduta Inadequada de Docentes ou Servidores
-                            </SelectItem>
-                            <SelectItem value="higiene">
-                              Falta de Higiene em Ambientes Críticos
-                            </SelectItem>
-                            <SelectItem value="descarte-irregular">
-                              Descarte Irregular de Resíduos
-                            </SelectItem>
-                            <SelectItem value="outro">Outro</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                </TabsContent>
-              )}
-
-              {tab === "descricao" && (
-                <TabsContent value="descricao" forceMount>
-                  <motion.div
-                    key="descricao"
-                    initial="initial"
-                    animate="animate"
-                    exit="exit"
-                    variants={tabVariants}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Descrição da denúncia</CardTitle>
-                        <CardDescription>
-                          Descreva o motivo e contexto da denúncia.
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div>
-                          <h3 className="mb-2">Título</h3>
-                          <Input
-                            value={titulo}
-                            onChange={(e) => setTitulo(e.target.value)}
-                            placeholder="Digite um título"
-                            required
-                          />
-                        </div>
-                        <div>
-                          <h3 className="mb-2">Detalhes</h3>
-                          <div
-                            ref={quillContainerRef}
-                            className="min-h-[200px] bg-white"
-                          />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                </TabsContent>
-              )}
-              {tab === "finalizar" && (
-                <TabsContent value="finalizar">
-                  <motion.div
-                    key="contato"
-                    initial="initial"
-                    animate="animate"
-                    exit="exit"
-                    variants={tabVariants}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <Card>
-                      <CardContent className="space-y-2">
-                        <Icon
-                          icon={"line-md:check-list-3-filled"}
-                          className="text-center w-full text-8xl text-[var(--color-success)] my-4"
-                        ></Icon>
-                      </CardContent>
-                      <CardFooter className="border-t">
-                        <p className="text-center text-muted-foreground w-full">
-                          Tudo Pronto! Clique em "Enviar" para enviar sua
-                          denúncia.
-                        </p>
-                      </CardFooter>
-                    </Card>
-                  </motion.div>
-                </TabsContent>
-              )}
-            </AnimatePresence>
-
-            <div className="flex justify-between w-full gap-4 mt-4">
-              <Button
-                texto="Voltar"
-                color={tab === "contato" ? "muted" : "secondary"}
-                type="button"
-                onClick={() => {
-                  const order = ["contato", "tipo", "descricao", "finalizar"];
-                  const idx = order.indexOf(tab);
-                  if (idx > 0) setTab(order[idx - 1] as any);
-                }}
-              />
-              {tab === "finalizar" ? (
-                <Button texto="Enviar" type="submit" />
-              ) : (
-                <Button
-                  texto="Avançar"
-                  type="button"
-                  onClick={() => {
-                    const order = ["contato", "tipo", "descricao", "finalizar"];
-                    const idx = order.indexOf(tab);
-                    if (idx < order.length - 1) setTab(order[idx + 1] as any);
-                  }}
+          <div>
+            <Card>
+              <CardHeader>
+                <CardTitle>Informações pessoais</CardTitle>
+                <CardDescription>
+                  Você deseja enviar suas informações pessoais e de contato?
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <Checkbox
+                  id="enviarContato"
+                  checked={anonimo}
+                  className="data-[state=checked]:bg-[#16aa51] data-[state=checked]:border-[#16aa51]"
+                  onCheckedChange={(c) => setAnonimo(!!c)}
                 />
-              )}
-            </div>
-          </Tabs>
+                <span className="ml-2 text-sm text-muted-foreground">
+                  Desejo fazer uma manifestação anônima.
+                </span>
+                <p className="text-sm text-red-500 my-4">
+                  *OBS: Estas informações serão usadas para entrar em contato
+                  com você. Denúncias identificadas permitem um acompanhamento
+                  mais eficaz.
+                </p>
+              </CardContent>
+              <CardHeader>
+                <CardTitle>Tipo de denúncia</CardTitle>
+                <CardDescription>
+                  Selecione o tipo da sua denúncia.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <Select
+                  name="tipoDenuncia"
+                  onValueChange={(value) => setTipo(value)}
+                >
+                  <SelectTrigger className="custom-select">
+                    <SelectValue placeholder="Selecione..." />
+                  </SelectTrigger>
+                  <SelectContent className="custom-select-content">
+                    <SelectItem value="Assédio Moral">Assédio Moral</SelectItem>
+                    <SelectItem value="Assédio Sexual">
+                      Assédio Sexual
+                    </SelectItem>
+                    <SelectItem value="Discriminação">
+                      Discriminação (Racial, de Gênero, etc.)
+                    </SelectItem>
+                    <SelectItem value="Violência ou Agressão Física">
+                      Violência ou Agressão Física
+                    </SelectItem>
+                    <SelectItem value="Ameaça ou Intimidação">
+                      Ameaça ou Intimidação
+                    </SelectItem>
+                    <SelectItem value="Bullying ou Cyberbullying">
+                      Bullying ou Cyberbullying
+                    </SelectItem>
+                    <SelectItem value="Negligência ou Abuso de Autoridade">
+                      Negligência ou Abuso de Autoridade
+                    </SelectItem>
+                    <SelectItem value="Corrupção, Fraude ou Irregularidades">
+                      Corrupção, Fraude ou Irregularidades
+                    </SelectItem>
+                    <SelectItem value="Abuso de Poder">Abuso de Poder</SelectItem>
+                    <SelectItem value="Desvios de Conduta ou Ética">
+                      Desvios de Conduta ou Ética
+                    </SelectItem>
+                    <SelectItem value="Infraestrutura Perigosa ou Insegura">
+                      Infraestrutura Perigosa ou Insegura
+                    </SelectItem>
+                    <SelectItem value="Conduta Inadequada de Docentes ou Servidores">
+                      Conduta Inadequada de Docentes ou Servidores
+                    </SelectItem>
+                    <SelectItem value="Falta de Higiene em Ambientes Críticos">
+                      Falta de Higiene em Ambientes Críticos
+                    </SelectItem>
+                    <SelectItem value="Descarte Irregular de Resíduos">
+                      Descarte Irregular de Resíduos
+                    </SelectItem>
+                    <SelectItem value="Outro">Outro</SelectItem>
+                  </SelectContent>
+                </Select>
+              </CardContent>
+              <CardHeader>
+                <CardTitle>Descrição da denúncia</CardTitle>
+                <CardDescription>
+                  Descreva o motivo e contexto da denúncia.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <h3 className="mb-2">Título</h3>
+                  <Input
+                    value={titulo}
+                    onChange={(e) => setTitulo(e.target.value)}
+                    placeholder="Digite um título"
+                    required
+                  />
+                </div>
+                <div>
+                  <h3 className="mb-2">Descrição</h3>
+                  <div
+                    ref={quillContainerRef}
+                    className="min-h-[200px] bg-white"
+                  />
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Button
+                  color="primary"
+                  texto="enviar denúncia"
+                  type="submit"
+                  icon="material-symbols:send-rounded"
+                  iconPosition="right"
+                />
+              </CardFooter>
+            </Card>
+          </div>
         </div>
       </form>
+
+      <Dialog open={openSuccess} onOpenChange={closeSuccess}>
+        <DialogContent className="sm:max-w-[400px] rounded-xl [&>button]:hidden">
+          <DialogHeader>
+            <DialogTitle className="text-center text-[var(--color-primary)] text-3xl mb-4">
+              Manifestação enviada com sucesso!
+            </DialogTitle>
+            <DialogDescription className="text-center">
+              Clique no botão abaixo para voltar à home.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="sm:justify-center mt-4">
+            <Button
+              onClick={closeSuccess}
+              full_rounded
+              color="success"
+              className="w-full sm:max-w-[200px] px-5"
+              texto="home"
+            />
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </BlankLayout>
   );
 };

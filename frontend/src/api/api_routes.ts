@@ -243,3 +243,8 @@ export const responderManifestacao = async (id: number, resposta: Partial<Respos
   const response = await api.post(`/manifestacoes/${id}/respostas`, resposta);
   return response.data;
 };
+
+export const enviarManifestacao = async (manifestacao: Partial<Manifestacao>) => {
+  const response = await api.post(`/manifestacoes`, manifestacao);
+  return response.data;
+};

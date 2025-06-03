@@ -47,6 +47,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import "quill/dist/quill.snow.css";
 
 const MinhaManifestacao = () => {
   const navigate = useNavigate();
@@ -177,7 +178,7 @@ const MinhaManifestacao = () => {
       setOpenSuccessEditarStatus(true);
       setStatus(statusEdicao);
     } catch (error) {
-      console.error("Erro ao deletar manifestação:", error);
+      console.error("Erro ao editar status da manifestação:", error);
     }
   };
 
@@ -240,7 +241,7 @@ const MinhaManifestacao = () => {
 
   return (
     <BlankLayout showNavbar showHeader showFooter={false}>
-      <div className="grid grid-cols-2 w-full max-w-6xl mx-auto px-6 pt-12 pb-16 min-h-full ">
+      <div className="grid grid-cols-2 w-full max-w-7xl mx-auto px-6 pt-12 pb-16 min-h-full ">
         <div className="col-span-2 display flex w-full justify-between">
           <div className="h-8 w-full flex gap-2 items-center">
             <Avatar onClick={() => navigate(`/perfil`)}>
@@ -333,8 +334,13 @@ const MinhaManifestacao = () => {
         </div>
 
         <div className="mt-5 col-span-2 ml-4">
-          <h1 className="text-xl font-semibold">{manifestacao.Titulo}</h1>
-          <h1 className="text-1xl mt-2">{manifestacao.Descricao}</h1>
+          <h1 className="text-2xl font-semibold">{manifestacao.Titulo}</h1>
+          <div className="ql-snow border-l border-r my-8">
+            <div
+              className="ql-editor"
+              dangerouslySetInnerHTML={{ __html: manifestacao.Descricao }}
+            />
+          </div>
           <div className="flex items-center justify-between mt-4">
             <p className="text-xs text-gray-600 flex items-center">
               {formatDate(manifestacao.Data_Envio)}
