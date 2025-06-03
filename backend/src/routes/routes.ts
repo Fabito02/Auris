@@ -116,10 +116,13 @@ router.delete(
 router.get("/users/avatar/:id", verifyToken, userController.getAvatar);
 router.post(
   "/users/notificacao",
-
   verifyToken,
-
   userController.postEnviarNotificacao
+);
+router.put(
+  "/users/notificacao/:id",
+  verifyToken,
+  userController.atualizarStatusNotificacao
 );
 
 // rotas para manifestações

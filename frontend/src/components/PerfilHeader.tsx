@@ -57,9 +57,7 @@ const PerfilHeader = () => {
   useEffect(() => {
     const fetchAvatar = async () => {
       if (user?.Avatar) {
-        setAvatar(
-          `${URL_BASE_AVATAR}/${user.Avatar}`
-        );
+        setAvatar(`${URL_BASE_AVATAR}/${user.Avatar}`);
       }
     };
     fetchAvatar();

@@ -248,3 +248,8 @@ export const enviarManifestacao = async (manifestacao: Partial<Manifestacao>) =>
   const response = await api.post(`/manifestacoes`, manifestacao);
   return response.data;
 };
+
+export const atualizarStatusNotificacao = async (id: number, notificacao: Partial<Notificacao>) => {
+  const response = await api.put(`/users/notificacao/${id}`, notificacao);
+  return response.data;
+};

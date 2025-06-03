@@ -366,3 +366,38 @@ export const postEnviarNotificacao = async (
     return;
   }
 };
+
+export const atualizarStatusNotificacao = (
+  req: Request,
+  res: Response
+): void => {
+  const id = Number(req.params.id);
+  const novoStatus = "lida";
+
+  connection.query<ResultSetHeader>(
+    "UPDATE Notificacoes SET Status = ? WHERE Notificacao_ID = ?",
+    [novoStatus, id],
+    (err, results) => {
+      if (err) {
+        res.status(500).json({
+          success: false,
+          error: `Erro ao atualizar notificação: ${err.message}`,
+        });
+        return;
+      }
+
+      if (results.affectedRows === 0) {
+        res.status(404).json({
+          success: false,
+          error: "Notificação não encontrada.",
+        });
+        return;
+      }
+
+      res.status(200).json({
+        success: true,
+        message: "Notificação atualizada com sucesso.",
+      });
+    }
+  );
+};
