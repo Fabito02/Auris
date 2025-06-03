@@ -12,6 +12,7 @@ import {
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { getAvatar } from "@/api/api_routes";
 import { useNavigate } from "react-router-dom";
+import { URL_BASE_AVATAR } from "@/config";
 
 interface CardManifestacaoProps {
   manifestacoes: Manifestacao[];
@@ -25,7 +26,7 @@ interface ManifestacaoComAvatar extends Manifestacao {
 
 const formatDate = (iso: string) =>
   new Intl.DateTimeFormat("pt-BR", {
-    year: "numeric",
+    year: "2-digit",
     month: "2-digit",
     day: "2-digit",
     hour: "2-digit",
@@ -49,6 +50,9 @@ const CardManifestacao = ({
   useEffect(() => {
     Promise.all(
       manifestacoesFiltradas.map(async (m) => {
+        if (m.Anonimo) {
+          return { ...m, avatarUrl: "/user_placeholder_anonimo.png" };
+        }
         try {
           const { avatarUrl } = await getAvatar(m.User_ID);
           return { ...m, avatarUrl: avatarUrl || "/user_placeholder.png" };

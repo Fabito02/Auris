@@ -147,7 +147,7 @@ const Perfil: React.FC = () => {
 
   return (
     <BlankLayout showFooter={false} showHeader showNavbar>
-      <div className="mb-10 max-w-5xl mt-14 mx-auto">
+      <div className="mb-6 max-w-5xl mt-14 mx-auto">
         <form onSubmit={handleSubmit} className="grid grid-cols-3 gap-4">
           <div className="col-span-3 md:col-span-1 flex justify-center">
             <div className="relative w-[220px] h-[220px] rounded-full overflow-hidden">

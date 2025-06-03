@@ -145,7 +145,7 @@ const Denuncia = () => {
                     variants={tabVariants}
                     transition={{ duration: 0.3 }}
                   >
-                    <Card className="rounded-lg">
+                    <Card>
                       <CardHeader>
                         <CardTitle>Contato</CardTitle>
                         <CardDescription>
@@ -160,11 +160,11 @@ const Denuncia = () => {
                           onCheckedChange={(c) => setSalvarContato(!!c)}
                         />
                         <span className="ml-2 text-sm text-muted-foreground">
-                          Sim, desejo enviar minhas informações de contato.
+                          Desejo fazer uma manifestação anônima.
                         </span>
                       </CardContent>
                       <CardFooter className="border-t">
-                        <p className="text-sm text-red-700">
+                        <p className="text-sm text-red-500">
                           *OBS: Estas informações serão usadas para entrar em
                           contato com você. Denúncias identificadas permitem um
                           acompanhamento mais eficaz.

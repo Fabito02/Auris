@@ -7,8 +7,8 @@
   --color-primary: #1cb158;
   --color-primary-hover: #26bc62;
 
-  --color-secondary: #ffcf50;
-  --color-secondary-hover: #ffd86b;
+  --color-secondary: #3167d4;
+  --color-secondary-hover: #4072d7;
 
   --color-danger: #dc3545;
   --color-danger-hover: #df4755;
@@ -31,7 +31,7 @@
   --color-elogio: #FC489C;
   --color-sugestao: #12D05E;
 
-  --color-cinza-semitransparente-claro: #00000012;
+  --color-cinza-semitransparente-claro: #00000014;
 
   --sonner-toast-icon-color: var(--color-primary);
   --sonner-toast-icon-color-danger: var(--color-danger);
@@ -135,7 +135,7 @@ body {
 }
 
 ::selection {
-  background-color: #69ff7688;
+  background-color: #67f17b8b;
 }
 
 .float-card {

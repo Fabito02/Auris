@@ -5,6 +5,7 @@ import { API_BASE } from "@/config";
 const api = axios.create({
   baseURL: API_BASE,
   withCredentials: true,
+  timeout: 10000
 });
 
 api.interceptors.response.use(
@@ -209,6 +210,13 @@ export const getManifestacaoDoUsuario = async (id: number): Promise<{
   return response.data;
 };
 
+export const getManifestacao = async (id: number): Promise<{
+  data: Manifestacao, error?: string;
+}> => {
+  const response = await api.get(`/manifestacoes/${id}`);
+  return response.data;
+};
+
 export const getManifestacoes = async (): Promise<{
   data: Manifestacao[], error?: string, success?: boolean;
 }> => {
@@ -216,9 +224,22 @@ export const getManifestacoes = async (): Promise<{
   return response.data;
 };
 
-export const deleteManifestacaoDoUsuario = async (id: number): Promise<{
+export const deleteManifestacao = async (id: number): Promise<{
   data: Manifestacao, error?: string, success?: boolean;
 }> => {
-  const response = await api.delete(`/me/manifestacoes/${id}`);
+  const response = await api.delete(`/manifestacoes/${id}`);
+  return response.data;
+};
+
+export const atualizarStatusManifestacao = async ({
+  Status,
+  Manifestacao_ID
+}: Pick<Manifestacao, "Status" | "Manifestacao_ID">) => {
+  const response = await api.put(`/manifestacoes/${Manifestacao_ID}/status`, { Status });
+  return response.data;
+};
+
+export const responderManifestacao = async (id: number, resposta: Partial<Resposta>) => {
+  const response = await api.post(`/manifestacoes/${id}/respostas`, resposta);
   return response.data;
 };

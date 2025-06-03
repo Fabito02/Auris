@@ -38,7 +38,7 @@ const Reclamacao = () => {
     "contato" | "tipo" | "descricao" | "finalizar"
   >("contato");
 
-  const [salvarContato, setSalvarContato] = useState(false);
+  const [anonimo, setAnonimo] = useState(false);
   const [tipoReclamacao, setTipoReclamacao] = useState("");
   const [titulo, setTitulo] = useState("");
   const quillContainerRef = useRef<HTMLDivElement | null>(null);
@@ -95,7 +95,7 @@ const Reclamacao = () => {
     e.preventDefault();
     const descricaoHTML = quillRef.current?.root.innerHTML || "";
     console.log({
-      salvarContato,
+      anonimo,
       tipoReclamacao,
       titulo,
       descricao: descricaoHTML,
@@ -145,7 +145,7 @@ const Reclamacao = () => {
                     variants={tabVariants}
                     transition={{ duration: 0.3 }}
                   >
-                    <Card className="rounded-lg">
+                    <Card>
                       <CardHeader>
                         <CardTitle>Contato</CardTitle>
                         <CardDescription>
@@ -155,16 +155,16 @@ const Reclamacao = () => {
                       <CardContent className="space-y-2">
                         <Checkbox
                           id="enviarContato"
-                          checked={salvarContato}
+                          checked={anonimo}
                           className="data-[state=checked]:bg-[#16aa51] data-[state=checked]:border-[#16aa51]"
-                          onCheckedChange={(c) => setSalvarContato(!!c)}
+                          onCheckedChange={(c) => setAnonimo(!!c)}
                         />
                         <span className="ml-2 text-sm text-muted-foreground">
-                          Sim, desejo enviar minhas informações de contato.
+                          Desejo fazer uma manifestação anônima.
                         </span>
                       </CardContent>
                       <CardFooter className="border-t">
-                        <p className="text-sm text-red-700">
+                        <p className="text-sm text-red-500">
                           *OBS: Estas informações serão usadas para entrar em
                           contato com você. Reclamações identificadas permitem
                           um acompanhamento mais eficaz.

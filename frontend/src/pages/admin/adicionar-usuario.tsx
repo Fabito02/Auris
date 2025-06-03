@@ -177,7 +177,6 @@ const Gerenciar = () => {
       showNavbar={true}
       removeBodyPadding={false}
     >
-
       <div className="w-full max-w-6xl mx-auto sm:px-6 lg:px-8 mt-14">
         <Tabs defaultValue="manual" className="w-full px-4">
           <TabsList className="grid w-full grid-cols-2 mb-2">
@@ -213,9 +212,9 @@ const Gerenciar = () => {
                   />
                 </CardContent>
                 <CardFooter className="border-t">
-                  <p className="text-sm text-red-700">
-                    *OBS: O SIAPE/matrícula será utilizado como senha
-                    para acesso ao sistema.
+                  <p className="text-sm text-red-500">
+                    *OBS: O SIAPE/Matrícula será utilizado(a) como senha para
+                    acesso ao sistema.
                   </p>
                 </CardFooter>
               </Card>
@@ -274,9 +273,9 @@ const Gerenciar = () => {
                   />
                 </CardContent>
                 <CardFooter className="border-t">
-                  <p className="text-sm text-red-700">
-                    *OBS: O SIAPE/matrícula será utilizado como senha
-                    para acesso ao sistema.
+                  <p className="text-sm text-red-500">
+                    *OBS: O SIAPE/Matrícula será utilizado(a) como senha para
+                    acesso ao sistema.
                   </p>
                 </CardFooter>
               </Card>

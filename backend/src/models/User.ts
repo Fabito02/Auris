@@ -10,7 +10,7 @@ export interface User {
   SIAPE?: string;
   Tipo?: "aluno" | "servidor";
   Data_Criacao?: Date;
-  Role?: "user" | "admin" | "moderador";
+  Role?: "user" | "admin" | "moderador" | "anonimo";
   Email_Verificado?: boolean;
   Token_Verificacao?: string;
   Requer_Alteracao_Senha?: boolean;

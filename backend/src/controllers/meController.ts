@@ -7,6 +7,7 @@ import multer from "multer";
 import path from "path";
 import mime from "mime-types";
 import fs from "fs";
+import { randomUUID } from 'crypto';
 import { URL_BASE_BACKEND } from "../config";
 
 export const getUsuarioAtual = async (
@@ -194,7 +195,7 @@ const storage = multer.diskStorage({
     cb(null, path.resolve(__dirname, "..", "uploads", "avatars"));
   },
   filename: function (_req, file, cb) {
-    const uniqueSuffix = Date.now();
+    const uniqueSuffix = `${Date.now()}-${randomUUID()}`;
     const extension = mime.extension(file.mimetype) || "png";
     cb(null, `${uniqueSuffix}.${extension}`);
   },

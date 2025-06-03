@@ -10,7 +10,7 @@ import { URL_BASE_FRONTEND, URL_BASE_AVATAR } from "../config";
 
 export const listUsers = (req: Request, res: Response): void => {
   connection.query(
-    "SELECT User_ID, Nome, Email, Telefone, Avatar, SIAPE, Tipo, Data_Criacao, Role FROM Users",
+    "SELECT User_ID, Nome, Email, Telefone, Avatar, SIAPE, Tipo, Data_Criacao, Role FROM Users WHERE is_anonymous != true",
     (err, results: RowDataPacket[]) => {
       if (err) {
         res.status(500).json({

@@ -39,18 +39,19 @@ async function createTables(conn: mysql.Connection) {
     `CREATE TABLE IF NOT EXISTS Users (
             User_ID INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
             Nome VARCHAR(100) NOT NULL,
-            Email VARCHAR(100) UNIQUE NOT NULL,
+            Email VARCHAR(100) UNIQUE,
             Telefone VARCHAR(20),
             Avatar VARCHAR(255) DEFAULT NULL,
             SIAPE VARCHAR(50),
             Tipo ENUM('servidor', 'aluno'),
-            Senha VARCHAR(255) NOT NULL,
+            Senha VARCHAR(255),
             Data_Criacao DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-            Role ENUM('user', 'admin', 'moderador') DEFAULT 'user',
+            Role ENUM('user', 'admin', 'moderador', 'anonimo') DEFAULT 'user',
             Token_Verificacao VARCHAR(255),
             Email_Verificado BOOLEAN DEFAULT FALSE,
             Requer_Alteracao_Senha BOOLEAN DEFAULT FALSE,
-            Primeiro_Acesso BOOLEAN DEFAULT TRUE
+            Primeiro_Acesso BOOLEAN DEFAULT TRUE,
+            is_anonymous BOOLEAN DEFAULT FALSE
         ) ENGINE=InnoDB;`,
 
     `CREATE TABLE IF NOT EXISTS Endereco (
@@ -78,7 +79,9 @@ async function createTables(conn: mysql.Connection) {
             Status ENUM('pendente', 'em_andamento', 'concluido') DEFAULT 'pendente',
             Prioridade ENUM('baixa', 'media', 'alta', 'urgente') DEFAULT 'media',
             User_ID INT NOT NULL,
-            FOREIGN KEY (User_ID) REFERENCES Users(User_ID)
+            Real_User_ID INT,
+            FOREIGN KEY (User_ID) REFERENCES Users(User_ID),
+            FOREIGN KEY (Real_User_ID) REFERENCES Users(User_ID)
         ) ENGINE=InnoDB`,
 
     `CREATE TABLE IF NOT EXISTS Respostas (
@@ -126,6 +129,14 @@ async function insertSeeds(conn: mysql.Connection) {
     const hashedSenha = await bcrypt.hash(senhaPadrao, 10);
 
     const users = [
+      {
+        Nome: "Anônimo",
+        Role: "anonimo",
+        Email_Verificado: true,
+        Primeiro_Acesso: false,
+        is_anonymous: true,
+        Avatar: "user_placeholder_anonimo.png",
+      },
       {
         Nome: "admin",
         Email: "teste@admin.com",
@@ -175,7 +186,7 @@ async function insertSeeds(conn: mysql.Connection) {
         Complemento: "Apto 202",
         Estado: "RJ",
         CEP: "20031-170",
-        User_ID: 1,
+        User_ID: 2,
       },
       {
         Logradouro: "Avenida Atlântica",
@@ -184,7 +195,7 @@ async function insertSeeds(conn: mysql.Connection) {
         Numero: "3000",
         Estado: "RJ",
         CEP: "22070-001",
-        User_ID: 2,
+        User_ID: 3,
       },
       {
         Logradouro: "Praça da Liberdade",
@@ -194,7 +205,7 @@ async function insertSeeds(conn: mysql.Connection) {
         Complemento: "Edifício Central",
         Estado: "MG",
         CEP: "30140-010",
-        User_ID: 3,
+        User_ID: 4,
       },
     ];
 
@@ -213,6 +224,8 @@ async function insertSeeds(conn: mysql.Connection) {
         Prioridade: "alta",
         User_ID: 1,
         Status: "pendente",
+        Anonimo: true,
+        Real_User_ID: 2,
       },
       {
         Titulo: "As carteiras estão muito danificadas",
@@ -224,6 +237,8 @@ async function insertSeeds(conn: mysql.Connection) {
         Prioridade: "alta",
         User_ID: 1,
         Status: "pendente",
+        Anonimo: true,
+        Real_User_ID: 2,
       },
       {
         Titulo: "A higiene do campus está excelente",
@@ -232,8 +247,9 @@ async function insertSeeds(conn: mysql.Connection) {
         Tipo_manifestacao: "elogio",
         Local: "Biblioteca",
         Prioridade: "baixa",
-        User_ID: 1,
+        User_ID: 2,
         Status: "concluido",
+        Real_User_ID: 2,
       },
       {
         Titulo: "Solicitação de material",
@@ -242,8 +258,9 @@ async function insertSeeds(conn: mysql.Connection) {
         Tipo_manifestacao: "sugestão",
         Local: "Biblioteca",
         Prioridade: "media",
-        User_ID: 1,
+        User_ID: 2,
         Status: "em_andamento",
+        Real_User_ID: 2,
       },
       {
         Titulo: "Agressão no refeitorio",
@@ -253,8 +270,9 @@ async function insertSeeds(conn: mysql.Connection) {
         Tipo_manifestacao: "denuncia",
         Local: "Biblioteca",
         Prioridade: "urgente",
-        User_ID: 1,
+        User_ID: 2,
         Status: "em_andamento",
+        Real_User_ID: 2,
       },
       {
         Titulo: "Computadores lentos",
@@ -263,8 +281,9 @@ async function insertSeeds(conn: mysql.Connection) {
         Tipo_manifestacao: "reclamacao",
         Local: "Laboratório de Informática",
         Prioridade: "media",
-        User_ID: 2,
+        User_ID: 3,
         Status: "pendente",
+        Real_User_ID: 3,
       },
       {
         Titulo: "Falta de papel higiênico",
@@ -273,8 +292,9 @@ async function insertSeeds(conn: mysql.Connection) {
         Tipo_manifestacao: "reclamacao",
         Local: "Banheiros do bloco B",
         Prioridade: "alta",
-        User_ID: 2,
+        User_ID: 3,
         Status: "pendente",
+        Real_User_ID: 3,
       },
       {
         Titulo: "Excelente atendimento",
@@ -283,18 +303,21 @@ async function insertSeeds(conn: mysql.Connection) {
         Tipo_manifestacao: "elogio",
         Local: "Secretaria",
         Prioridade: "baixa",
-        User_ID: 2,
+        User_ID: 3,
         Status: "concluido",
+        Real_User_ID: 4,
       },
       {
         Titulo: "Mais opções vegetarianas",
-        Descricao: "Seria interessante adicionar mais opções vegetarianas no cardápio.",
+        Descricao:
+          "Seria interessante adicionar mais opções vegetarianas no cardápio.",
         Tipo: "Alimentação",
         Tipo_manifestacao: "sugestão",
         Local: "Refeitório",
         Prioridade: "media",
-        User_ID: 3,
+        User_ID: 4,
         Status: "em_andamento",
+        Real_User_ID: 4,
       },
       {
         Titulo: "Roubo de bicicleta",
@@ -303,8 +326,9 @@ async function insertSeeds(conn: mysql.Connection) {
         Tipo_manifestacao: "denuncia",
         Local: "Estacionamento",
         Prioridade: "urgente",
-        User_ID: 3,
+        User_ID: 4,
         Status: "em_andamento",
+        Real_User_ID: 4,
       },
     ];
 
@@ -316,32 +340,34 @@ async function insertSeeds(conn: mysql.Connection) {
     const respostas = [
       {
         Descricao: "Já solicitamos a manutenção da iluminação",
-        User_ID: 1,
+        User_ID: 2,
         Manifestacao_ID: 1,
       },
       {
         Descricao: 'Irei marcar como "concluído", pois já foi resolvido.',
-        User_ID: 1,
+        User_ID: 2,
         Manifestacao_ID: 1,
       },
       {
-        Descricao: "Estamos analisando a situação para tomar as medidas necessárias.",
-        User_ID: 2,
+        Descricao:
+          "Estamos analisando a situação para tomar as medidas necessárias.",
+        User_ID: 3,
         Manifestacao_ID: 2,
       },
       {
         Descricao: "Agradecemos seu elogio, continuaremos nos esforçando!",
-        User_ID: 2,
+        User_ID: 3,
         Manifestacao_ID: 3,
       },
       {
-        Descricao: "Estamos considerando sua sugestão para futuras atualizações.",
-        User_ID: 3,
+        Descricao:
+          "Estamos considerando sua sugestão para futuras atualizações.",
+        User_ID: 4,
         Manifestacao_ID: 4,
       },
       {
         Descricao: "As medidas de segurança estão sendo reforçadas.",
-        User_ID: 3,
+        User_ID: 4,
         Manifestacao_ID: 5,
       },
     ];
@@ -356,40 +382,40 @@ async function insertSeeds(conn: mysql.Connection) {
         Titulo: "Nova manifestação recebida",
         Mensagem: "Você recebeu uma nova manifestação para análise.",
         Status: "pendente",
-        User_ID: 1,
+        User_ID: 2,
       },
       {
         Titulo: "Resposta recebida",
         Mensagem:
           'Sua manifestação "Solicitação de material" recebeu uma resposta.',
         Status: "pendente",
-        User_ID: 3,
+        User_ID: 4,
       },
       {
         Titulo: "Nova manifestação recebida",
         Mensagem: "Você recebeu uma nova manifestação para análise.",
         Status: "pendente",
-        User_ID: 2,
+        User_ID: 3,
       },
       {
         Titulo: "Resposta recebida",
         Mensagem:
           'Sua manifestação "Elogio ao professor" recebeu uma resposta.',
         Status: "pendente",
-        User_ID: 2,
+        User_ID: 3,
       },
       {
         Titulo: "Nova manifestação recebida",
         Mensagem: "Você recebeu uma nova manifestação para análise.",
         Status: "pendente",
-        User_ID: 3,
+        User_ID: 4,
       },
       {
         Titulo: "Resposta recebida",
         Mensagem:
           'Sua manifestação "Solicitação de manutenção" recebeu uma resposta.',
         Status: "pendente",
-        User_ID: 1,
+        User_ID: 2,
       },
     ];
 

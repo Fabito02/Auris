@@ -4,7 +4,9 @@ import {
   getManifestacaoDoUsuario,
   getRespostasManifestacaoDoUsuario,
   getUsuarioByUserId,
-  deleteManifestacaoDoUsuario,
+  deleteManifestacao,
+  atualizarStatusManifestacao,
+  responderManifestacao,
 } from "@/api/api_routes";
 import { Manifestacao, Resposta, User } from "@/types/api";
 import {
@@ -18,7 +20,7 @@ import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
 import Button from "@/components/buttons/Button";
 import { URL_BASE_AVATAR } from "@/config";
-import { checkAuth } from "@/api/auth";
+import { checkAuth, checkRole } from "@/api/auth";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -35,6 +37,16 @@ import {
 } from "@/components/ui/dialog";
 import "./manifestacao.css";
 import { BlankLayout } from "@/components/BlankLayout/BlankLayout";
+import {
+  SelectGroup,
+  Select,
+  SelectValue,
+  SelectTrigger,
+  SelectContent,
+  SelectLabel,
+  SelectItem,
+} from "@/components/ui/select";
+import { toast } from "sonner";
 
 const MinhaManifestacao = () => {
   const navigate = useNavigate();
@@ -46,17 +58,33 @@ const MinhaManifestacao = () => {
     Record<number, User>
   >({});
   const [openConfirmacao, setOpenConfirmacao] = useState(false);
+  const [openEditarStatus, setOpenEditarStatus] = useState(false);
   const [openSuccess, setOpenSuccess] = useState(false);
+  const [resposta, setResposta] = useState<string>("");
+  const [openSuccessEditarStatus, setOpenSuccessEditarStatus] = useState(false);
+  const [status, setStatus] = useState<
+    "pendente" | "em_andamento" | "concluido"
+  >(manifestacao?.Status || "pendente");
+  const [statusEdicao, setStatusEdicao] = useState<
+    "pendente" | "em_andamento" | "concluido"
+  >(manifestacao?.Status || "pendente");
+  const [role, setRole] = useState<string>("");
 
   useEffect(() => {
     checkAuth(navigate, ["admin", "moderador", "user"]);
+    const fetchRole = async () => {
+      const isAdmin = await checkRole("admin");
+      const isModerador = await checkRole("moderador");
+      setRole(isAdmin ? "admin" : isModerador ? "moderador" : "user");
+    };
+    fetchRole();
   }, []);
 
   const fetchRespostas = async () => {
     setRespostas(undefined);
     const response = await getRespostasManifestacaoDoUsuario(Number(id));
     const respostasData = response.data;
-    setRespostas(respostasData);
+    setRespostas(respostasData.reverse());
 
     const usuarios: Record<number, User> = {};
     await Promise.all(
@@ -94,6 +122,10 @@ const MinhaManifestacao = () => {
   useEffect(() => {
     const fetchAvatar = async () => {
       try {
+        if (manifestacao?.User_ID === 1) {
+          setAvatar("/user_placeholder_anonimo.png");
+          return;
+        }
         const response = await getUsuarioByUserId(manifestacao?.User_ID ?? 0);
         if (response.data) {
           response.data.Avatar
@@ -107,6 +139,7 @@ const MinhaManifestacao = () => {
 
     if (manifestacao) {
       fetchAvatar();
+      setStatus(manifestacao.Status);
     }
   }, [manifestacao, setAvatar]);
 
@@ -117,7 +150,7 @@ const MinhaManifestacao = () => {
 
   const formatDate = (iso: string) =>
     new Intl.DateTimeFormat("pt-BR", {
-      year: "numeric",
+      year: "2-digit",
       month: "2-digit",
       day: "2-digit",
       hour: "2-digit",
@@ -126,7 +159,7 @@ const MinhaManifestacao = () => {
 
   const handleDelete = async () => {
     try {
-      await deleteManifestacaoDoUsuario(Number(id));
+      await deleteManifestacao(Number(id));
       setOpenConfirmacao(false);
       setOpenSuccess(true);
     } catch (error) {
@@ -134,8 +167,66 @@ const MinhaManifestacao = () => {
     }
   };
 
+  const handleSetStatus = async () => {
+    try {
+      await atualizarStatusManifestacao({
+        Status: statusEdicao,
+        Manifestacao_ID: manifestacao.Manifestacao_ID,
+      });
+      setOpenEditarStatus(false);
+      setOpenSuccessEditarStatus(true);
+      setStatus(statusEdicao);
+    } catch (error) {
+      console.error("Erro ao deletar manifestação:", error);
+    }
+  };
+
+  const handlePostResposta = async () => {
+    try {
+      if (!resposta.trim()) {
+        toast.error("Por favor, insira uma resposta valida.", {
+          icon: (
+            <Icon
+              icon="mdi:alert-circle"
+              height={20}
+              className="text-[var(--color-warning)]"
+            />
+          ),
+        });
+        return;
+      } else if (resposta.trim().length < 5) {
+        toast.error("A resposta deve ter pelo menos 5 caracteres.", {
+          icon: (
+            <Icon
+              icon="mdi:alert-circle"
+              height={20}
+              className="text-[var(--color-warning)]"
+            />
+          ),
+        });
+        return;
+      }
+
+      const novaResposta = {
+        Descricao: resposta,
+      };
+      const response = await responderManifestacao(
+        manifestacao.Manifestacao_ID,
+        novaResposta
+      );
+      setRespostas([response.data, ...(respostas || [])]);
+      setResposta("");
+    } catch (error) {
+      console.error("Erro ao enviar resposta:", error);
+    }
+  };
+
   const closeModal = () => {
     setOpenConfirmacao(false);
+  };
+
+  const closeEditarStatus = () => {
+    setOpenEditarStatus(false);
   };
 
   const closeSuccess = () => {
@@ -143,16 +234,16 @@ const MinhaManifestacao = () => {
     navigate("/minhas-manifestacoes");
   };
 
+  const closeSucessEditarStatus = () => {
+    setOpenSuccessEditarStatus(false);
+  };
+
   return (
     <BlankLayout showNavbar showHeader showFooter={false}>
       <div className="grid grid-cols-2 w-full max-w-6xl mx-auto px-6 pt-12 pb-16 min-h-full ">
         <div className="col-span-2 display flex w-full justify-between">
           <div className="h-8 w-full flex gap-2 items-center">
-            <Avatar
-              onClick={() =>
-                navigate(`/admin/gerenciar/${manifestacao.User_ID}/perfil`)
-              }
-            >
+            <Avatar onClick={() => navigate(`/perfil`)}>
               <AvatarImage
                 className="h-8 min-h-8 aspect-square cursor-pointer rounded-full"
                 src={avatar || "/user_placeholder.png"}
@@ -210,28 +301,35 @@ const MinhaManifestacao = () => {
               />
             </div>
           </div>
-          <DropdownMenu modal={false}>
-            <DropdownMenuTrigger className="focus:outline-none">
-              <Icon
-                icon="heroicons-solid:menu-alt-3"
-                height="30px"
-                className="text-gray-700 pl-4 "
-              />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="menu-mobile-content mt-1 mr-2 border-0">
-              <DropdownMenuItem className="custom-menu !bg-[var(--color-primary)] !text-white">
-                <Icon icon="material-symbols:edit-rounded" />
-                EDITAR
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="custom-menu !bg-[var(--color-danger)] !text-white"
-                onClick={() => setOpenConfirmacao(true)}
-              >
-                <Icon icon="material-symbols:delete-rounded" />
-                DELETAR
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {(role === "admin" || role === "moderador") && (
+            <DropdownMenu modal={false}>
+              <DropdownMenuTrigger className="focus:outline-none">
+                <Icon
+                  icon="heroicons-solid:menu-alt-3"
+                  height="30px"
+                  className="text-gray-700 pl-4 "
+                />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="menu-mobile-content mt-1 mr-2 border-0">
+                <DropdownMenuItem
+                  className="custom-menu !bg-[var(--color-primary)] !text-white"
+                  onClick={() => setOpenEditarStatus(true)}
+                >
+                  <Icon icon="material-symbols:edit-rounded" />
+                  EDITAR
+                </DropdownMenuItem>
+                {role === "admin" && (
+                  <DropdownMenuItem
+                    className="custom-menu !bg-[var(--color-danger)] !text-white"
+                    onClick={() => setOpenConfirmacao(true)}
+                  >
+                    <Icon icon="material-symbols:delete-rounded" />
+                    DELETAR
+                  </DropdownMenuItem>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
 
         <div className="mt-5 col-span-2 ml-4">
@@ -243,23 +341,23 @@ const MinhaManifestacao = () => {
             </p>
             <div
               className={`px-2 text-xs text-white h-6 ${
-                manifestacao.Status === "pendente"
+                status === "pendente"
                   ? "bg-[var(--color-warning)]"
-                  : manifestacao.Status === "em_andamento"
+                  : status === "em_andamento"
                   ? "bg-[var(--color-info)]"
                   : "bg-[var(--color-success)]"
               } rounded-full flex items-center justify-center`}
             >
-              {manifestacao.Status === "pendente"
+              {status === "pendente"
                 ? "Pendente"
-                : manifestacao.Status === "em_andamento"
+                : status === "em_andamento"
                 ? "Em andamento"
                 : "Concluído"}
               <Icon
                 icon={
-                  manifestacao.Status === "concluido"
+                  status === "concluido"
                     ? "material-symbols:sentiment-excited-outline-rounded"
-                    : manifestacao.Status === "em_andamento"
+                    : status === "em_andamento"
                     ? "material-symbols:sentiment-neutral-outline-rounded"
                     : "material-symbols:sentiment-dissatisfied-outline-rounded"
                 }
@@ -274,29 +372,43 @@ const MinhaManifestacao = () => {
 
         <div className="grid grid-cols-2 gap-4 col-span-2">
           <div className="col-span-2 md:col-span-1 flex flex-col mt-14">
-            <h1 className="text-2xl font-medium col-span-2 mb-6">
-              Enviar resposta
-            </h1>
-            <Card className="mt-2 py-4 gap-4">
-              <CardContent className="px-4 flex flex-col relative">
-                <Textarea className="h-35 pr-12"></Textarea>
-                <Button
-                  icon="material-symbols:send"
-                  iconPosition="center"
-                  className="mt-4 justify-end w-10 h-10 absolute right-7 bottom-3"
-                />
-              </CardContent>
-              <CardFooter className="border-t pb-2">
-                <p className="text-sm text-red-500 w-full text-center">
-                  Mantenha um tom respeitoso ao escrever sua resposta.
-                </p>
-              </CardFooter>
-            </Card>
+            <div className="sticky top-20">
+              <h1 className="text-2xl font-medium col-span-2 mb-8">
+                Enviar resposta
+              </h1>
+              <Card className="mt-2 py-4 gap-4">
+                <CardContent className="px-4 flex flex-col relative">
+                  <Textarea
+                    className="min-h-35 pb-15 overflow-hidden"
+                    style={{
+                      height: "35px",
+                      resize: "none",
+                      overflow: "hidden",
+                    }}
+                    onChange={(e) => {
+                      setResposta(e.target.value);
+                      e.target.style.height = "35px";
+                      e.target.style.height = e.target.scrollHeight + "px";
+                    }}
+                    value={resposta}
+                  ></Textarea>
+                  <Button
+                    icon="material-symbols:send"
+                    iconPosition="center"
+                    className="mt-4 justify-end w-10 h-10 absolute right-7 bottom-3"
+                    onClick={handlePostResposta}
+                  />
+                </CardContent>
+                <CardFooter className="border-t pb-2">
+                  <p className="text-sm text-red-500 w-full text-center">
+                    Mantenha um tom respeitoso ao escrever sua resposta.
+                  </p>
+                </CardFooter>
+              </Card>
+            </div>
           </div>
           <div className="md:order-first col-span-2 md:col-span-1 flex flex-col gap-4 mt-8 md:mt-14">
-            <h1 className="text-2xl font-medium col-span-2 mb-4">
-              Respostas
-            </h1>
+            <h1 className="text-2xl font-medium col-span-2 mb-4">Respostas</h1>
             {respostas?.length === 0 ||
               (!respostas && (
                 <div className="text-muted-foreground mt-4 w-full text-center">
@@ -307,32 +419,35 @@ const MinhaManifestacao = () => {
               const usuario = usuariosRespostas[resposta.User_ID];
               return (
                 <Card key={resposta.Resposta_ID} className="py-4 gap-3">
-                  <CardHeader className="px-4 flex flex-row items-center">
-                    <Avatar>
-                      <AvatarImage
-                        src={
-                          usuario?.Avatar
-                            ? `${URL_BASE_AVATAR}/${usuario.Avatar}`
-                            : "/user_placeholder.png"
-                        }
-                        alt="Ícone do Usuário"
-                        className="w-10 h-10 aspect-square cursor-pointer rounded-full"
-                      />
-                    </Avatar>
-                    <div className="ml-2">
-                      <p className="text-md font-medium leading-none">
-                        {usuario?.Nome || "Usuário"}
-                      </p>
+                  <CardHeader className="px-4 flex flex-row items-center justify-between">
+                    <div className="flex flex-row items-center">
+                      <Avatar>
+                        <AvatarImage
+                          src={
+                            usuario?.User_ID === 1
+                              ? "/user_placeholder_anonimo.png"
+                              : usuario?.Avatar
+                              ? `${URL_BASE_AVATAR}/${usuario.Avatar}`
+                              : "/user_placeholder.png"
+                          }
+                          alt="Ícone do Usuário"
+                          className="w-8 h-8 aspect-square rounded-full"
+                        />
+                      </Avatar>
+                      <div className="ml-2">
+                        <p className="text-md font-medium leading-none">
+                          {usuario?.Nome || "Usuário"}
+                        </p>
+                      </div>
                     </div>
+
+                    <p className="text-xs text-muted-foreground">
+                      {formatDate(resposta.Data_Criacao)}
+                    </p>
                   </CardHeader>
                   <CardContent>
                     <p className="ml-3 text-gray-600">{resposta.Descricao}</p>
                   </CardContent>
-                  <CardFooter>
-                    <p className="text-xs text-muted-foreground">
-                      {formatDate(resposta.Data_Criacao)}
-                    </p>
-                  </CardFooter>
                 </Card>
               );
             })}
@@ -368,6 +483,52 @@ const MinhaManifestacao = () => {
           </DialogContent>
         </Dialog>
 
+        <Dialog open={openEditarStatus} onOpenChange={closeEditarStatus}>
+          <DialogContent className="sm:max-w-[400px] rounded-xl [&>button]:hidden">
+            <DialogHeader>
+              <DialogTitle className="text-center text-[var(--color-primary)] text-3xl mb-4">
+                Editar status
+              </DialogTitle>
+              <Select
+                defaultValue={manifestacao.Status}
+                onValueChange={(e) =>
+                  setStatusEdicao(
+                    e as "pendente" | "em_andamento" | "concluido"
+                  )
+                }
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Selecione um status</SelectLabel>
+                    <SelectItem value="pendente">Pendente</SelectItem>
+                    <SelectItem value="em_andamento">Em andamento</SelectItem>
+                    <SelectItem value="concluido">Concluído</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </DialogHeader>
+            <DialogFooter className="grid grid-cols-2 gap-4 mt-4">
+              <Button
+                onClick={handleSetStatus}
+                full_rounded
+                color="success"
+                className="w-full px-5"
+                texto="salvar"
+              />
+              <Button
+                onClick={closeEditarStatus}
+                full_rounded
+                color="danger"
+                className="w-full px-5"
+                texto="cancelar"
+              />
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
         <Dialog open={openSuccess} onOpenChange={closeSuccess}>
           <DialogContent className="sm:max-w-[400px] rounded-xl [&>button]:hidden">
             <DialogHeader>
@@ -385,6 +546,31 @@ const MinhaManifestacao = () => {
                 color="success"
                 className="w-full sm:max-w-[200px] px-5"
                 texto="voltar"
+              />
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog
+          open={openSuccessEditarStatus}
+          onOpenChange={closeSucessEditarStatus}
+        >
+          <DialogContent className="sm:max-w-[400px] rounded-xl [&>button]:hidden">
+            <DialogHeader>
+              <DialogTitle className="text-center text-[var(--color-primary)] text-3xl mb-4">
+                Status alterado com sucesso!
+              </DialogTitle>
+              <DialogDescription className="text-center">
+                Clique no botão abaixo para continuar.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="sm:justify-center mt-4">
+              <Button
+                onClick={closeSucessEditarStatus}
+                full_rounded
+                color="success"
+                className="w-full sm:max-w-[200px] px-5"
+                texto="ok"
               />
             </DialogFooter>
           </DialogContent>

@@ -11,11 +11,7 @@ const ConteudoHome = () => {
 
   return (
     <BlankLayout removeBodyPadding>
-      <Button
-        texto="entrar"
-        className="login-btn z-100"
-        onClick={() => navigate("/login")}
-      />
+      <Button texto="entrar" className="login-btn z-100" href="/login" />
       <img src="/home/auris.svg" alt="Logo Auris" className="logo-auris" />
 
       <AnimarAoVer>
@@ -112,7 +108,7 @@ const ConteudoHome = () => {
                 full_rounded
                 texto="acessar plataforma"
                 className="plataforma-btn mt-4"
-                onClick={() => navigate("/home")}
+                href="/login"
                 icon="material-symbols:arrow-forward-rounded"
                 iconPosition="right"
               />
@@ -125,4 +121,3 @@ const ConteudoHome = () => {
 };
 
 export default ConteudoHome;
-

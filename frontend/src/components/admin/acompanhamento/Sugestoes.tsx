@@ -25,6 +25,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Manifestacao, User } from "@/types/api";
+import CardInfo from "../../card-info/CardInfo";
 
 interface props {
   manifestacoes: Manifestacao[];
@@ -32,7 +33,6 @@ interface props {
 }
 
 export default function Component({ manifestacoes, usuarios }: props) {
-
   const categoriaColors = ["var(--color-success)", "var(--color-secondary)"];
 
   const tiposManifestacao = Array.from(
@@ -89,6 +89,34 @@ export default function Component({ manifestacoes, usuarios }: props) {
     { Total: manifestacoesInfo7dias[6] },
   ];
 
+  const manifestacoesInfo = {
+    manifestacoes: manifestacoes.length,
+    tipos: Array.from(new Set(manifestacoes.map((m) => m.Tipo))).filter(
+      (t) => t !== ""
+    ).length,
+    pendentes: manifestacoes.filter(
+      (manifestacao) => manifestacao.Status === "pendente"
+    ).length,
+    emAndamento: manifestacoes.filter(
+      (manifestacao) => manifestacao.Status === "em_andamento"
+    ).length,
+    concluido: manifestacoes.filter(
+      (manifestacao) => manifestacao.Status === "concluido"
+    ).length,
+    urgente: manifestacoes.filter(
+      (manifestacao) => manifestacao.Prioridade === "urgente"
+    ).length,
+    alta: manifestacoes.filter(
+      (manifestacao) => manifestacao.Prioridade === "alta"
+    ).length,
+    media: manifestacoes.filter(
+      (manifestacao) => manifestacao.Prioridade === "media"
+    ).length,
+    baixa: manifestacoes.filter(
+      (manifestacao) => manifestacao.Prioridade === "baixa"
+    ).length,
+  };
+
   const dadosPorPerfil = [
     {
       nome: "Servidores",
@@ -101,10 +129,45 @@ export default function Component({ manifestacoes, usuarios }: props) {
       cor: "var(--color-success)",
     },
   ];
+
+  const data_cards = [
+    {
+      cor: "danger",
+      total: manifestacoesInfo.manifestacoes,
+      titulo: "Sugestões",
+    },
+    { cor: "warning", total: manifestacoesInfo.pendentes, titulo: "Pendentes" },
+    {
+      cor: "info",
+      total: manifestacoesInfo.emAndamento,
+      titulo: "Em andamento",
+    },
+    { cor: "success", total: manifestacoesInfo.concluido, titulo: "Concluído" },
+  ];
+
+  const dadosPrioridade = [
+    {
+      nome: "Urgente",
+      valor: manifestacoesInfo.urgente,
+      cor: "var(--color-danger-dark)",
+    },
+    { nome: "Alta", valor: manifestacoesInfo.alta, cor: "var(--color-danger)" },
+    {
+      nome: "Média",
+      valor: manifestacoesInfo.media,
+      cor: "var(--color-warning)",
+    },
+    {
+      nome: "Baixa",
+      valor: manifestacoesInfo.baixa,
+      cor: "var(--color-success)",
+    },
+  ];
   const chartConfig = {} satisfies ChartConfig;
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
+      <CardInfo conteudo_cards={data_cards} className="mb-4" />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card className="flex flex-col col-span-3">
           <CardHeader className="items-center pb-0">
@@ -148,7 +211,7 @@ export default function Component({ manifestacoes, usuarios }: props) {
           </CardContent>
         </Card>
 
-        <Card className="col-span-3 md:col-span-2">
+        <Card className="col-span-3">
           <CardHeader>
             <CardTitle>Sugestões</CardTitle>
             <CardDescription>Número total nos últimos 7 dias</CardDescription>
@@ -193,6 +256,84 @@ export default function Component({ manifestacoes, usuarios }: props) {
                 />
               </LineChart>
             </ChartContainer>
+          </CardContent>
+        </Card>
+        <Card className="flex flex-col col-span-3 md:col-span-2">
+          <CardHeader className="items-center pb-0">
+            <CardTitle>Prioridade das Sugestões</CardTitle>
+            <CardDescription>
+              Distribuição por nível de urgência
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex-1 pb-0">
+            <ChartContainer
+              config={chartConfig}
+              className="mx-auto aspect-square max-h-[250px]"
+            >
+              <PieChart>
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent hideLabel />}
+                />
+                <Pie
+                  data={dadosPrioridade}
+                  dataKey="valor"
+                  nameKey="nome"
+                  innerRadius={60}
+                  outerRadius={90}
+                  paddingAngle={2}
+                  strokeWidth={5}
+                >
+                  <Label
+                    content={({ viewBox }) => {
+                      const total = dadosPrioridade.reduce(
+                        (acc, curr) => acc + curr.valor,
+                        0
+                      );
+                      if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                        return (
+                          <text
+                            x={viewBox.cx}
+                            y={viewBox.cy}
+                            textAnchor="middle"
+                            dominantBaseline="middle"
+                          >
+                            <tspan
+                              x={viewBox.cx}
+                              y={viewBox.cy}
+                              className="fill-foreground text-3xl font-bold"
+                            >
+                              {total}
+                            </tspan>
+                            <tspan
+                              x={viewBox.cx}
+                              y={(viewBox.cy || 0) + 24}
+                              className="fill-muted-foreground"
+                            >
+                              Total
+                            </tspan>
+                          </text>
+                        );
+                      }
+                    }}
+                  />
+                  {dadosPrioridade.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.cor} />
+                  ))}
+                </Pie>
+              </PieChart>
+            </ChartContainer>
+            <div className="flex flex-wrap justify-center gap-2 mt-4">
+              {dadosPrioridade.map((item) => (
+                <div key={item.nome} className="flex items-center gap-1">
+                  <div
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: item.cor }}
+                  />
+                  <span className="text-sm">{item.nome}</span>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
 

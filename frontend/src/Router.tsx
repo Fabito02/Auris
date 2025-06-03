@@ -23,7 +23,7 @@ const Router: React.FC = () => {
         key={routePath}
         path={routePath}
         element={
-          <Suspense fallback={<Loading></Loading>}>
+          <Suspense fallback={<Loading />}>
             <Component />
           </Suspense>
         }

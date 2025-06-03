@@ -145,7 +145,7 @@ const Elogio = () => {
                     variants={tabVariants}
                     transition={{ duration: 0.3 }}
                   >
-                    <Card className="rounded-lg">
+                    <Card>
                       <CardHeader>
                         <CardTitle>Contato</CardTitle>
                         <CardDescription>
@@ -160,7 +160,7 @@ const Elogio = () => {
                           onCheckedChange={(c) => setSalvarContato(!!c)}
                         />
                         <span className="ml-2 text-sm text-muted-foreground">
-                          Sim, desejo enviar minhas informações de contato.
+                          Desejo fazer uma manifestação anônima.
                         </span>
                       </CardContent>
                     </Card>

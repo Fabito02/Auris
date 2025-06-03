@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react";
-import {
-  getUsuarioAtual,
-  enviarNotificacao,
-} from "@/api/api_routes";
+import { getUsuarioAtual, enviarNotificacao } from "@/api/api_routes";
 import { User } from "@/types/api";
 
 export function useUsuarioAtual() {
-  const [usuario, setUsuario] = useState<User | null>(null);
+  const [usuario, setUsuario] = useState<User | null>();
 
   useEffect(() => {
     const fetchDados = async () => {
       try {
         const res = await getUsuarioAtual();
+
         if (!res.success) {
           console.error("Erro ao buscar usuário:", res.error);
           return;
@@ -19,7 +17,6 @@ export function useUsuarioAtual() {
 
         setUsuario(res.user);
 
-        // Usa o objeto que acabou de chegar, e não o state antigo
         if (res.user.Primeiro_Acesso) {
           sessionStorage.setItem("primeiroAcesso", "true");
           await enviarNotificacao({
