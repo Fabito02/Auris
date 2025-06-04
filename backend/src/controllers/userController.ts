@@ -174,20 +174,20 @@ export const deleteUser = (
         registrarLog("Usuário deletado", userId);
 
         connection.query(
-          "DELETE FROM Manifestacoes WHERE Real_User_ID = ?",
+          "DELETE FROM Respostas WHERE User_ID = ?",
           [userId],
-          (deleteManifestacoesErr) => {
-            if (deleteManifestacoesErr) {
-              connection.rollback(() => next(deleteManifestacoesErr));
+          (deleteRespostasErr) => {
+            if (deleteRespostasErr) {
+              connection.rollback(() => next(deleteRespostasErr));
               return;
             }
 
             connection.query(
-              "DELETE FROM Respostas WHERE User_ID = ?",
+              "DELETE FROM Manifestacoes WHERE Real_User_ID = ?",
               [userId],
-              (deleteRespostasErr) => {
-                if (deleteRespostasErr) {
-                  connection.rollback(() => next(deleteRespostasErr));
+              (deleteManifestacoesErr) => {
+                if (deleteManifestacoesErr) {
+                  connection.rollback(() => next(deleteManifestacoesErr));
                   return;
                 }
 
