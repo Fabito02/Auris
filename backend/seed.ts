@@ -90,9 +90,7 @@ async function createTables(conn: mysql.Connection) {
             Data_Criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
             Manifestacao_ID INT NOT NULL,
             User_ID INT NOT NULL,
-            Real_User_ID INT,
             FOREIGN KEY (User_ID) REFERENCES Users(User_ID),
-            FOREIGN KEY (Real_User_ID) REFERENCES Users(User_ID)
             FOREIGN KEY (Manifestacao_ID) REFERENCES Manifestacoes(Manifestacao_ID) ON DELETE CASCADE
         ) ENGINE=InnoDB`,
 

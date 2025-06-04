@@ -171,6 +171,8 @@ export const deleteUser = (
       connection.beginTransaction((err) => {
         if (err) return next(err);
 
+        registrarLog("Usuário deletado", userId);
+
         connection.query(
           "DELETE FROM Manifestacoes WHERE Real_User_ID = ?",
           [userId],
@@ -218,8 +220,6 @@ export const deleteUser = (
                         connection.rollback(() => next(commitErr));
                         return;
                       }
-
-                      registrarLog("Usuário deletado", userId);
 
                       res.status(200).json({
                         success: true,
