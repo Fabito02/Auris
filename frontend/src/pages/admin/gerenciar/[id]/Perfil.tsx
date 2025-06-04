@@ -87,7 +87,7 @@ const Perfil: React.FC = () => {
         setOpenConfirmacao(false);
         setOpenSuccess(true);
       } else {
-        toast.error("Erro ao conectar com o servidor:" + response.error, {
+        toast.error(`Erro ao deletar usuário: ${response.error}`, {
           icon: (
             <Icon
               icon="mdi:alert-circle"
@@ -97,7 +97,7 @@ const Perfil: React.FC = () => {
         });
       }
     } catch (err: any) {
-      toast.error("Erro ao conectar com o servidor:" + err.message, {
+      toast.error(`Erro ao deletar usuário: ${err.message}`, {
         icon: (
           <Icon
             icon="mdi:alert-circle"

@@ -86,7 +86,6 @@ router.post(
 router.get(
   "/users/:id",
   verifyToken,
-  verifyRole(["admin", "moderador"]),
   userController.getUserById
 );
 router.put(

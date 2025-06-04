@@ -26,6 +26,7 @@ export const listUsers = (req: Request, res: Response): void => {
 
 export const getUserById = (req: Request<{ id: string }>, res: Response) => {
   const userId = Number(req.params.id);
+  const userIdAtual = req.user?.User_ID;
 
   connection.query(
     "SELECT User_ID, Nome, Email, Telefone, Avatar, SIAPE, Tipo, Data_Criacao, Role FROM Users WHERE User_ID = ?",
@@ -42,7 +43,31 @@ export const getUserById = (req: Request<{ id: string }>, res: Response) => {
           .status(404)
           .json({ success: false, error: "Usuário não encontrado" });
       }
-      return res.status(200).json({ success: true, data: results[0] });
+
+      const role = results[0].Role;
+
+      const alvo = results[0];
+
+      if (role === "admin" || role === "moderador") {
+        return res.status(200).json({ success: true, data: alvo });
+      }
+
+      if (userId === userIdAtual) {
+        return res.status(200).json({ success: true, data: alvo });
+      }
+
+      if (
+        alvo.Role === "admin" ||
+        alvo.Role === "moderador" ||
+        alvo.Role === "anonimo"
+      ) {
+        return res.status(200).json({ success: true, data: alvo });
+      }
+
+      return res.status(403).json({
+        success: false,
+        error: "Você não tem permissão para acessar dados desse usuário",
+      });
     }
   );
 };
@@ -107,70 +132,109 @@ export const deleteUser = (
     return;
   }
 
-  connection.beginTransaction((err) => {
-    if (err) return next(err);
+  connection.query(
+    "SELECT Role, User_ID FROM Users WHERE User_ID = ?",
+    [userId],
+    (userDeleteErr, results: RowDataPacket[]) => {
+      if (userDeleteErr) {
+        res.status(500).json({
+          success: false,
+          error: `Erro ao buscar usuário: ${userDeleteErr.message}`,
+        });
+        return;
+      }
 
-    connection.query(
-      "DELETE FROM Manifestacoes WHERE User_id = ?",
-      [userId],
-      (deleteErr) => {
-        if (deleteErr) {
-          connection.rollback(() => next(deleteErr));
-          return;
-        }
+      if (results.length === 0) {
+        res.status(404).json({
+          success: false,
+          error: "Usuário não encontrado",
+        });
+        return;
+      }
+
+      if (results[0].Role === "admin") {
+        res.status(403).json({
+          success: false,
+          error: "Não é permitido deletar usuários com papel de administrador",
+        });
+        return;
+      }
+
+      if (results[0].Role === "anonimo" && results[0].User_ID === 1) {
+        res.status(403).json({
+          success: false,
+          error: "Usuário anônimo não pode ser deletado",
+        });
+        return;
+      }
+
+      connection.beginTransaction((err) => {
+        if (err) return next(err);
 
         connection.query(
-          "INSERT INTO Logs (Acao, User_ID) VALUES (?, ?)",
-          ["Usuário deletado", userId],
-          (logErr) => {
-            if (logErr) {
-              connection.rollback(() => next(logErr));
+          "DELETE FROM Manifestacoes WHERE Real_User_ID = ?",
+          [userId],
+          (deleteManifestacoesErr) => {
+            if (deleteManifestacoesErr) {
+              connection.rollback(() => next(deleteManifestacoesErr));
               return;
             }
 
             connection.query(
-              "DELETE FROM Users WHERE User_ID = ?",
+              "DELETE FROM Respostas WHERE User_ID = ?",
               [userId],
-              (userDeleteErr, results: ResultSetHeader) => {
-                if (userDeleteErr) {
-                  connection.rollback(() => {
-                    res.status(500).json({
-                      success: false,
-                      error: `Erro ao deletar usuário: ${userDeleteErr.message}`,
-                    });
-                    return;
-                  });
-                }
-
-                if (results.affectedRows === 0) {
-                  connection.rollback(() => {
-                    res
-                      .status(404)
-                      .json({
-                        success: false,
-                        error: "Usuário não encontrado",
-                      });
-                  });
+              (deleteRespostasErr) => {
+                if (deleteRespostasErr) {
+                  connection.rollback(() => next(deleteRespostasErr));
                   return;
                 }
 
-                connection.commit((commitErr) => {
-                  if (commitErr) {
-                    connection.rollback(() => next(commitErr));
-                    return;
+                connection.query(
+                  "DELETE FROM Users WHERE User_ID = ?",
+                  [userId],
+                  (userDeleteErr, results: ResultSetHeader) => {
+                    if (userDeleteErr) {
+                      connection.rollback(() => {
+                        res.status(500).json({
+                          success: false,
+                          error: `Erro ao deletar usuário: ${userDeleteErr.message}`,
+                        });
+                      });
+                      return;
+                    }
+
+                    if (results.affectedRows === 0) {
+                      connection.rollback(() => {
+                        res.status(404).json({
+                          success: false,
+                          error: "Usuário não encontrado",
+                        });
+                      });
+                      return;
+                    }
+
+                    connection.commit((commitErr) => {
+                      if (commitErr) {
+                        connection.rollback(() => next(commitErr));
+                        return;
+                      }
+
+                      registrarLog("Usuário deletado", userId);
+
+                      res.status(200).json({
+                        success: true,
+                        message: "Usuário deletado com sucesso",
+                      });
+                    });
                   }
-                  res.status(200).json({
-                    success: true,
-                    message: "Usuário deletado com sucesso",
-                  });
-                });
+                );
               }
             );
           }
         );
-      }
-    );
-  });
+      });
+    }
+  );
 };
 
 export const getEnderecoByUserId = (
