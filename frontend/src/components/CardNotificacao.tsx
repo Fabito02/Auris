@@ -106,7 +106,7 @@ const CardNotificacao = ({ notificacoes, onDelete }: CardNotificacaoProps) => {
             <DialogTitle className="text-center text-[var(--color-primary)] text-2xl mb-4">
               {notificacaoAberta?.Titulo}
             </DialogTitle>
-            <DialogDescription className="border-l px-4 text-gray-800">
+            <DialogDescription className="border-l px-4 mx-4 text-gray-800">
               {notificacaoAberta?.Mensagem}
               <div className="text-xs text-muted-foreground mt-2">
                 {notificacaoAberta?.Data_Criacao

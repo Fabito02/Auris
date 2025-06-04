@@ -19,7 +19,7 @@ const Regulamento = () => {
         .containerRegulamento h1 {
           font-size: 2rem;
           font-weight: bold;
-          color: #2e7d32;
+          color: var(--color-primary);
           margin-bottom: 1.5rem;
           text-align: center;
         }
@@ -27,7 +27,7 @@ const Regulamento = () => {
         .containerRegulamento span {
           font-size: 1.3rem;
           font-weight: bold;
-          color: #256029;
+          color: var(--color-primary-dark);
           margin-top: 2rem;
           margin-bottom: 1rem;
           
@@ -39,19 +39,19 @@ const Regulamento = () => {
         }
 
         .containerRegulamento ul {
-          background-color: #f1f3f5;
+          background-color: #00000007;
           padding: 1rem 1.5rem;
-          border-left: 5px solid #2e7d32;
+          border-left: 5px solid var(--color-primary);
           border-radius: 10px;
           margin: 1rem 0;
         }
 
         .containerRegulamento ul li {
-          margin: 0.5rem 0;
+          margin: 0.7rem 0;
         }
 
         .welcome-message {
-          background-color: #e9f5ec;
+          background-color: #1cb15818;
           color: #256029;
           padding: 1rem;
           border-radius: 12px;
@@ -65,8 +65,8 @@ const Regulamento = () => {
         <CardContent className="px-8 containerRegulamento">
           <h1>Regulamento da Ouvidoria Digital</h1>
           <div className="welcome-message">
-            Seja bem-vindo(a) à página de Regulamento da Ouvidoria Digital do
-            IFNMG - Campus Almenara.
+            Seja bem-vindo(a) à página de Regulamento da Auris - Ouvidoria
+            Digital do IFNMG - Campus Almenara.
           </div>
 
           <p>
