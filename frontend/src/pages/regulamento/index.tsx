@@ -30,7 +30,10 @@ const Regulamento = () => {
           color: var(--color-primary-dark);
           margin-top: 2rem;
           margin-bottom: 1rem;
-          
+        }
+
+        strong {
+          color: var(--color-primary-dark);
         }
 
         .containerRegulamento p {
