@@ -30,7 +30,7 @@ export const getUserById = (req: Request<{ id: string }>, res: Response) => {
 
   connection.query(
     "SELECT User_ID, Nome, Email, Telefone, Avatar, SIAPE, Tipo, Data_Criacao, Role FROM Users WHERE User_ID = ?",
-    [userIdAtual],
+    [userId],
     (err, results: RowDataPacket[]) => {
       if (err) {
         return res.status(500).json({

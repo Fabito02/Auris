@@ -125,9 +125,8 @@ export const responderManifestacao = (req: Request, res: Response) => {
         return;
       }
 
-      const ID_ANONIMO = 1;
       if (isDono && Anonimo) {
-        resposta.User_ID = ID_ANONIMO;
+        resposta.User_ID = 1;
       } else {
         resposta.User_ID = userId;
       }

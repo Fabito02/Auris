@@ -98,7 +98,7 @@ const Registrar = () => {
             <p className="subtitle mt-4">
               Caso você já possua uma conta,
               <br />
-              entre com o botão abaixo
+              clique no botão abaixo
             </p>
             <Button
               onClick={() => navigate("/login")}

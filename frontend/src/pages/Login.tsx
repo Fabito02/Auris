@@ -91,7 +91,7 @@ const Login = () => {
             <p className="subtitle mt-4">
               Caso você não possua uma conta,
               <br />
-              crie com o botão abaixo
+              clique no botão abaixo
             </p>
             <button
               onClick={() => navigate("/registrar")}
