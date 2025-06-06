@@ -24,7 +24,7 @@ passport.use(
         if (!user)
           return done(null, false, { message: "Usuário não encontrado" });
         if (!(await bcrypt.compare(password, user.Senha!))) {
-          return done(null, false, { message: "Senha incorreta" });
+          return done(null, false, { message: "Email ou senha incorretos" });
         }
 
         delete user.Senha;
