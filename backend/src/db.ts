@@ -36,7 +36,6 @@ function handleDisconnect() {
   });
 }
 
-// inicia o loop de conexão
 handleDisconnect();
 
 export default connection;
