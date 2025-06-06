@@ -101,7 +101,7 @@ git clone https://github.com/Fabito02/Auris.git
 **• Abra a pasta**
 
 ```bash
-cd 'Ouvidoria_Digital_IFNMG-Almenara'
+cd 'Auris'
 ```
 
 
