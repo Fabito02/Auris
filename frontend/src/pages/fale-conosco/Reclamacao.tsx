@@ -75,7 +75,7 @@ const Reclamacao = () => {
             [{ indent: "-1" }, { indent: "+1" }],
             [{ direction: "rtl" }],
             ["blockquote", "code-block"],
-            ["link", "image", "video"],
+            ["link", "video"],
             ["clean"],
           ],
         },

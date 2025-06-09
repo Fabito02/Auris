@@ -7,14 +7,6 @@
   height: 100vh;
 }
 
-.formulario {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  text-align: center;
-}
-
 .container {
   margin: 0;
   max-width: 100% !important;

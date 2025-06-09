@@ -75,7 +75,7 @@ const Sugestao = () => {
             [{ indent: "-1" }, { indent: "+1" }],
             [{ direction: "rtl" }],
             ["blockquote", "code-block"],
-            ["link", "image", "video"],
+            ["link", "video"],
             ["clean"],
           ],
         },
@@ -243,21 +243,15 @@ const Sugestao = () => {
                     <SelectItem value="Comunicação Institucional">
                       Comunicação Institucional
                     </SelectItem>
-                    <SelectItem value="Transporte">
-                      Transporte
-                    </SelectItem>
+                    <SelectItem value="Transporte">Transporte</SelectItem>
                     <SelectItem value="Segurança no Campus">
                       Segurança no Campus
                     </SelectItem>
                     <SelectItem value="Pesquisa e Extensão">
                       Pesquisa e Extensão
                     </SelectItem>
-                    <SelectItem value="Laboratórios">
-                      Laboratórios
-                    </SelectItem>
-                    <SelectItem value="Biblioteca">
-                      Biblioteca
-                    </SelectItem>
+                    <SelectItem value="Laboratórios">Laboratórios</SelectItem>
+                    <SelectItem value="Biblioteca">Biblioteca</SelectItem>
                     <SelectItem value="Recursos de Aprendizagem">
                       Recursos de Aprendizagem
                     </SelectItem>

@@ -103,7 +103,7 @@ const Login = () => {
             </button>
           </div>
 
-          <div className="col-span-3 formulario h-screen">
+          <div className="col-span-3 h-auto items-center justify-center text-center my-28 lg:my-auto">
             <div className="max-w-md mx-auto w-full">
               <h1 className="title2 mb-12">LOGIN</h1>
               <form className="px-15" onSubmit={handleSubmit}>

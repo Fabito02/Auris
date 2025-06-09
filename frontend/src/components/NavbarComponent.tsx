@@ -68,7 +68,6 @@ const NavbarComponent = () => {
       document.getElementById("link-acompanhamento")?.classList.add("active");
     }
   }, [location.pathname]);
-  
 
   return (
     <nav
@@ -93,10 +92,18 @@ const NavbarComponent = () => {
         {permissao && (
           <>
             <div className="border-r"></div>
-            <Link to="/admin/gerenciar" className="link-navbar" id="link-gerenciar">
+            <Link
+              to="/admin/gerenciar"
+              className="link-navbar"
+              id="link-gerenciar"
+            >
               GERENCIAR
             </Link>
-            <Link to="/admin/acompanhamento" className="link-navbar" id="link-acompanhamento">
+            <Link
+              to="/admin/acompanhamento"
+              className="link-navbar"
+              id="link-acompanhamento"
+            >
               ACOMPANHAMENTO
             </Link>
           </>
@@ -134,7 +141,7 @@ const NavbarComponent = () => {
             </Link>
             {permissao && (
               <>
-                <DropdownMenuItem className="border-t mt-3 rounded-[0]"></DropdownMenuItem>
+                <div className="border-t my-2 rounded-[0]"></div>
                 <Link to="/admin/gerenciar">
                   <DropdownMenuItem className="link-navbar-menu">
                     GERENCIAR

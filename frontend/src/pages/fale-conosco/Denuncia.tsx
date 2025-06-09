@@ -75,7 +75,7 @@ const Denuncia = () => {
             [{ indent: "-1" }, { indent: "+1" }],
             [{ direction: "rtl" }],
             ["blockquote", "code-block"],
-            ["link", "image", "video"],
+            ["link", "video"],
             ["clean"],
           ],
         },
@@ -244,7 +244,9 @@ const Denuncia = () => {
                     <SelectItem value="Corrupção, Fraude ou Irregularidades">
                       Corrupção, Fraude ou Irregularidades
                     </SelectItem>
-                    <SelectItem value="Abuso de Poder">Abuso de Poder</SelectItem>
+                    <SelectItem value="Abuso de Poder">
+                      Abuso de Poder
+                    </SelectItem>
                     <SelectItem value="Desvios de Conduta ou Ética">
                       Desvios de Conduta ou Ética
                     </SelectItem>

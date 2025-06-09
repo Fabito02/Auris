@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { checkAuth } from "@/api/auth";
-import { Card, CardContent } from "@/components/ui/card";
 
 const Regulamento = () => {
   const navigate = useNavigate();
@@ -13,14 +12,13 @@ const Regulamento = () => {
 
   return (
     <div className="mx-auto flex items-center justify-center">
-      <Card className="max-w-6xl mx-4 my-12">
+      <div className="max-w-6xl mx-4 mb-12">
         <style>{`
 
         .containerRegulamento h1 {
-          font-size: 2rem;
+          font-size: 2.4rem;
           font-weight: bold;
-          color: var(--color-primary);
-          margin-bottom: 1.5rem;
+          color: var(--color-primary-dark);
           text-align: center;
         }
 
@@ -54,7 +52,7 @@ const Regulamento = () => {
         }
 
         .welcome-message {
-          background-color: #1cb15818;
+          background-color: #1cb15813;
           color: #256029;
           padding: 1rem;
           border-radius: 12px;
@@ -65,11 +63,10 @@ const Regulamento = () => {
         }
       `}</style>
 
-        <CardContent className="px-8 containerRegulamento">
-          <h1>Regulamento da Ouvidoria Digital</h1>
+        <div className="px-8 containerRegulamento">
+          <h1 className="my-12">Regulamento da Auris - Ouvidoria Digital</h1>
           <div className="welcome-message">
-            Seja bem-vindo(a) à página de Regulamento da Auris - Ouvidoria
-            Digital do IFNMG - Campus Almenara.
+            Aqui você encontra o regulamento que estabelece as diretrizes e estratégias para o funcionamento e a gestão das atividades desenvolvidas pelo serviço de Ouvidoria do Instituto Federal do Norte de Minas Gerais - Campus Almenara.
           </div>
 
           <p>
@@ -312,8 +309,8 @@ const Regulamento = () => {
               denúncias ou elogios);
             </li>
           </ul>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 };
