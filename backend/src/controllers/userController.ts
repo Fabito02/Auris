@@ -44,30 +44,37 @@ export const getUserById = (req: Request<{ id: string }>, res: Response) => {
           .json({ success: false, error: "Usuário não encontrado" });
       }
 
-      const role = results[0].Role;
-
       const alvo = results[0];
 
-      if (role === "admin" || role === "moderador") {
-        return res.status(200).json({ success: true, data: alvo });
-      }
+      connection.query(
+        "SELECT Role FROM Users WHERE User_ID = ?",
+        [userIdAtual],
+        (err2, results2: RowDataPacket[]) => {
+          if (err2) {
+            return res.status(500).json({
+              success: false,
+              error: `Erro ao buscar usuário atual: ${err2.message}`,
+            });
+          }
 
-      if (userId === userIdAtual) {
-        return res.status(200).json({ success: true, data: alvo });
-      }
+          const roleAtual = results2[0]?.Role;
 
-      if (
-        alvo.Role === "admin" ||
-        alvo.Role === "moderador" ||
-        alvo.Role === "anonimo"
-      ) {
-        return res.status(200).json({ success: true, data: alvo });
-      }
+          if (roleAtual === "admin" || roleAtual === "moderador") {
+            return res.status(200).json({ success: true, data: alvo });
+          }
+          if (userId === userIdAtual) {
+            return res.status(200).json({ success: true, data: alvo });
+          }
+          if (alvo.Role === "anonimo") {
+            return res.status(200).json({ success: true, data: alvo });
+          }
 
-      return res.status(403).json({
-        success: false,
-        error: "Você não tem permissão para acessar dados desse usuário",
-      });
+          return res.status(403).json({
+            success: false,
+            error: "Você não tem permissão para acessar dados desse usuário",
+          });
+        }
+      );
     }
   );
 };
