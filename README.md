@@ -16,7 +16,7 @@ Um sistema simples e eficiente para que alunos, servidores e colaboradores possa
 
 ### Requisitos:
 
-**• Git (caso por motivo desconhecido não tenha instalado em algum momento nos últimos 10 anos)**
+**• Git**
 
 ArchLinux
 
