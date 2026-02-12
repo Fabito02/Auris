@@ -1,7 +1,7 @@
 # Auris - Ouvidoria Digital do IFNMG (Campus Almenara)
 ---
 [![License: NPOSL-3.0](https://img.shields.io/badge/License-NPOSL--3.0-blue.svg)](https://opensource.org/license/nposl-3-0)
-![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
+![Status](https://img.shields.io/badge/status-finalizado-green)
 ![Feito com Amor](https://img.shields.io/badge/feito%20com-carinho-red)
 
 Um sistema simples e eficiente para que alunos, servidores e colaboradores possam registrar sugestões, elogios, reclamações e denúncias — tudo de forma prática, digital e (quando necessário) anônima.
