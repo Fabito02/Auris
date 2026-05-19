@@ -9,8 +9,12 @@ Um sistema simples e eficiente para que alunos, servidores e colaboradores possa
 > **Nota:** Este guia assume que você está usando uma distribuição Linux.
 > 
 > Por esse motivo o foco do tutorial é exclusivo para esse sistema operacional, adequando-se às tecnologias utilizadas no IFNMG - Campus Almenara.
-> 
-> Se estiver utilizando Windows ou MacOS... boa sorte.
+
+## Arquitetura e Tecnologias
+
+- Frontend: React.js, Vite, TypeScript, TailwindCSS.
+- Backend: Node.js, Express, MySQL.
+- Segurança: Autenticação JWT, senhas criptografadas com bcrypt.
 
 ## Etapas de configuração do dispositivo para o uso da aplicação local
 
